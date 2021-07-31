@@ -1,0 +1,2 @@
+rootProject.name = 'java-persistence-benchmark'
+include('server', 'clients', 'commons')
