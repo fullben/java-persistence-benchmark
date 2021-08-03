@@ -1,11 +1,10 @@
 package de.uniba.dsg.jpb.server;
 
-import de.uniba.dsg.jpb.server.datagen.DataGenerator;
 import de.uniba.dsg.jpb.server.datagen.DatabaseWriter;
-import de.uniba.dsg.jpb.server.model.Warehouse;
+import de.uniba.dsg.jpb.server.datagen.FakeDataGenerator;
+import de.uniba.dsg.jpb.server.test.TransactionRunner;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import java.util.Arrays;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
@@ -35,17 +34,21 @@ public class Application {
   }
 
   @Bean
-  public CommandLineRunner cmdRunner(ApplicationContext context, DatabaseWriter writer) {
+  public CommandLineRunner cmdRunner(
+      ApplicationContext context, DatabaseWriter writer, TransactionRunner transactionRunner) {
     return args -> {
-      DataGenerator gen = new DataGenerator(1, true);
+      FakeDataGenerator fakeGen = new FakeDataGenerator(1, true);
       LOG.info("Beginning data generation...");
       Stopwatch stopwatch = new Stopwatch(true);
-      gen.generateTestData();
-      List<Warehouse> warehouses = gen.getWarehouses();
+      fakeGen.generate();
       stopwatch.stop();
       LOG.info("Data generation took {} seconds", stopwatch.getDurationSeconds());
-      writer.writeAll(gen);
-      LOG.info("Successfully wrote sample data to database");
+      stopwatch.start();
+      writer.writeAll(fakeGen);
+      stopwatch.stop();
+      LOG.info(
+          "Successfully wrote sample data to database, took {} milliseconds",
+          stopwatch.getDurationMillis());
     };
   }
 }

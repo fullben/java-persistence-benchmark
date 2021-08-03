@@ -210,7 +210,6 @@ public class DataGenerator {
       district.setCustomers(generateCustomers(district));
       district.setOrders(generateOrders(district, items));
       newOrders.addAll(generateNewOrders(district));
-      district.setNextOrderId(3001);
     }
     return districts;
   }
@@ -280,7 +279,7 @@ public class DataGenerator {
       order.setEntryDate(LocalDateTime.now());
       order.setCarrierId(order.getId() < 2_101 ? carrierIdRandom.nextLong() : null);
       order.setOrderLineCount(orderLineCountRandom.nextInt());
-      order.setAllLocal(1);
+      order.setAllLocal(true);
       order.setOrderLines(generateOrderLines(order, items));
       orders.add(order);
     }

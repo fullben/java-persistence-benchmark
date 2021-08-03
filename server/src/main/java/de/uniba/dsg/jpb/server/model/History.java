@@ -1,31 +1,24 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.HistoryId;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-@IdClass(HistoryId.class)
 public class History {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @OneToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumns({
-    @JoinColumn(name = "customer_id", referencedColumnName = "id"),
-    @JoinColumn(name = "customer_district_id", referencedColumnName = "district_id"),
-    @JoinColumn(
-        name = "customer_district_warehouse_id",
-        referencedColumnName = "district_warehouse_id")
-  })
   private Customer customer;
 
   @Column(name = "history_date")
@@ -38,10 +31,19 @@ public class History {
   private String data;
 
   public History() {
+    id = null;
     customer = null;
     date = null;
     amount = 0;
     data = null;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public Customer getCustomer() {
@@ -93,11 +95,11 @@ public class History {
       return false;
     }
     History history = (History) o;
-    return customer.equals(history.customer);
+    return id.equals(history.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customer);
+    return Objects.hash(id);
   }
 }

@@ -1,31 +1,32 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.NewOrderId;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.OneToOne;
 
 @Entity
-@IdClass(NewOrderId.class)
 public class NewOrder {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @OneToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumns({
-    @JoinColumn(name = "order_id", referencedColumnName = "id"),
-    @JoinColumn(name = "order_district_id", referencedColumnName = "district_id"),
-    @JoinColumn(
-        name = "order_district_warehouse_id",
-        referencedColumnName = "district_warehouse_id")
-  })
   private Order order;
 
   public NewOrder() {}
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public Order getOrder() {
     return order;
@@ -44,11 +45,11 @@ public class NewOrder {
       return false;
     }
     NewOrder newOrder = (NewOrder) o;
-    return order.equals(newOrder.order);
+    return id.equals(newOrder.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(order);
+    return Objects.hash(id);
   }
 }

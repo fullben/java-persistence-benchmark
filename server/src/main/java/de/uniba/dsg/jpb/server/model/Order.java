@@ -1,26 +1,26 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.OrderId;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "oorder")
-@IdClass(OrderId.class)
 public class Order {
 
-  @Id private Long id;
-
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private District district;
 
@@ -34,7 +34,7 @@ public class Order {
   private List<OrderLine> orderLines;
 
   private int orderLineCount;
-  private int allLocal;
+  private boolean allLocal;
 
   public Long getId() {
     return id;
@@ -92,11 +92,11 @@ public class Order {
     this.orderLineCount = orderLineCount;
   }
 
-  public int getAllLocal() {
+  public boolean isAllLocal() {
     return allLocal;
   }
 
-  public void setAllLocal(int allLocal) {
+  public void setAllLocal(boolean allLocal) {
     this.allLocal = allLocal;
   }
 
@@ -109,11 +109,11 @@ public class Order {
       return false;
     }
     Order order = (Order) o;
-    return id.equals(order.id) && district.equals(order.district);
+    return id.equals(order.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, district);
+    return Objects.hash(id);
   }
 }

@@ -73,13 +73,10 @@ public class NewOrderService {
     if (warehouse == null) {
       throw new IllegalArgumentException();
     }
-    Long nextOrderId = district.getNextOrderId();
     // TODO persist district
-    district.setNextOrderId(nextOrderId + 1);
     district = districtRepository.save(district);
     // 2. Create and persist a new order and order entry
     Order order = new Order();
-    order.setId(nextOrderId);
     order.setCustomer(customer);
     order.setDistrict(district);
     order.setCarrierId(null);
@@ -88,9 +85,7 @@ public class NewOrderService {
     // We're not all local if any item is supplied by a non-home warehouse
     order.setAllLocal(
         req.getLines().stream()
-                .anyMatch(line -> !line.getSupplyingWarehouseId().equals(warehouse.getId()))
-            ? 0
-            : 1);
+            .anyMatch(line -> !line.getSupplyingWarehouseId().equals(warehouse.getId())));
     order = orderRepository.save(order);
     NewOrder newOrder = new NewOrder();
     newOrder.setOrder(order);

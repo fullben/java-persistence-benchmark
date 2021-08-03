@@ -1,25 +1,25 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.DistrictId;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-@IdClass(DistrictId.class)
 public class District {
 
-  @Id private Long id;
-
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
@@ -34,7 +34,6 @@ public class District {
   @Embedded private Address address;
   private double salesTax;
   private double yearToDateBalance;
-  private long nextOrderId;
 
   public Long getId() {
     return id;
@@ -100,14 +99,6 @@ public class District {
     this.yearToDateBalance = yearToDateBalance;
   }
 
-  public Long getNextOrderId() {
-    return nextOrderId;
-  }
-
-  public void setNextOrderId(long nextOrderId) {
-    this.nextOrderId = nextOrderId;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -117,11 +108,11 @@ public class District {
       return false;
     }
     District district = (District) o;
-    return id.equals(district.id) && warehouse.equals(district.warehouse);
+    return id.equals(district.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, warehouse);
+    return Objects.hash(id);
   }
 }

@@ -1,23 +1,24 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.StockId;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-@IdClass(StockId.class)
 public class Stock {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Item item;
 
-  @Id
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
@@ -37,6 +38,14 @@ public class Stock {
   private int orderCount;
   private int remoteCount;
   private String data;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public Item getItem() {
     return item;
@@ -183,11 +192,11 @@ public class Stock {
       return false;
     }
     Stock stock = (Stock) o;
-    return item.equals(stock.item) && warehouse.equals(stock.warehouse);
+    return id.equals(stock.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(item, warehouse);
+    return Objects.hash(id);
   }
 }

@@ -1,8 +1,8 @@
 package de.uniba.dsg.jpb.server.datagen;
 
-import de.uniba.dsg.jpb.server.repositories.WarehouseRepository;
 import de.uniba.dsg.jpb.server.repositories.ItemRepository;
 import de.uniba.dsg.jpb.server.repositories.NewOrderRepository;
+import de.uniba.dsg.jpb.server.repositories.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +28,12 @@ public class DatabaseWriter {
   }
 
   public void writeAll(DataGenerator generator) {
+    itemRepository.saveAll(generator.getItems());
+    warehouseRepository.saveAll(generator.getWarehouses());
+    newOrderRepository.saveAll(generator.getNewOrders());
+  }
+
+  public void writeAll(FakeDataGenerator generator) {
     itemRepository.saveAll(generator.getItems());
     warehouseRepository.saveAll(generator.getWarehouses());
     newOrderRepository.saveAll(generator.getNewOrders());

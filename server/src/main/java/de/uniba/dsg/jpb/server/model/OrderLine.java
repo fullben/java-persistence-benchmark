@@ -1,12 +1,12 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.OrderLineId;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
 /**
@@ -15,14 +15,16 @@ import javax.persistence.ManyToOne;
  * order this line is part of.
  */
 @Entity
-@IdClass(OrderLineId.class)
 public class OrderLine {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Order order;
 
-  @Id private int number;
+  private int number;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private Item item;
@@ -36,6 +38,14 @@ public class OrderLine {
   private String distInfo;
 
   public OrderLine() {}
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public Order getOrder() {
     return order;
@@ -110,11 +120,11 @@ public class OrderLine {
       return false;
     }
     OrderLine orderLine = (OrderLine) o;
-    return number == orderLine.number && order.equals(orderLine.order);
+    return id.equals(orderLine.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(order, number);
+    return Objects.hash(id);
   }
 }

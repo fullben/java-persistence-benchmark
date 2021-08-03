@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.server.model;
 
-import de.uniba.dsg.jpb.server.model.id.CustomerId;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -9,20 +8,21 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-@IdClass(CustomerId.class)
 public class Customer {
 
-  @Id private Long id;
-
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
+
   @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private District district;
 
@@ -203,11 +203,11 @@ public class Customer {
       return false;
     }
     Customer customer = (Customer) o;
-    return id.equals(customer.id) && district.equals(customer.district);
+    return id.equals(customer.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, district);
+    return Objects.hash(id);
   }
 }
