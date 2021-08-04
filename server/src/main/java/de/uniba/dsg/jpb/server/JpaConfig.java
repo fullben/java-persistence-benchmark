@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
-public class ApplicationConfig {
+public class JpaConfig {
 
   @Bean
   public DataSource dataSource() {
@@ -26,7 +26,6 @@ public class ApplicationConfig {
 
   @Bean
   public EntityManagerFactory entityManagerFactory() {
-
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
     vendorAdapter.setGenerateDdl(true);
 
