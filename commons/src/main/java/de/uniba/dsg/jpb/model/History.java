@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.server.model;
+package de.uniba.dsg.jpb.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 public class History {
@@ -18,7 +17,7 @@ public class History {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  @OneToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   private Customer customer;
 
   @Column(name = "history_date")

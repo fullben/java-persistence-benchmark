@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.server.model;
+package de.uniba.dsg.jpb.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

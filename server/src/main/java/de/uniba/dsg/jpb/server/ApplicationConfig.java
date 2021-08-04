@@ -32,7 +32,7 @@ public class ApplicationConfig {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("de.uniba.dsg.jpb.server.model");
+    factory.setPackagesToScan("de.uniba.dsg.jpb.model");
     factory.setDataSource(dataSource());
     factory.afterPropertiesSet();
 

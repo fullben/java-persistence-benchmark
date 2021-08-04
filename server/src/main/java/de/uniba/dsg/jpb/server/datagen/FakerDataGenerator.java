@@ -1,16 +1,16 @@
 package de.uniba.dsg.jpb.server.datagen;
 
 import com.github.javafaker.Faker;
-import de.uniba.dsg.jpb.server.model.Address;
-import de.uniba.dsg.jpb.server.model.Customer;
-import de.uniba.dsg.jpb.server.model.District;
-import de.uniba.dsg.jpb.server.model.History;
-import de.uniba.dsg.jpb.server.model.Item;
-import de.uniba.dsg.jpb.server.model.NewOrder;
-import de.uniba.dsg.jpb.server.model.Order;
-import de.uniba.dsg.jpb.server.model.OrderLine;
-import de.uniba.dsg.jpb.server.model.Stock;
-import de.uniba.dsg.jpb.server.model.Warehouse;
+import de.uniba.dsg.jpb.model.Address;
+import de.uniba.dsg.jpb.model.Customer;
+import de.uniba.dsg.jpb.model.District;
+import de.uniba.dsg.jpb.model.History;
+import de.uniba.dsg.jpb.model.Item;
+import de.uniba.dsg.jpb.model.NewOrder;
+import de.uniba.dsg.jpb.model.Order;
+import de.uniba.dsg.jpb.model.OrderLine;
+import de.uniba.dsg.jpb.model.Stock;
+import de.uniba.dsg.jpb.model.Warehouse;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -247,7 +247,7 @@ public class FakerDataGenerator {
       customer.setLastName(faker.name().lastName());
       customer.setPhoneNumber(faker.phoneNumber().phoneNumber());
       customer.setSince(LocalDateTime.now());
-      customer.setHistory(generateHistory(customer));
+      customer.setHistory(List.of(generateHistory(customer)));
       customer.setCredit(creditRandom.nextInt() < 11 ? BAD_CREDIT : GOOD_CREDIT);
       customer.setCreditLimit(50_000);
       customer.setDiscount(discountRandom.nextDouble());

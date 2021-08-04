@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.server.model;
+package de.uniba.dsg.jpb.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Customer {
@@ -23,6 +22,7 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
+  // FIXME eager bad?
   @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private District district;
 
@@ -33,8 +33,8 @@ public class Customer {
   private String phoneNumber;
   private LocalDateTime since;
 
-  @OneToOne(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
-  private History history;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
+  private List<History> history;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
   private List<Order> orders;
@@ -114,11 +114,11 @@ public class Customer {
     this.since = since;
   }
 
-  public History getHistory() {
+  public List<History> getHistory() {
     return history;
   }
 
-  public void setHistory(History history) {
+  public void setHistory(List<History> history) {
     this.history = history;
   }
 

@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.server.model;
+package de.uniba.dsg.jpb.model;
 
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +20,7 @@ public class District {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
+  // FIXME eager bad?
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;

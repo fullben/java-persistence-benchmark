@@ -1,15 +1,15 @@
 package de.uniba.dsg.jpb.server.datagen;
 
-import de.uniba.dsg.jpb.server.model.Address;
-import de.uniba.dsg.jpb.server.model.Customer;
-import de.uniba.dsg.jpb.server.model.District;
-import de.uniba.dsg.jpb.server.model.History;
-import de.uniba.dsg.jpb.server.model.Item;
-import de.uniba.dsg.jpb.server.model.NewOrder;
-import de.uniba.dsg.jpb.server.model.Order;
-import de.uniba.dsg.jpb.server.model.OrderLine;
-import de.uniba.dsg.jpb.server.model.Stock;
-import de.uniba.dsg.jpb.server.model.Warehouse;
+import de.uniba.dsg.jpb.model.Address;
+import de.uniba.dsg.jpb.model.Customer;
+import de.uniba.dsg.jpb.model.District;
+import de.uniba.dsg.jpb.model.History;
+import de.uniba.dsg.jpb.model.Item;
+import de.uniba.dsg.jpb.model.NewOrder;
+import de.uniba.dsg.jpb.model.Order;
+import de.uniba.dsg.jpb.model.OrderLine;
+import de.uniba.dsg.jpb.model.Stock;
+import de.uniba.dsg.jpb.model.Warehouse;
 import de.uniba.dsg.jpb.util.RandomSelector;
 import de.uniba.dsg.jpb.util.StringRandom;
 import de.uniba.dsg.jpb.util.UniformRandom;
@@ -235,7 +235,7 @@ public class TpccDataGenerator {
       customer.setLastName(lastNames.get(i));
       customer.setPhoneNumber(phoneNumberRandom.nextString());
       customer.setSince(LocalDateTime.now());
-      customer.setHistory(generateHistory(customer));
+      customer.setHistory(List.of(generateHistory(customer)));
       customer.setCredit(creditRandom.nextInt() > 10 ? "BC" : "GC");
       customer.setCreditLimit(50_000);
       customer.setDiscount(discountRandom.nextDouble());
