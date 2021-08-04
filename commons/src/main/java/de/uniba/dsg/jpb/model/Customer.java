@@ -22,8 +22,7 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  // FIXME eager bad?
-  @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private District district;
 
   private String firstName;
@@ -36,7 +35,7 @@ public class Customer {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
   private List<History> history;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
   private List<Order> orders;
 
   private String credit;
