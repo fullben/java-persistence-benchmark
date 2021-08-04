@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.server.repositories;
 
 import de.uniba.dsg.jpb.server.model.Warehouse;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WarehouseRepository extends CrudRepository<Warehouse, Long> {}
+public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {}

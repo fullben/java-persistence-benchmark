@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DataGenerator {
+public class TpccDataGenerator {
 
   private static final List<String> LAST_NAME_SYLLABLES =
       List.of("BAR", "OUGHT", "ABLE", "PRI", "PRES", "ESE", "ANTI", "CALLY", "ATION", "EING");
@@ -36,7 +36,7 @@ public class DataGenerator {
   private final List<NewOrder> newOrders;
   private final boolean limited;
 
-  public DataGenerator(int warehouseCount) {
+  public TpccDataGenerator(int warehouseCount) {
     dataRandom = new StringRandom(26, 50);
     nameRandom = new StringRandom(6, 10);
     salesTaxRandom = new UniformRandom(0.0, 0.2);
@@ -52,7 +52,7 @@ public class DataGenerator {
     limited = false;
   }
 
-  public DataGenerator(int warehouseCount, boolean limited) {
+  public TpccDataGenerator(int warehouseCount, boolean limited) {
     dataRandom = new StringRandom(26, 50);
     nameRandom = new StringRandom(6, 10);
     salesTaxRandom = new UniformRandom(0.0, 0.2);

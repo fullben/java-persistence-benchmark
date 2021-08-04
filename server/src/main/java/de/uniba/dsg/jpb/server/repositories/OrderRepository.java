@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.server.repositories;
 
 import de.uniba.dsg.jpb.server.model.Order;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends CrudRepository<Order, Long> {}
+public interface OrderRepository extends JpaRepository<Order, Long> {}

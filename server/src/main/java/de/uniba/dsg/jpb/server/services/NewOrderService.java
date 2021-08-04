@@ -19,6 +19,7 @@ import de.uniba.dsg.jpb.server.repositories.NewOrderRepository;
 import de.uniba.dsg.jpb.server.repositories.OrderLineRepository;
 import de.uniba.dsg.jpb.server.repositories.OrderRepository;
 import de.uniba.dsg.jpb.server.repositories.StockRepository;
+import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class NewOrderService {
 
+  private static final UniformRandom DIST_RANDOM = new UniformRandom(1, 10);
   private final ItemRepository itemRepository;
   private final StockRepository stockRepository;
   private final OrderLineRepository orderLineRepository;
@@ -85,16 +87,17 @@ public class NewOrderService {
     // We're not all local if any item is supplied by a non-home warehouse
     order.setAllLocal(
         req.getLines().stream()
-            .anyMatch(line -> !line.getSupplyingWarehouseId().equals(warehouse.getId())));
+            .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
     order = orderRepository.save(order);
     NewOrder newOrder = new NewOrder();
     newOrder.setOrder(order);
     newOrderRepository.save(newOrder);
     // 3. Process individual order lines
-    List<OrderLine> orderLines = toOrderLines(req.getLines());
+    List<OrderLine> orderLines = toOrderLines(req.getLines(), order);
     List<OrderResponseLine> responseLines = new ArrayList<>(orderLines.size());
     double orderLineSum = 0;
-    for (OrderLine orderLine : orderLines) {
+    for (int i = 0; i < orderLines.size(); i++) {
+      OrderLine orderLine = orderLines.get(i);
       // This may result in null due to requirement of 1% of all transactions using an unused id
       Item item = itemRepository.findById(orderLine.getItem().getId()).orElse(null);
       if (item == null) {
@@ -107,8 +110,7 @@ public class NewOrderService {
       }
       Stock stock =
           stockRepository
-              .findByItemIdAndWarehouseId(
-                  item.getId(), orderLine.getOrder().getDistrict().getWarehouse())
+              .findByItemIdAndWarehouseId(item.getId(), orderLine.getSupplyingWarehouse().getId())
               .orElseThrow(NullPointerException::new);
       OrderResponseLine responseLine = newOrderResponseLine(orderLine);
       responseLines.add(responseLine);
@@ -121,7 +123,7 @@ public class NewOrderService {
       }
       stock.setYearToDateBalance(stock.getYearToDateBalance() + orderLineQuantity);
       stock.setOrderCount(stock.getOrderCount() + 1);
-      // TODO this ain't gud, how can we roll this back?
+      // TODO this ain't good, how can we roll this back?
       stock = stockRepository.save(stock);
       responseLine.setStockQuantity(stock.getQuantity());
       responseLine.setItemName(item.getName());
@@ -130,9 +132,8 @@ public class NewOrderService {
       responseLine.setBrandGeneric(determineBrandGeneric(item.getData(), stock.getData()));
       orderLine.setAmount(item.getPrice() * orderLineQuantity);
       orderLine.setDeliveryDate(null);
-      orderLine.setNumber(orderLines.indexOf(orderLine) + 1);
-      orderLine.setDistInfo(
-          getDistrictInfo(orderLine.getOrder().getDistrict().getId().intValue(), stock));
+      orderLine.setNumber(i + 1);
+      orderLine.setDistInfo(getRandomDistrictInfo(stock));
       orderLineRepository.save(orderLine);
       orderLineSum += orderLine.getAmount();
     }
@@ -178,6 +179,10 @@ public class NewOrderService {
     return sumPrice * (1 - customerDiscount) * (1 + warehouseSalesTax + districtSalesTax);
   }
 
+  private static String getRandomDistrictInfo(Stock stock) {
+    return getDistrictInfo(DIST_RANDOM.nextInt(), stock);
+  }
+
   private static String getDistrictInfo(int districtNbr, Stock stock) {
     switch (districtNbr) {
       case 1:
@@ -217,15 +222,19 @@ public class NewOrderService {
     return requestLine;
   }
 
-  private List<OrderLine> toOrderLines(List<OrderRequestLine> lines) {
+  private static List<OrderLine> toOrderLines(List<OrderRequestLine> lines, Order order) {
     return lines.stream()
         .map(
             l -> {
               OrderLine line = new OrderLine();
-              // FIXME we somehow need to fetch the supplying warehouse and item
-              line.setItem(null);
-              line.setSupplyingWarehouse(null);
+              Item item = new Item();
+              item.setId(l.getItemId());
+              Warehouse warehouse = new Warehouse();
+              warehouse.setId(l.getSupplyingWarehouseId());
+              line.setItem(item);
+              line.setSupplyingWarehouse(warehouse);
               line.setQuantity(l.getQuantity());
+              line.setOrder(order);
               return line;
             })
         .collect(Collectors.toList());

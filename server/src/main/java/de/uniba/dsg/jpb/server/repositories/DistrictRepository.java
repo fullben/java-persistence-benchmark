@@ -1,6 +1,10 @@
 package de.uniba.dsg.jpb.server.repositories;
 
 import de.uniba.dsg.jpb.server.model.District;
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DistrictRepository extends CrudRepository<District, Long> {}
+public interface DistrictRepository extends JpaRepository<District, Long> {
+
+  List<District> findByWarehouseId(Long warehouseId);
+}

@@ -23,17 +23,17 @@ public class DatabaseWriter {
     this.newOrderRepository = newOrderRepository;
   }
 
-  public void writeItems(DataGenerator generator) {
+  public void writeItems(TpccDataGenerator generator) {
     itemRepository.saveAll(generator.getItems());
   }
 
-  public void writeAll(DataGenerator generator) {
+  public void writeAll(TpccDataGenerator generator) {
     itemRepository.saveAll(generator.getItems());
     warehouseRepository.saveAll(generator.getWarehouses());
     newOrderRepository.saveAll(generator.getNewOrders());
   }
 
-  public void writeAll(FakeDataGenerator generator) {
+  public void writeAll(FakerDataGenerator generator) {
     itemRepository.saveAll(generator.getItems());
     warehouseRepository.saveAll(generator.getWarehouses());
     newOrderRepository.saveAll(generator.getNewOrders());

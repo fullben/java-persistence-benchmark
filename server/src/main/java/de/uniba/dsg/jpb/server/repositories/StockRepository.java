@@ -1,12 +1,13 @@
 package de.uniba.dsg.jpb.server.repositories;
 
 import de.uniba.dsg.jpb.server.model.Stock;
-import de.uniba.dsg.jpb.server.model.Warehouse;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StockRepository extends CrudRepository<Stock, Long> {
-  Optional<Stock> findByItemId(Long id);
+public interface StockRepository extends JpaRepository<Stock, Long> {
 
-  Optional<Stock> findByItemIdAndWarehouseId(Long itemId, Warehouse warehouseId);
+  Optional<Stock> findByItemIdAndWarehouseId(Long itemId, Long warehouseId);
+
+  List<Stock> findByWarehouseId(Long warehouseId);
 }

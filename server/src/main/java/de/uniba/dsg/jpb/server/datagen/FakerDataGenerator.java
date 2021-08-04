@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class FakeDataGenerator {
+public class FakerDataGenerator {
 
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
@@ -34,7 +34,7 @@ public class FakeDataGenerator {
   private List<Warehouse> warehouses;
   private List<Item> items;
 
-  public FakeDataGenerator(int warehouseCount, boolean limited) {
+  public FakerDataGenerator(int warehouseCount, boolean limited) {
     faker = new Faker(Locale.US);
     salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
     this.warehouseCount = warehouseCount;

@@ -1,7 +1,7 @@
 package de.uniba.dsg.jpb.server;
 
 import de.uniba.dsg.jpb.server.datagen.DatabaseWriter;
-import de.uniba.dsg.jpb.server.datagen.FakeDataGenerator;
+import de.uniba.dsg.jpb.server.datagen.FakerDataGenerator;
 import de.uniba.dsg.jpb.server.test.TransactionRunner;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import java.util.Arrays;
@@ -37,7 +37,7 @@ public class Application {
   public CommandLineRunner cmdRunner(
       ApplicationContext context, DatabaseWriter writer, TransactionRunner transactionRunner) {
     return args -> {
-      FakeDataGenerator fakeGen = new FakeDataGenerator(1, true);
+      FakerDataGenerator fakeGen = new FakerDataGenerator(1, true);
       LOG.info("Beginning data generation...");
       Stopwatch stopwatch = new Stopwatch(true);
       fakeGen.generate();

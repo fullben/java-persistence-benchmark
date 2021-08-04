@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -22,9 +23,11 @@ public class Warehouse {
   @Embedded private Address address;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<District> districts;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Stock> stocks;
 
   private double salesTax;
