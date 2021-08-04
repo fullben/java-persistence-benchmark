@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.clients.transaction;
+package de.uniba.dsg.jpb.client.transaction;
 
 import de.uniba.dsg.jpb.messages.OrderRequest;
 import de.uniba.dsg.jpb.messages.OrderRequestLine;
@@ -86,7 +86,7 @@ public class NewOrderTransaction {
   }
 
   public void complete(OrderResponse res) {
-    if (!began) {
+    if (!began || complete) {
       throw new IllegalStateException();
     }
     stopwatch.stop();
