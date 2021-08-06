@@ -1,7 +1,7 @@
 package de.uniba.dsg.jpb.client.transaction;
 
 import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderRequestLine;
+import de.uniba.dsg.jpb.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.messages.OrderResponse;
 import de.uniba.dsg.jpb.util.NonUniformRandom;
 import de.uniba.dsg.jpb.util.RandomSelector;
@@ -65,9 +65,9 @@ public class NewOrderTransaction {
     req.setWarehouseId(warehouseId);
     req.setDistrictId(districtId);
     req.setCustomerId(customerId);
-    List<OrderRequestLine> lines = new ArrayList<>(orderItemCount);
+    List<OrderRequestItem> lines = new ArrayList<>(orderItemCount);
     for (int i = 0; i < orderItemCount; i++) {
-      OrderRequestLine line = new OrderRequestLine();
+      OrderRequestItem line = new OrderRequestItem();
       long itemId;
       if (entryError && i == orderItemCount - 1) {
         itemId = 100_001;
@@ -79,7 +79,7 @@ public class NewOrderTransaction {
       line.setQuantity(ITEM_QUANTITY_RANDOM.nextInt());
       lines.add(line);
     }
-    req.setLines(lines);
+    req.setItems(lines);
     began = true;
     stopwatch.start();
     return req;

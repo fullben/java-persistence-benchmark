@@ -7,7 +7,7 @@ public class OrderRequest {
   private Long warehouseId;
   private Long districtId;
   private Long customerId;
-  private List<OrderRequestLine> lines;
+  private List<OrderRequestItem> items;
 
   public Long getWarehouseId() {
     return warehouseId;
@@ -33,11 +33,11 @@ public class OrderRequest {
     this.customerId = customerId;
   }
 
-  public List<OrderRequestLine> getLines() {
-    return lines;
+  public List<OrderRequestItem> getItems() {
+    return items;
   }
 
-  public void setLines(List<OrderRequestLine> lines) {
-    this.lines = lines;
+  public void setItems(List<OrderRequestItem> items) {
+    this.items = items;
   }
 }

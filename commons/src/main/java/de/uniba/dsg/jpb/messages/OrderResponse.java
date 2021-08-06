@@ -9,8 +9,8 @@ public class OrderResponse {
   private Long districtId;
   private Long customerId;
   private Long orderId;
-  private List<OrderResponseLine> orderLines;
-  private int orderLineCount;
+  private List<OrderResponseItem> orderItems;
+  private int orderItemCount;
   private LocalDateTime orderTimestamp;
   private String customerLastName;
   private String customerCredit;
@@ -58,20 +58,20 @@ public class OrderResponse {
     this.orderId = orderId;
   }
 
-  public List<OrderResponseLine> getOrderLines() {
-    return orderLines;
+  public List<OrderResponseItem> getOrderItems() {
+    return orderItems;
   }
 
-  public void setOrderLines(List<OrderResponseLine> orderLines) {
-    this.orderLines = orderLines;
+  public void setOrderItems(List<OrderResponseItem> orderItems) {
+    this.orderItems = orderItems;
   }
 
-  public int getOrderLineCount() {
-    return orderLineCount;
+  public int getOrderItemCount() {
+    return orderItemCount;
   }
 
-  public void setOrderLineCount(int orderLineCount) {
-    this.orderLineCount = orderLineCount;
+  public void setOrderItemCount(int orderItemCount) {
+    this.orderItemCount = orderItemCount;
   }
 
   public LocalDateTime getOrderTimestamp() {

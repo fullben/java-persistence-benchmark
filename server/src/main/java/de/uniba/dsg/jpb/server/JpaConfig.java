@@ -31,7 +31,7 @@ public class JpaConfig {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("de.uniba.dsg.jpb.model");
+    factory.setPackagesToScan("de.uniba.dsg.jpb.data.model.jpa");
     factory.setDataSource(dataSource());
     factory.afterPropertiesSet();
 

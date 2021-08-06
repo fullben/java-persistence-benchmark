@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation 'javax.persistence:javax.persistence-api:2.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.4'
+    implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.2'

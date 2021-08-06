@@ -1,8 +1,7 @@
 package de.uniba.dsg.jpb.server;
 
-import de.uniba.dsg.jpb.server.datagen.DatabaseWriter;
-import de.uniba.dsg.jpb.server.datagen.FakerDataGenerator;
-import de.uniba.dsg.jpb.server.test.TransactionRunner;
+import de.uniba.dsg.jpb.server.data.gen.JpaDataGenerator;
+import de.uniba.dsg.jpb.server.data.gen.JpaDatabaseWriter;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
@@ -12,8 +11,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 
 @SpringBootApplication
+@EnableSpringConfigured
 public class Application {
 
   private static final Logger LOG = LogManager.getLogger(Application.class);
@@ -34,17 +35,16 @@ public class Application {
   }
 
   @Bean
-  public CommandLineRunner cmdRunner(
-      ApplicationContext context, DatabaseWriter writer, TransactionRunner transactionRunner) {
+  public CommandLineRunner cmdRunner(JpaDatabaseWriter writer) {
     return args -> {
-      FakerDataGenerator fakeGen = new FakerDataGenerator(1, true);
+      JpaDataGenerator jpaDataGenerator = new JpaDataGenerator(1, true);
       LOG.info("Beginning data generation...");
       Stopwatch stopwatch = new Stopwatch(true);
-      fakeGen.generate();
+      jpaDataGenerator.generate();
       stopwatch.stop();
       LOG.info("Data generation took {} seconds", stopwatch.getDurationSeconds());
       stopwatch.start();
-      writer.writeAll(fakeGen);
+      writer.writeAll(jpaDataGenerator);
       stopwatch.stop();
       LOG.info(
           "Successfully wrote sample data to database, took {} milliseconds",
