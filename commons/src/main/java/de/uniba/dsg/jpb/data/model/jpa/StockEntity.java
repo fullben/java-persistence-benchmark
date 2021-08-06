@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -183,5 +184,22 @@ public class StockEntity {
 
   public void setDist10(String dist10) {
     this.dist10 = dist10;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    StockEntity that = (StockEntity) o;
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

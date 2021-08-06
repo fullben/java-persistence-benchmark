@@ -2,6 +2,7 @@ package de.uniba.dsg.jpb.data.model.jpa;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -106,5 +107,22 @@ public class OrderEntity {
 
   public void setFulfilled(boolean fulfilled) {
     this.fulfilled = fulfilled;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OrderEntity that = (OrderEntity) o;
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

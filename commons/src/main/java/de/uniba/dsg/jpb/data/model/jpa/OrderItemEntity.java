@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -103,5 +104,22 @@ public class OrderItemEntity {
 
   public void setDistInfo(String distInfo) {
     this.distInfo = distInfo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OrderItemEntity that = (OrderItemEntity) o;
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

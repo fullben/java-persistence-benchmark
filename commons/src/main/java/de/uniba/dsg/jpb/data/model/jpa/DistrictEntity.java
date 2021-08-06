@@ -2,6 +2,7 @@ package de.uniba.dsg.jpb.data.model.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -102,5 +103,22 @@ public class DistrictEntity {
 
   public void setYearToDateBalance(double yearToDateBalance) {
     this.yearToDateBalance = yearToDateBalance;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    DistrictEntity that = (DistrictEntity) o;
+    return id.equals(that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }
