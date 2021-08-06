@@ -18,6 +18,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
+    implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
     implementation 'io.springfox:springfox-swagger2:2.7.0'
     implementation 'io.springfox:springfox-swagger-ui:2.7.0'
     implementation 'com.h2database:h2:1.3.148'
