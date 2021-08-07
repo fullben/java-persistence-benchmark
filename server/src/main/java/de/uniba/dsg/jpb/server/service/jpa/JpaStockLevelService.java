@@ -33,7 +33,8 @@ public class JpaStockLevelService extends StockLevelService {
     // Find the corresponding stock objects and count the ones below the given threshold
     List<Long> productIds =
         orders.stream()
-            .flatMap(o -> o.getItems().stream().map(i -> i.getProduct().getId()).distinct())
+            .flatMap(o -> o.getItems().stream().map(i -> i.getProduct().getId()))
+            .distinct()
             .collect(Collectors.toList());
     int lowStockCount =
         stockRepository
