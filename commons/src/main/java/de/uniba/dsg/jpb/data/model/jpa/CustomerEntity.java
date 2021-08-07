@@ -32,6 +32,10 @@ public class CustomerEntity {
   private String lastName;
   @Embedded private AddressEmbeddable address;
   private String phoneNumber;
+
+  @Column(unique = true)
+  private String email;
+
   private LocalDateTime since;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
@@ -103,6 +107,14 @@ public class CustomerEntity {
 
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public LocalDateTime getSince() {

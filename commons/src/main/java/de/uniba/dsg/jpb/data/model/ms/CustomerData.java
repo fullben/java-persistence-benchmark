@@ -13,6 +13,7 @@ public class CustomerData implements Identifiable<Long> {
   private String lastName;
   private AddressData address;
   private String phoneNumber;
+  private String email;
   private LocalDateTime since;
   private Lazy<List<PaymentData>> payments;
   private Lazy<List<OrderData>> orders;
@@ -79,6 +80,14 @@ public class CustomerData implements Identifiable<Long> {
 
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public LocalDateTime getSince() {

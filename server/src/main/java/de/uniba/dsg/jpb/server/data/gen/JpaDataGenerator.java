@@ -10,6 +10,7 @@ import de.uniba.dsg.jpb.data.model.jpa.PaymentEntity;
 import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
+import de.uniba.dsg.jpb.util.RandomSelector;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +23,16 @@ public class JpaDataGenerator {
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
   private static final String ORIGINAL = "ORIGINAL";
+  private static final List<String> EMAIL_SERVICES =
+      List.of(
+          "outlook.com",
+          "gmail.com",
+          "icloud.com",
+          "mail.com",
+          "yahoo.com",
+          "gmx.com",
+          "hotmail.com",
+          "protonmail.com");
   private final int warehouseCount;
   private final int itemCount;
   private final int districtsPerWarehouseCount;
@@ -30,13 +41,16 @@ public class JpaDataGenerator {
   private final Faker faker;
   private final UniformRandom salesTaxRandom;
   private final UniformRandom oneInThreeRandom;
+  private final RandomSelector<String> emailService;
   private List<ProductEntity> products;
   private List<WarehouseEntity> warehouses;
+  private List<String> existingEmails;
 
   public JpaDataGenerator(int warehouseCount, boolean limited) {
     faker = new Faker(Locale.US);
     salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
     oneInThreeRandom = new UniformRandom(1, 3);
+    emailService = new RandomSelector<>(EMAIL_SERVICES);
     this.warehouseCount = warehouseCount;
     if (limited) {
       itemCount = 1_000;
@@ -51,6 +65,7 @@ public class JpaDataGenerator {
     }
     products = null;
     warehouses = null;
+    existingEmails = new ArrayList<>();
   }
 
   public List<WarehouseEntity> getWarehouses() {
@@ -62,6 +77,7 @@ public class JpaDataGenerator {
   }
 
   public void generate() {
+    existingEmails.clear();
     products = generateProducts();
     warehouses = generateWarehouses();
   }
@@ -131,6 +147,9 @@ public class JpaDataGenerator {
       customer.setMiddleName(faker.name().firstName());
       customer.setLastName(faker.name().lastName());
       customer.setPhoneNumber(faker.phoneNumber().phoneNumber());
+      customer.setEmail(
+          generateUniqueEmail(
+              customer.getFirstName(), customer.getMiddleName(), customer.getLastName()));
       customer.setSince(LocalDateTime.now());
       customer.setPayments(List.of(generatePayment(customer)));
       customer.setCredit(creditRandom.nextInt() < 11 ? BAD_CREDIT : GOOD_CREDIT);
@@ -266,5 +285,20 @@ public class JpaDataGenerator {
 
   private String lorem26To50() {
     return lorem(26, 50);
+  }
+
+  private String generateUniqueEmail(String firstName, String middleName, String lastName) {
+    final String lcFirst = firstName.toLowerCase(Locale.ROOT);
+    final String lcMiddle = middleName.toLowerCase(Locale.ROOT);
+    final String lcLast = lastName.toLowerCase(Locale.ROOT);
+    final String domain = emailService.next();
+    String email = lcFirst + "-" + lcMiddle + "." + lcLast + "@" + domain;
+    int i = 1;
+    while (existingEmails.contains(email)) {
+      email = lcFirst + "-" + lcMiddle + "." + lcLast + i + "@" + domain;
+      i++;
+    }
+    existingEmails.add(email);
+    return email;
   }
 }

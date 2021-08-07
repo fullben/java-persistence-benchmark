@@ -117,6 +117,8 @@ public class JpaToMsConverter {
       customer.setFirstName(c.getFirstName());
       customer.setMiddleName(c.getMiddleName());
       customer.setLastName(c.getLastName());
+      customer.setPhoneNumber(c.getPhoneNumber());
+      customer.setEmail(c.getEmail());
       customer.setCredit(c.getCredit());
       customer.setCreditLimit(c.getCreditLimit());
       customer.setBalance(c.getBalance());
