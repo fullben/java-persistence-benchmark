@@ -19,6 +19,7 @@ public class StockEntity {
   private Long id;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  @JoinColumn(name = "product_id")
   private ProductEntity product;
 
   private int quantity;
