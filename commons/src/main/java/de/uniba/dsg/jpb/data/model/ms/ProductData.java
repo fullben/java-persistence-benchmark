@@ -1,5 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+import de.uniba.dsg.jpb.data.model.Identifiable;
+
 public class ProductData implements Identifiable<Long> {
 
   private Long id;

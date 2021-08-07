@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+import de.uniba.dsg.jpb.data.model.Identifiable;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
