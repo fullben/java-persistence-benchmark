@@ -14,10 +14,13 @@ import de.uniba.dsg.jpb.server.service.DeliveryService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaDeliveryService extends DeliveryService {
 
   private final DistrictRepository districtRepository;
@@ -37,7 +40,7 @@ public class JpaDeliveryService extends DeliveryService {
     this.customerRepository = customerRepository;
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
     List<DistrictEntity> districts = districtRepository.findByWarehouseId(req.getWarehouseId());

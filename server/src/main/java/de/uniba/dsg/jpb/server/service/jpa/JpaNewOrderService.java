@@ -22,11 +22,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaNewOrderService extends NewOrderService {
 
   private final ProductRepository productRepository;
@@ -52,7 +55,7 @@ public class JpaNewOrderService extends NewOrderService {
     this.districtRepository = districtRepository;
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public OrderResponse process(OrderRequest req) {
     // 1. Fetch warehouse, district and customer

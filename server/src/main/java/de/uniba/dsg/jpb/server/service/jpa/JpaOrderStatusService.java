@@ -13,10 +13,13 @@ import de.uniba.dsg.jpb.server.service.OrderStatusService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaOrderStatusService extends OrderStatusService {
 
   private final CustomerRepository customerRepository;
@@ -33,7 +36,7 @@ public class JpaOrderStatusService extends OrderStatusService {
     this.orderItemRepository = orderItemRepository;
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
     Long customerId = req.getCustomerId();

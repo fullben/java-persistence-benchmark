@@ -10,13 +10,17 @@ import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.PaymentRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;
+import de.uniba.dsg.jpb.server.service.PaymentService;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class JpaPaymentService {
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
+public class JpaPaymentService extends PaymentService {
 
   private final WarehouseRepository warehouseRepository;
   private final DistrictRepository districtRepository;
@@ -35,7 +39,8 @@ public class JpaPaymentService {
     this.paymentRepository = paymentRepository;
   }
 
-  @Transactional
+  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Override
   public PaymentResponse process(PaymentRequest req) {
     WarehouseEntity warehouse = warehouseRepository.getById(req.getWarehouseId());
     DistrictEntity district = districtRepository.getById(req.getDistrictId());
