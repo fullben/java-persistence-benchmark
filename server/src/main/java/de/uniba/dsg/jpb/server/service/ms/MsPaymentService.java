@@ -1,21 +1,34 @@
 package de.uniba.dsg.jpb.server.service.ms;
 
-import de.uniba.dsg.jpb.messages.PaymentRequest;
-import de.uniba.dsg.jpb.messages.PaymentResponse;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.PaymentData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.messages.PaymentRequest;
+import de.uniba.dsg.jpb.messages.PaymentResponse;
 import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.server.data.access.ms.WarehouseRepository;
 import de.uniba.dsg.jpb.server.service.PaymentService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
+@Service
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsPaymentService extends PaymentService {
 
-  private WarehouseRepository warehouseRepository;
-  private CustomerRepository customerRepository;
+  private final DataRoot dataRoot;
+  private final WarehouseRepository warehouseRepository;
+  private final CustomerRepository customerRepository;
+
+  public MsPaymentService(DataRoot dataRoot) {
+    this.dataRoot = dataRoot;
+    warehouseRepository = dataRoot.getWarehouseRepository();
+    // TODO
+    customerRepository = null;
+  }
 
   @Override
   public PaymentResponse process(PaymentRequest req) {

@@ -7,14 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 
-@Configurable(autowire = Autowire.BY_TYPE)
 public abstract class IndexedIdRepository<T extends Identifiable<I>, I> {
 
-  @Autowired private transient EmbeddedStorageManager storageManager;
+  private transient EmbeddedStorageManager storageManager;
   private final Map<I, T> idToItem;
 
   IndexedIdRepository(EmbeddedStorageManager storageManager) {
@@ -65,7 +61,7 @@ public abstract class IndexedIdRepository<T extends Identifiable<I>, I> {
     storageManager.storeAll(idToItem);
   }
 
-  public void setStorageManager(EmbeddedStorageManager storageManager) {
+  void setStorageManager(EmbeddedStorageManager storageManager) {
     this.storageManager = storageManager;
   }
 

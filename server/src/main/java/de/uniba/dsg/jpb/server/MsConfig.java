@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server;
 
+import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
 import one.microstream.storage.embedded.configuration.types.EmbeddedStorageConfiguration;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
@@ -27,6 +28,17 @@ public class MsConfig {
             .setChannelCount(Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1))
             .createEmbeddedStorageFoundation();
     return foundation.createEmbeddedStorageManager().start();
+  }
+
+  @Bean
+  public DataRoot dataRoot(EmbeddedStorageManager embeddedStorageManager) {
+    DataRoot root = (DataRoot) embeddedStorageManager.root();
+    if (root == null) {
+      root = new DataRoot();
+      embeddedStorageManager.setRoot(root);
+    }
+    root.setStorageManager(embeddedStorageManager);
+    return root;
   }
 
   public String getStorageDir() {

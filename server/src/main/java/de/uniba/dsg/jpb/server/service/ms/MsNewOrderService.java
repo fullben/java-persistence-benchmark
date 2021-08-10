@@ -12,17 +12,30 @@ import de.uniba.dsg.jpb.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.messages.OrderResponse;
 import de.uniba.dsg.jpb.messages.OrderResponseItem;
 import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.server.data.access.ms.ProductRepository;
 import de.uniba.dsg.jpb.server.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
+@Service
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsNewOrderService extends NewOrderService {
 
-  private CustomerRepository customerRepository;
-  private ProductRepository productRepository;
+  private final DataRoot dataRoot;
+  private final ProductRepository productRepository;
+  private final CustomerRepository customerRepository;
+
+  public MsNewOrderService(DataRoot dataRoot) {
+    this.dataRoot = dataRoot;
+    productRepository = dataRoot.getProductRepository();
+    // TODO
+    customerRepository = null;
+  }
 
   @Override
   public OrderResponse process(OrderRequest req) {
