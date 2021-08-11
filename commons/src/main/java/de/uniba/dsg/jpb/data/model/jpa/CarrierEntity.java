@@ -20,6 +20,8 @@ public class CarrierEntity {
   @Column(unique = true)
   private String name;
 
+  private String phoneNumber;
+
   @Embedded private AddressEmbeddable address;
 
   public Long getId() {
@@ -36,6 +38,14 @@ public class CarrierEntity {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
   public AddressEmbeddable getAddress() {

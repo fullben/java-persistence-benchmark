@@ -83,6 +83,7 @@ public class JpaToMsConverter {
       CarrierData carrier = new CarrierData();
       carrier.setId(c.getId());
       carrier.setName(c.getName());
+      carrier.setPhoneNumber(c.getPhoneNumber());
       carrier.setAddress(address(c.getAddress()));
       carriers.add(carrier);
     }

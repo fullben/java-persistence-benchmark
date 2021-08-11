@@ -4,6 +4,7 @@ public class CarrierData {
 
   private Long id;
   private String name;
+  private String phoneNumber;
   private AddressData address;
 
   public Long getId() {
@@ -20,6 +21,14 @@ public class CarrierData {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
   }
 
   public AddressData getAddress() {

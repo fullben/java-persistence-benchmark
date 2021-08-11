@@ -127,6 +127,7 @@ public class JpaDataGenerator {
     for (int i = 0; i < CARRIER_NAMES.size(); i++) {
       CarrierEntity carrier = new CarrierEntity();
       carrier.setName(CARRIER_NAMES.get(i));
+      carrier.setPhoneNumber(faker.phoneNumber().phoneNumber());
       carrier.setAddress(addresses.get(i));
       carriers.add(carrier);
     }
