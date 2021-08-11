@@ -47,7 +47,7 @@ public class MsNewOrderService extends NewOrderService {
     OrderData order = new OrderData();
     order.setCustomer(customer);
     order.setDistrict(district);
-    order.setCarrierId(null);
+    order.setCarrier(null);
     order.setEntryDate(LocalDateTime.now());
     order.setItemCount(req.getItems().size());
     order.setAllLocal(

@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
+import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
@@ -89,7 +90,8 @@ public class JpaOrderStatusService extends OrderStatusService {
     res.setCustomerBalance(customer.getBalance());
     res.setOrderId(order.getId());
     res.setOrderEntryDate(order.getEntryDate());
-    res.setOrderCarrierId(order.getCarrierId());
+    CarrierEntity carrier = order.getCarrier();
+    res.setOrderCarrierId(carrier != null ? carrier.getId() : null);
     res.setItemStatus(itemStatusResponses);
     return res;
   }

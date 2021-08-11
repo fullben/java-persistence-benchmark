@@ -2,6 +2,7 @@ package de.uniba.dsg.jpb.server.data.gen;
 
 import com.github.javafaker.Faker;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
+import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.data.model.jpa.DistrictEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
@@ -33,6 +34,18 @@ public class JpaDataGenerator {
           "gmx.com",
           "hotmail.com",
           "protonmail.com");
+  private static final List<String> CARRIER_NAMES =
+      List.of(
+          "Warehouse Services Inc.",
+          "Dupré Logistics",
+          "Hub Group",
+          "Averitt Express",
+          "UPS Supply Chain Solutions",
+          "DHL Supply Chain",
+          "Commercial Warehousing",
+          "Great Plains Transport",
+          "PAM Transportation",
+          "FedEx");
   private final int warehouseCount;
   private final int itemCount;
   private final int districtsPerWarehouseCount;
@@ -43,8 +56,9 @@ public class JpaDataGenerator {
   private final UniformRandom oneInThreeRandom;
   private final RandomSelector<String> emailService;
   private List<ProductEntity> products;
+  private List<CarrierEntity> carriers;
   private List<WarehouseEntity> warehouses;
-  private List<String> existingEmails;
+  private final List<String> existingEmails;
 
   public JpaDataGenerator(int warehouseCount, boolean limited) {
     faker = new Faker(Locale.US);
@@ -64,6 +78,7 @@ public class JpaDataGenerator {
       ordersPerDistrictCount = 3_000;
     }
     products = null;
+    carriers = null;
     warehouses = null;
     existingEmails = new ArrayList<>();
   }
@@ -76,9 +91,14 @@ public class JpaDataGenerator {
     return products;
   }
 
+  public List<CarrierEntity> getCarriers() {
+    return carriers;
+  }
+
   public void generate() {
     existingEmails.clear();
     products = generateProducts();
+    carriers = generateCarriers();
     warehouses = generateWarehouses();
   }
 
@@ -99,6 +119,18 @@ public class JpaDataGenerator {
       items.add(product);
     }
     return items;
+  }
+
+  private List<CarrierEntity> generateCarriers() {
+    List<CarrierEntity> carriers = new ArrayList<>(CARRIER_NAMES.size());
+    List<AddressEmbeddable> addresses = generateAddresses(CARRIER_NAMES.size());
+    for (int i = 0; i < CARRIER_NAMES.size(); i++) {
+      CarrierEntity carrier = new CarrierEntity();
+      carrier.setName(CARRIER_NAMES.get(i));
+      carrier.setAddress(addresses.get(i));
+      carriers.add(carrier);
+    }
+    return carriers;
   }
 
   private List<WarehouseEntity> generateWarehouses() {
@@ -227,6 +259,7 @@ public class JpaDataGenerator {
     List<CustomerEntity> shuffledCustomers = new ArrayList<>(district.getCustomers());
     Collections.shuffle(shuffledCustomers);
     UniformRandom carrierIdRandom = new UniformRandom(1, 10);
+    RandomSelector<CarrierEntity> carrierSelector = new RandomSelector<>(carriers);
     UniformRandom orderItemCountRandom = new UniformRandom(5, 15);
     for (int i = 0; i < ordersPerDistrictCount; i++) {
       CustomerEntity customer = shuffledCustomers.get(i);
@@ -234,7 +267,7 @@ public class JpaDataGenerator {
       order.setCustomer(customer);
       order.setDistrict(customer.getDistrict());
       order.setEntryDate(LocalDateTime.now());
-      order.setCarrierId(oneInThreeRandom.nextInt() < 3 ? carrierIdRandom.nextLong() : null);
+      order.setCarrier(oneInThreeRandom.nextInt() < 3 ? carrierSelector.next() : null);
       order.setItemCount(orderItemCountRandom.nextInt());
       order.setAllLocal(true);
       order.setItems(generateOrderItems(order, products));

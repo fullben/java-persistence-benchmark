@@ -1,11 +1,13 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
+import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.data.model.jpa.DistrictEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.messages.DeliveryResponse;
+import de.uniba.dsg.jpb.server.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderItemRepository;
@@ -27,17 +29,20 @@ public class JpaDeliveryService extends DeliveryService {
   private final OrderRepository orderRepository;
   private final OrderItemRepository orderItemRepository;
   private final CustomerRepository customerRepository;
+  private final CarrierRepository carrierRepository;
 
   @Autowired
   public JpaDeliveryService(
       DistrictRepository districtRepository,
       OrderRepository orderRepository,
       OrderItemRepository orderItemRepository,
-      CustomerRepository customerRepository) {
+      CustomerRepository customerRepository,
+      CarrierRepository carrierRepository) {
     this.districtRepository = districtRepository;
     this.orderRepository = orderRepository;
     this.orderItemRepository = orderItemRepository;
     this.customerRepository = customerRepository;
+    this.carrierRepository = carrierRepository;
   }
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -53,8 +58,9 @@ public class JpaDeliveryService extends DeliveryService {
         // No unfulfilled orders for this district, do nothing
         continue;
       }
-      // Update carrier id of order
-      order.setCarrierId(req.getCarrierId());
+      // Update carrier of order
+      CarrierEntity carrier = carrierRepository.getById(req.getCarrierId());
+      order.setCarrier(carrier);
       order = orderRepository.save(order);
       // Find all order items, set delivery date to now and sum amount
       List<OrderItemEntity> orderItems =

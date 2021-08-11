@@ -71,7 +71,7 @@ public class JpaNewOrderService extends NewOrderService {
     OrderEntity order = new OrderEntity();
     order.setCustomer(customer);
     order.setDistrict(district);
-    order.setCarrierId(null);
+    order.setCarrier(null);
     order.setEntryDate(LocalDateTime.now());
     order.setItemCount(req.getItems().size());
     // We're not all local if any item is supplied by a non-home warehouse

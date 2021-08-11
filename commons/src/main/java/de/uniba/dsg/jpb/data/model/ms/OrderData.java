@@ -10,7 +10,7 @@ public class OrderData {
   private DistrictData district;
   private CustomerData customer;
   private LocalDateTime entryDate;
-  private Long carrierId;
+  private CarrierData carrier;
   private Lazy<List<OrderItemData>> items;
   private int itemCount;
   private boolean allLocal;
@@ -48,12 +48,12 @@ public class OrderData {
     this.entryDate = entryDate;
   }
 
-  public Long getCarrierId() {
-    return carrierId;
+  public CarrierData getCarrier() {
+    return carrier;
   }
 
-  public void setCarrierId(Long carrierId) {
-    this.carrierId = carrierId;
+  public void setCarrier(CarrierData carrier) {
+    this.carrier = carrier;
   }
 
   public List<OrderItemData> getItems() {

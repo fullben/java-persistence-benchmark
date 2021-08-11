@@ -28,7 +28,9 @@ public class OrderEntity {
   private CustomerEntity customer;
 
   private LocalDateTime entryDate;
-  private Long carrierId;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  private CarrierEntity carrier;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderItemEntity> items;
@@ -69,12 +71,12 @@ public class OrderEntity {
     this.entryDate = entryDate;
   }
 
-  public Long getCarrierId() {
-    return carrierId;
+  public CarrierEntity getCarrier() {
+    return carrier;
   }
 
-  public void setCarrierId(Long carrierId) {
-    this.carrierId = carrierId;
+  public void setCarrier(CarrierEntity carrier) {
+    this.carrier = carrier;
   }
 
   public List<OrderItemEntity> getItems() {
