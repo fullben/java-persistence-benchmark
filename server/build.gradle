@@ -22,7 +22,7 @@ dependencies {
     implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
     implementation 'io.springfox:springfox-swagger2:2.7.0'
     implementation 'io.springfox:springfox-swagger-ui:2.7.0'
-    implementation 'com.h2database:h2:1.3.148'
+    implementation 'com.h2database:h2:1.4.200'
     implementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'

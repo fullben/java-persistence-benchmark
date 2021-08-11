@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "microstream")
+@ConfigurationProperties(prefix = "jpb.ms")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-public class MsConfig {
+public class MsPersistenceConfiguration {
 
   private String storageDir;
 
-  public MsConfig() {
+  public MsPersistenceConfiguration() {
     storageDir = null;
   }
 
