@@ -12,19 +12,19 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
   @Query(
       value =
-          "SELECT * FROM oorder o WHERE o.customer_id = :customerId ORDER BY o.entrydate DESC LIMIT 1",
+          "SELECT * FROM orders o WHERE o.customer_id = :customerId ORDER BY o.entrydate DESC LIMIT 1",
       nativeQuery = true)
   Optional<OrderEntity> findMostRecentOrderOfCustomer(Long customerId);
 
   @Query(
       value =
-          "SELECT * FROM oorder o WHERE o.district_id = :districtId AND o.fulfilled = false ORDER BY o.entrydate ASC LIMIT 1",
+          "SELECT * FROM orders o WHERE o.district_id = :districtId AND o.fulfilled = false ORDER BY o.entrydate ASC LIMIT 1",
       nativeQuery = true)
   Optional<OrderEntity> findOldestUnfulfilledOrderOfDistrict(Long districtId);
 
   @Query(
       value =
-          "SELECT * FROM oorder o WHERE o.district_id = :districtId ORDER BY o.entrydate DESC LIMIT 20",
+          "SELECT * FROM orders o WHERE o.district_id = :districtId ORDER BY o.entrydate DESC LIMIT 20",
       nativeQuery = true)
   List<OrderEntity> find20MostRecentOrdersOfDistrict(Long districtId);
 }

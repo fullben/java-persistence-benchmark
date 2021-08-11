@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "carrier")
+@Table(name = "carriers")
 public class CarrierEntity {
 
   @Id

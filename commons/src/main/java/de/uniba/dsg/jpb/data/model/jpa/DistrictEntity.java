@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "district")
+@Table(name = "districts")
 public class DistrictEntity {
 
   @Id
