@@ -1,19 +1,21 @@
 package de.uniba.dsg.jpb.server.api.jpa;
 
-import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
-import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.server.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;
+import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.EmployeeEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ public class JpaResourcesController {
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
   private final WarehouseRepository warehouseRepository;
+  private final EmployeeRepository employeeRepository;
   private final DistrictRepository districtRepository;
   private final StockRepository stockRepository;
   private final CustomerRepository customerRepository;
@@ -44,6 +47,7 @@ public class JpaResourcesController {
       ProductRepository productRepository,
       CarrierRepository carrierRepository,
       WarehouseRepository warehouseRepository,
+      EmployeeRepository employeeRepository,
       DistrictRepository districtRepository,
       StockRepository stockRepository,
       CustomerRepository customerRepository,
@@ -51,6 +55,7 @@ public class JpaResourcesController {
     this.productRepository = productRepository;
     this.carrierRepository = carrierRepository;
     this.warehouseRepository = warehouseRepository;
+    this.employeeRepository = employeeRepository;
     this.districtRepository = districtRepository;
     this.stockRepository = stockRepository;
     this.customerRepository = customerRepository;
@@ -60,6 +65,11 @@ public class JpaResourcesController {
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public Page<ProductEntity> getProducts(@RequestParam int page, @RequestParam int size) {
     return productRepository.findAll(PageRequest.of(page, size));
+  }
+
+  @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public EmployeeEntity getEmployee(@PathVariable String username) {
+    return employeeRepository.findByUsername(username);
   }
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
