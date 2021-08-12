@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.server.data.gen;
 
-import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.server.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;

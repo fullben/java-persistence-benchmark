@@ -1,16 +1,16 @@
 package de.uniba.dsg.jpb.server.service.ms;
 
-import de.uniba.dsg.jpb.data.model.ms.CustomerData;
-import de.uniba.dsg.jpb.data.model.ms.DistrictData;
-import de.uniba.dsg.jpb.data.model.ms.OrderData;
-import de.uniba.dsg.jpb.data.model.ms.OrderItemData;
-import de.uniba.dsg.jpb.data.model.ms.ProductData;
-import de.uniba.dsg.jpb.data.model.ms.StockData;
-import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
-import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderRequestItem;
-import de.uniba.dsg.jpb.messages.OrderResponse;
-import de.uniba.dsg.jpb.messages.OrderResponseItem;
+import de.uniba.dsg.jpb.server.data.model.ms.CustomerData;
+import de.uniba.dsg.jpb.server.data.model.ms.DistrictData;
+import de.uniba.dsg.jpb.server.data.model.ms.OrderData;
+import de.uniba.dsg.jpb.server.data.model.ms.OrderItemData;
+import de.uniba.dsg.jpb.server.data.model.ms.ProductData;
+import de.uniba.dsg.jpb.server.data.model.ms.StockData;
+import de.uniba.dsg.jpb.server.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.server.messages.OrderRequest;
+import de.uniba.dsg.jpb.server.messages.OrderRequestItem;
+import de.uniba.dsg.jpb.server.messages.OrderResponse;
+import de.uniba.dsg.jpb.server.messages.OrderResponseItem;
 import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.server.data.access.ms.ProductRepository;

@@ -1,11 +1,11 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
-import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
-import de.uniba.dsg.jpb.data.model.jpa.DistrictEntity;
-import de.uniba.dsg.jpb.data.model.jpa.PaymentEntity;
-import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
-import de.uniba.dsg.jpb.messages.PaymentRequest;
-import de.uniba.dsg.jpb.messages.PaymentResponse;
+import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.PaymentEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
+import de.uniba.dsg.jpb.server.messages.PaymentRequest;
+import de.uniba.dsg.jpb.server.messages.PaymentResponse;
 import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.PaymentRepository;

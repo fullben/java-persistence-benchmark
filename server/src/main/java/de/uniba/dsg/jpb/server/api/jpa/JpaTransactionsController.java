@@ -1,15 +1,15 @@
 package de.uniba.dsg.jpb.server.api.jpa;
 
-import de.uniba.dsg.jpb.messages.DeliveryRequest;
-import de.uniba.dsg.jpb.messages.DeliveryResponse;
-import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderResponse;
-import de.uniba.dsg.jpb.messages.OrderStatusRequest;
-import de.uniba.dsg.jpb.messages.OrderStatusResponse;
-import de.uniba.dsg.jpb.messages.PaymentRequest;
-import de.uniba.dsg.jpb.messages.PaymentResponse;
-import de.uniba.dsg.jpb.messages.StockLevelRequest;
-import de.uniba.dsg.jpb.messages.StockLevelResponse;
+import de.uniba.dsg.jpb.server.messages.DeliveryRequest;
+import de.uniba.dsg.jpb.server.messages.DeliveryResponse;
+import de.uniba.dsg.jpb.server.messages.OrderRequest;
+import de.uniba.dsg.jpb.server.messages.OrderResponse;
+import de.uniba.dsg.jpb.server.messages.OrderStatusRequest;
+import de.uniba.dsg.jpb.server.messages.OrderStatusResponse;
+import de.uniba.dsg.jpb.server.messages.PaymentRequest;
+import de.uniba.dsg.jpb.server.messages.PaymentResponse;
+import de.uniba.dsg.jpb.server.messages.StockLevelRequest;
+import de.uniba.dsg.jpb.server.messages.StockLevelResponse;
 import de.uniba.dsg.jpb.server.api.TransactionsController;
 import de.uniba.dsg.jpb.server.service.jpa.JpaDeliveryService;
 import de.uniba.dsg.jpb.server.service.jpa.JpaNewOrderService;

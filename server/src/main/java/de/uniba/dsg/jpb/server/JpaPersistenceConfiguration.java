@@ -50,7 +50,7 @@ public class JpaPersistenceConfiguration {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("de.uniba.dsg.jpb.data.model.jpa");
+    factory.setPackagesToScan("de.uniba.dsg.jpb.server.data.model.jpa");
     factory.setDataSource(dataSource());
     final String dialectKey = "jpb.jpa.database-platform";
     final String ddlAutoKey = "jpb.jpa.hibernate.ddl-auto";

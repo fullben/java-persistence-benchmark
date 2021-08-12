@@ -1,16 +1,16 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
-import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
-import de.uniba.dsg.jpb.data.model.jpa.DistrictEntity;
-import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
-import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
-import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
-import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
-import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
-import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderRequestItem;
-import de.uniba.dsg.jpb.messages.OrderResponse;
-import de.uniba.dsg.jpb.messages.OrderResponseItem;
+import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderItemEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
+import de.uniba.dsg.jpb.server.messages.OrderRequest;
+import de.uniba.dsg.jpb.server.messages.OrderRequestItem;
+import de.uniba.dsg.jpb.server.messages.OrderResponse;
+import de.uniba.dsg.jpb.server.messages.OrderResponseItem;
 import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderItemRepository;

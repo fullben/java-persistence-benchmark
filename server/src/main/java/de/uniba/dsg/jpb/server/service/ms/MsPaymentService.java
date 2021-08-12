@@ -1,11 +1,11 @@
 package de.uniba.dsg.jpb.server.service.ms;
 
-import de.uniba.dsg.jpb.data.model.ms.CustomerData;
-import de.uniba.dsg.jpb.data.model.ms.DistrictData;
-import de.uniba.dsg.jpb.data.model.ms.PaymentData;
-import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
-import de.uniba.dsg.jpb.messages.PaymentRequest;
-import de.uniba.dsg.jpb.messages.PaymentResponse;
+import de.uniba.dsg.jpb.server.data.model.ms.CustomerData;
+import de.uniba.dsg.jpb.server.data.model.ms.DistrictData;
+import de.uniba.dsg.jpb.server.data.model.ms.PaymentData;
+import de.uniba.dsg.jpb.server.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.server.messages.PaymentRequest;
+import de.uniba.dsg.jpb.server.messages.PaymentResponse;
 import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.server.data.access.ms.WarehouseRepository;

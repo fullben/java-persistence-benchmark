@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.server.data.access.jpa;
 
-import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

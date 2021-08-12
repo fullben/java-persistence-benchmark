@@ -1,8 +1,8 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
-import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
-import de.uniba.dsg.jpb.messages.StockLevelRequest;
-import de.uniba.dsg.jpb.messages.StockLevelResponse;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
+import de.uniba.dsg.jpb.server.messages.StockLevelRequest;
+import de.uniba.dsg.jpb.server.messages.StockLevelResponse;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.server.service.StockLevelService;

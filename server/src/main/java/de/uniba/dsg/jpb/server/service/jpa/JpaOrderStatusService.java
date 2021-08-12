@@ -1,12 +1,12 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
-import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
-import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
-import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
-import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
-import de.uniba.dsg.jpb.messages.OrderItemStatusResponse;
-import de.uniba.dsg.jpb.messages.OrderStatusRequest;
-import de.uniba.dsg.jpb.messages.OrderStatusResponse;
+import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.OrderItemEntity;
+import de.uniba.dsg.jpb.server.messages.OrderItemStatusResponse;
+import de.uniba.dsg.jpb.server.messages.OrderStatusRequest;
+import de.uniba.dsg.jpb.server.messages.OrderStatusResponse;
 import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderItemRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.OrderRepository;
