@@ -5,12 +5,14 @@ import de.uniba.dsg.jpb.server.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.EmployeeEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.PaymentEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
+import de.uniba.dsg.jpb.server.util.Digester;
 import de.uniba.dsg.jpb.server.util.RandomSelector;
 import de.uniba.dsg.jpb.server.util.UniformRandom;
 import java.time.LocalDateTime;
@@ -24,6 +26,8 @@ public class JpaDataGenerator {
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
   private static final String ORIGINAL = "ORIGINAL";
+  private static final String DEFAULT_PASSWORD = "password";
+  private static final String EMPLOYEE_USERNAME_PREFIX = "terminal_user_";
   private static final List<String> EMAIL_SERVICES =
       List.of(
           "outlook.com",
@@ -58,6 +62,7 @@ public class JpaDataGenerator {
   private List<ProductEntity> products;
   private List<CarrierEntity> carriers;
   private List<WarehouseEntity> warehouses;
+  private List<EmployeeEntity> employees;
   private final List<String> existingEmails;
 
   public JpaDataGenerator(int warehouseCount, boolean limited) {
@@ -80,11 +85,16 @@ public class JpaDataGenerator {
     products = null;
     carriers = null;
     warehouses = null;
+    employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
   }
 
   public List<WarehouseEntity> getWarehouses() {
     return warehouses;
+  }
+
+  public List<EmployeeEntity> getEmployees() {
+    return employees;
   }
 
   public List<ProductEntity> getProducts() {
@@ -96,6 +106,7 @@ public class JpaDataGenerator {
   }
 
   public void generate() {
+    employees.clear();
     existingEmails.clear();
     products = generateProducts();
     carriers = generateCarriers();
@@ -143,16 +154,17 @@ public class JpaDataGenerator {
       warehouse.setAddress(addresses.get(i));
       warehouse.setSalesTax(salesTaxRandom.nextDouble());
       warehouse.setYearToDateBalance(300_000);
-      warehouse.setDistricts(generateDistricts(warehouse));
+      warehouse.setDistricts(generateDistricts(warehouse, i + 1));
       warehouse.setStocks(generateStocks(warehouse, products));
       warehouses.add(warehouse);
     }
     return warehouses;
   }
 
-  private List<DistrictEntity> generateDistricts(WarehouseEntity warehouse) {
+  private List<DistrictEntity> generateDistricts(WarehouseEntity warehouse, int warehouseNbr) {
     List<DistrictEntity> districts = new ArrayList<>(10);
-    List<AddressEmbeddable> addresses = generateAddresses(districtsPerWarehouseCount);
+    List<AddressEmbeddable> addresses =
+        generateAddresses(districtsPerWarehouseCount, warehouse.getAddress().getState());
     for (int i = 0; i < districtsPerWarehouseCount; i++) {
       DistrictEntity district = new DistrictEntity();
       district.setWarehouse(warehouse);
@@ -163,8 +175,36 @@ public class JpaDataGenerator {
       district.setYearToDateBalance(30_000);
       district.setCustomers(generateCustomers(district));
       district.setOrders(generateOrders(district, products));
+      employees.add(generateEmployee(district, warehouseNbr, i + 1));
     }
     return districts;
+  }
+
+  private EmployeeEntity generateEmployee(
+      DistrictEntity district, int warehouseNbr, int districtNbr) {
+    EmployeeEntity employee = new EmployeeEntity();
+    employee.setFirstName(faker.name().firstName());
+    employee.setMiddleName(faker.name().firstName());
+    employee.setLastName(faker.name().lastName());
+    employee.setPhoneNumber(faker.phoneNumber().phoneNumber());
+    employee.setEmail(
+        generateUniqueEmail(
+            employee.getFirstName(), employee.getMiddleName(), employee.getLastName()));
+    employee.setAddress(newAddressSameZip(district.getAddress()));
+    Digester digester = new Digester();
+    employee.setUsername(EMPLOYEE_USERNAME_PREFIX + warehouseNbr + "_" + districtNbr);
+    employee.setSalt(digester.randomSalt());
+    employee.setPasswordHash(digester.digest(DEFAULT_PASSWORD, employee.getSalt()));
+    employee.setDistrict(district);
+    employee.setTitle(faker.job().title());
+    return employee;
+  }
+
+  private AddressEmbeddable newAddressSameZip(AddressEmbeddable address) {
+    AddressEmbeddable a = new AddressEmbeddable(address);
+    a.setStreet1(faker.address().streetAddress());
+    a.setStreet2(faker.address().secondaryAddress());
+    return a;
   }
 
   private List<CustomerEntity> generateCustomers(DistrictEntity district) {
@@ -242,9 +282,23 @@ public class JpaDataGenerator {
       AddressEmbeddable address = new AddressEmbeddable();
       address.setStreet1(faker.address().streetAddress());
       address.setStreet2(faker.address().secondaryAddress());
-      address.setCity(faker.address().cityName());
       address.setState(faker.address().stateAbbr());
       address.setZipCode(faker.address().zipCodeByState(address.getState()));
+      address.setCity(faker.address().cityName());
+      addresses.add(address);
+    }
+    return addresses;
+  }
+
+  private List<AddressEmbeddable> generateAddresses(int count, String state) {
+    List<AddressEmbeddable> addresses = new ArrayList<>(count);
+    for (int i = 0; i < count; i++) {
+      AddressEmbeddable address = new AddressEmbeddable();
+      address.setStreet1(faker.address().streetAddress());
+      address.setStreet2(faker.address().secondaryAddress());
+      address.setState(state);
+      address.setZipCode(faker.address().zipCodeByState(address.getState()));
+      address.setCity(faker.address().cityName());
       addresses.add(address);
     }
     return addresses;

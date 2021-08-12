@@ -25,7 +25,6 @@ public class DistrictEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "warehouse_id")
-  @JsonIgnore
   private WarehouseEntity warehouse;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "district", cascade = CascadeType.ALL)

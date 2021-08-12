@@ -2,10 +2,8 @@ package de.uniba.dsg.jpb.server;
 
 import de.uniba.dsg.jpb.server.data.gen.JpaDataGenerator;
 import de.uniba.dsg.jpb.server.data.gen.JpaDatabaseWriter;
-import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.server.util.Stopwatch;
 import java.util.Arrays;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
@@ -46,7 +44,7 @@ public class Application {
       stopwatch.stop();
       LOG.info("Data generation took {} seconds", stopwatch.getDurationSeconds());
       stopwatch.start();
-      List<WarehouseEntity> warehouses = writer.writeAll(jpaDataGenerator);
+      writer.writeAll(jpaDataGenerator);
       stopwatch.stop();
       LOG.info(
           "Successfully wrote sample data to database, took {} milliseconds",

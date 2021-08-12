@@ -14,10 +14,12 @@ public class WarehouseData implements Identifiable<Long> {
   private double salesTax;
   private double yearToDateBalance;
 
+  @Override
   public Long getId() {
     return id;
   }
 
+  @Override
   public void setId(Long id) {
     this.id = id;
   }

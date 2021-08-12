@@ -4,6 +4,7 @@ import de.uniba.dsg.jpb.server.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.EmployeeEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.PaymentEntity;
@@ -14,6 +15,7 @@ import de.uniba.dsg.jpb.server.data.model.ms.AddressData;
 import de.uniba.dsg.jpb.server.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.server.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.server.data.model.ms.DistrictData;
+import de.uniba.dsg.jpb.server.data.model.ms.EmployeeData;
 import de.uniba.dsg.jpb.server.data.model.ms.OrderData;
 import de.uniba.dsg.jpb.server.data.model.ms.OrderItemData;
 import de.uniba.dsg.jpb.server.data.model.ms.PaymentData;
@@ -27,10 +29,12 @@ import java.util.stream.Collectors;
 public class JpaToMsConverter {
 
   private final List<ProductEntity> productEntities;
-  private final List<WarehouseEntity> warehouseEntities;
   private final List<CarrierEntity> carrierEntities;
+  private final List<WarehouseEntity> warehouseEntities;
+  private final List<EmployeeEntity> employeeEntities;
   private List<ProductData> products;
   private List<WarehouseData> warehouses;
+  private List<EmployeeData> employees;
   private List<CarrierData> carriers;
 
   public JpaToMsConverter(JpaDataGenerator dataGenerator) {
@@ -38,10 +42,12 @@ public class JpaToMsConverter {
       dataGenerator.generate();
     }
     productEntities = dataGenerator.getProducts();
-    warehouseEntities = dataGenerator.getWarehouses();
     carrierEntities = dataGenerator.getCarriers();
+    warehouseEntities = dataGenerator.getWarehouses();
+    employeeEntities = dataGenerator.getEmployees();
     products = null;
     warehouses = null;
+    employees = null;
     carriers = null;
   }
 
@@ -49,6 +55,7 @@ public class JpaToMsConverter {
     products = convertProducts(productEntities);
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
+    employees = convertEmployees(employeeEntities, warehouses);
   }
 
   public List<ProductData> getProducts() {
@@ -61,6 +68,10 @@ public class JpaToMsConverter {
 
   public List<WarehouseData> getWarehouses() {
     return warehouses;
+  }
+
+  public List<EmployeeData> getEmployees() {
+    return employees;
   }
 
   private List<ProductData> convertProducts(List<ProductEntity> ps) {
@@ -117,6 +128,28 @@ public class JpaToMsConverter {
       w.setDistricts(districts);
     }
     return warehouses;
+  }
+
+  private List<EmployeeData> convertEmployees(
+      List<EmployeeEntity> es, List<WarehouseData> warehouses) {
+    List<EmployeeData> employees = new ArrayList<>(es.size());
+    for (EmployeeEntity e : es) {
+      EmployeeData employee = new EmployeeData();
+      employee.setId(e.getId());
+      employee.setAddress(address(e.getAddress()));
+      employee.setFirstName(e.getFirstName());
+      employee.setMiddleName(e.getMiddleName());
+      employee.setLastName(e.getLastName());
+      employee.setPhoneNumber(e.getPhoneNumber());
+      employee.setEmail(e.getEmail());
+      employee.setUsername(e.getUsername());
+      employee.setPasswordHash(e.getPasswordHash());
+      employee.setSalt(e.getSalt());
+      employee.setTitle(e.getTitle());
+      employee.setDistrict(findDistrictById(e.getDistrict().getId(), warehouses));
+      employees.add(employee);
+    }
+    return employees;
   }
 
   private DistrictData district(
@@ -291,6 +324,14 @@ public class JpaToMsConverter {
   private static CarrierData findCarrierById(Long id, List<CarrierData> carriers) {
     return carriers.stream()
         .filter(c -> c.getId().equals(id))
+        .findAny()
+        .orElseThrow(IllegalArgumentException::new);
+  }
+
+  private static DistrictData findDistrictById(Long id, List<WarehouseData> warehouses) {
+    return warehouses.stream()
+        .flatMap(w -> w.getDistricts().stream())
+        .filter(d -> d.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }

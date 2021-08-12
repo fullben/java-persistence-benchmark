@@ -19,6 +19,14 @@ public class AddressEmbeddable {
     state = null;
   }
 
+  public AddressEmbeddable(AddressEmbeddable address) {
+    street1 = address.street1;
+    street2 = address.street2;
+    zipCode = address.zipCode;
+    city = address.city;
+    state = address.state;
+  }
+
   public String getStreet1() {
     return street1;
   }
