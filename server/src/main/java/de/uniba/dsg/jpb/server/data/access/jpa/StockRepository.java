@@ -13,10 +13,10 @@ public interface StockRepository extends JpaRepository<StockEntity, Long> {
 
   @Query(
       value =
-          "SELECT * FROM stocks s WHERE s.warehouseid = :warehouseId AND s.productid IN :productIds AND s.quantity < :quantityThreshold",
+          "SELECT * FROM stocks s WHERE s.warehouse_id = :warehouseId AND s.product_id IN :productIds AND s.quantity < :quantityThreshold",
       nativeQuery = true)
   List<StockEntity> findByWarehouseIdAndProductIdAndQuantityThreshold(
-      Long warehouseId, Collection<Long> productId, int quantityThreshold);
+      Long warehouseId, Collection<Long> productIds, int quantityThreshold);
 
   List<StockEntity> findByWarehouseId(Long warehouseId);
 }

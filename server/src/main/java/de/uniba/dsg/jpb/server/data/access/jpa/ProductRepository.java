@@ -7,6 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface ProductRepository extends PagingAndSortingRepository<ProductEntity, Long> {
 
-  @Query("select id from ProductEntity")
+  @Query(value = "SELECT id FROM products", nativeQuery = true)
   List<Long> findAllProductIds();
 }
