@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
@@ -52,19 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.NEVER);
-    //        .invalidSessionUrl("/")
-    //        .sessionFixation()
-    //        .migrateSession();
   }
 
   @Bean
   AuthenticationProvider authenticationProvider() {
     return new EmployeeAuthenticationProvider(userDetailsService);
-  }
-
-  @Bean
-  public HttpSessionEventPublisher httpSessionEventPublisher() {
-    // Permits only one concurrent session per user
-    return new HttpSessionEventPublisher();
   }
 }
