@@ -1,12 +1,20 @@
 package de.uniba.dsg.jpb.server.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class OrderRequest {
 
+  @JsonProperty(required = true)
   private Long warehouseId;
+
+  @JsonProperty(required = true)
   private Long districtId;
+
+  @JsonProperty(required = true)
   private Long customerId;
+
+  @JsonProperty(required = true)
   private List<OrderRequestItem> items;
 
   public Long getWarehouseId() {

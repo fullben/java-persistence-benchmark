@@ -1,10 +1,17 @@
 package de.uniba.dsg.jpb.server.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class StockLevelRequest {
 
+  @JsonProperty(required = true)
   private Long warehouseId;
+
+  @JsonProperty(required = true)
   private Long districtId;
-  private int stockThreshold; // Random within 10...20
+
+  @JsonProperty(required = true)
+  private int stockThreshold;
 
   public Long getWarehouseId() {
     return warehouseId;
