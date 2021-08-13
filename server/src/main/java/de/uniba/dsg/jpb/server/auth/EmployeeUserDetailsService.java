@@ -29,6 +29,6 @@ public class EmployeeUserDetailsService implements UserDetailsService {
         employee.getUsername(),
         employee.getPasswordHash(),
         employee.getSalt(),
-        List.of(new SimpleGrantedAuthority(Roles.prefixed(Roles.TERMINAL_USER))));
+        List.of(new SimpleGrantedAuthority(Role.TERMINAL_USER.prefixedName())));
   }
 }

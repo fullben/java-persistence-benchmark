@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .disable()
         .authorizeRequests()
         .antMatchers("/api/transactions/**")
-        .hasRole(Roles.TERMINAL_USER)
+        .hasRole(Role.TERMINAL_USER.simpleName())
         .and()
         .authorizeRequests()
         .antMatchers("/**")
