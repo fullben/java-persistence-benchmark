@@ -18,15 +18,12 @@ import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -63,8 +60,8 @@ public class JpaResourcesController {
   }
 
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public Page<ProductEntity> getProducts(@RequestParam int page, @RequestParam int size) {
-    return productRepository.findAll(PageRequest.of(page, size));
+  public Iterable<ProductEntity> getProducts() {
+    return productRepository.findAll();
   }
 
   @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
