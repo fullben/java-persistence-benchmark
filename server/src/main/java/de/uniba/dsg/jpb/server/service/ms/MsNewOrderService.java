@@ -161,7 +161,7 @@ public class MsNewOrderService extends NewOrderService {
             l -> {
               OrderItemData orderItem = new OrderItemData();
               ProductData product = new ProductData();
-              product.setId(l.getItemId());
+              product.setId(l.getProductId());
               WarehouseData warehouse = new WarehouseData();
               warehouse.setId(l.getSupplyingWarehouseId());
               orderItem.setProduct(product);

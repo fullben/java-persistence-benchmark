@@ -200,7 +200,7 @@ public class JpaNewOrderService extends NewOrderService {
             l -> {
               OrderItemEntity orderItem = new OrderItemEntity();
               ProductEntity product = new ProductEntity();
-              product.setId(l.getItemId());
+              product.setId(l.getProductId());
               WarehouseEntity warehouse = new WarehouseEntity();
               warehouse.setId(l.getSupplyingWarehouseId());
               orderItem.setProduct(product);

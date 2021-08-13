@@ -1,33 +1,39 @@
 package de.uniba.dsg.jpb.server.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OrderRequestItem {
 
-  private Long itemId;
+  @JsonProperty(required = true)
+  private Long productId;
+
+  @JsonProperty(required = true)
   private Long supplyingWarehouseId;
+
+  @JsonProperty(required = true)
   private int quantity;
 
   public OrderRequestItem() {}
 
   public OrderRequestItem(OrderRequestItem line) {
-    itemId = line.itemId;
+    productId = line.productId;
     supplyingWarehouseId = line.supplyingWarehouseId;
     quantity = line.quantity;
   }
 
-  public Long getItemId() {
-    return itemId;
+  public Long getProductId() {
+    return productId;
   }
 
-  public void setItemId(Long itemId) {
-    this.itemId = itemId;
+  public void setProductId(Long productId) {
+    this.productId = productId;
   }
 
   public Long getSupplyingWarehouseId() {
     return supplyingWarehouseId;
   }
 
-  public void setSupplyingWarehouseId(
-      Long supplyingWarehouseId) {
+  public void setSupplyingWarehouseId(Long supplyingWarehouseId) {
     this.supplyingWarehouseId = supplyingWarehouseId;
   }
 
