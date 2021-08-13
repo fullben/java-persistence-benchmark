@@ -1,15 +1,15 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
+import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.PaymentRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.PaymentEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.server.messages.PaymentRequest;
 import de.uniba.dsg.jpb.server.messages.PaymentResponse;
-import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.PaymentRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;
 import de.uniba.dsg.jpb.server.service.PaymentService;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,16 @@ public class JpaPaymentService extends PaymentService {
   public PaymentResponse process(PaymentRequest req) {
     WarehouseEntity warehouse = warehouseRepository.getById(req.getWarehouseId());
     DistrictEntity district = districtRepository.getById(req.getDistrictId());
-    CustomerEntity customer = customerRepository.getById(req.getCustomerId());
+    Long customerId = req.getCustomerId();
+    CustomerEntity customer;
+    if (customerId == null) {
+      customer =
+          customerRepository
+              .findByEmail(req.getCustomerEmail())
+              .orElseThrow(IllegalStateException::new);
+    } else {
+      customer = customerRepository.getById(customerId);
+    }
     warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
     warehouse = warehouseRepository.save(warehouse);
     district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
@@ -59,6 +68,8 @@ public class JpaPaymentService extends PaymentService {
     payment.setData(warehouse.getName() + "    " + district.getName());
     payment.setAmount(req.getAmount());
     payment = paymentRepository.save(payment);
-    return new PaymentResponse();
+    PaymentResponse res = new PaymentResponse();
+    res.setPaymentId(payment.getId());
+    return res;
   }
 }

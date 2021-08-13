@@ -1,10 +1,22 @@
 package de.uniba.dsg.jpb.server.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PaymentRequest {
 
+  @JsonProperty(required = true)
   private Long warehouseId;
+
+  @JsonProperty(required = true)
   private Long districtId;
+
+  @JsonProperty(required = false)
   private Long customerId;
+
+  @JsonProperty(required = false)
+  private String customerEmail;
+
+  @JsonProperty(required = true)
   private double amount;
 
   public Long getWarehouseId() {
@@ -29,6 +41,14 @@ public class PaymentRequest {
 
   public void setCustomerId(Long customerId) {
     this.customerId = customerId;
+  }
+
+  public String getCustomerEmail() {
+    return customerEmail;
+  }
+
+  public void setCustomerEmail(String customerEmail) {
+    this.customerEmail = customerEmail;
   }
 
   public double getAmount() {
