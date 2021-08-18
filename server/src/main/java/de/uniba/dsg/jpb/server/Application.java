@@ -1,7 +1,7 @@
 package de.uniba.dsg.jpb.server;
 
-import de.uniba.dsg.jpb.server.data.gen.JpaDataGenerator;
-import de.uniba.dsg.jpb.server.data.gen.JpaDatabaseWriter;
+import de.uniba.dsg.jpb.server.data.gen.jpa.JpaDataGenerator;
+import de.uniba.dsg.jpb.server.data.gen.jpa.JpaDatabaseWriter;
 import de.uniba.dsg.jpb.server.util.Stopwatch;
 import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
