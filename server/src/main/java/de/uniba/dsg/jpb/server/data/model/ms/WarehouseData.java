@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server.data.model.ms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.uniba.dsg.jpb.server.data.model.Identifiable;
 import java.util.List;
 import one.microstream.reference.Lazy;
@@ -9,8 +10,8 @@ public class WarehouseData implements Identifiable<Long> {
   private Long id;
   private String name;
   private AddressData address;
-  private Lazy<List<DistrictData>> districts;
-  private Lazy<List<StockData>> stocks;
+  @JsonIgnore private Lazy<List<DistrictData>> districts;
+  @JsonIgnore private Lazy<List<StockData>> stocks;
   private double salesTax;
   private double yearToDateBalance;
 

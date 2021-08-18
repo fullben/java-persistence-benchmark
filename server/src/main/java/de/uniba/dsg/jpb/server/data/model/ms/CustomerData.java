@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server.data.model.ms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import one.microstream.reference.Lazy;
@@ -8,8 +9,8 @@ public class CustomerData extends PersonData {
 
   private DistrictData district;
   private LocalDateTime since;
-  private Lazy<List<PaymentData>> payments;
-  private Lazy<List<OrderData>> orders;
+  @JsonIgnore private Lazy<List<PaymentData>> payments;
+  @JsonIgnore private Lazy<List<OrderData>> orders;
   private String credit;
   private double creditLimit;
   private double discount;

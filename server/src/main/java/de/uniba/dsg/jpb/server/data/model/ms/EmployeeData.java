@@ -1,12 +1,14 @@
 package de.uniba.dsg.jpb.server.data.model.ms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class EmployeeData extends PersonData {
 
   private DistrictData district;
   private String title;
   private String username;
-  private String salt;
-  private String passwordHash;
+  @JsonIgnore private String salt;
+  @JsonIgnore private String passwordHash;
 
   public DistrictData getDistrict() {
     return district;

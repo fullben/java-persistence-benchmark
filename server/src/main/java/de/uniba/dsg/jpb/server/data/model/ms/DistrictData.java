@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.server.data.model.ms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
@@ -7,8 +8,8 @@ public class DistrictData {
 
   private Long id;
   private WarehouseData warehouse;
-  private Lazy<List<CustomerData>> customers;
-  private Lazy<List<OrderData>> orders;
+  @JsonIgnore private Lazy<List<CustomerData>> customers;
+  @JsonIgnore private Lazy<List<OrderData>> orders;
   private String name;
   private AddressData address;
   private double salesTax;
