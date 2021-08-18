@@ -22,12 +22,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = "de.uniba.dsg.jpb.server.data.access.jpa")
 @EnableTransactionManagement
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
-public class JpaPersistenceConfiguration {
+public class JpaConfiguration {
 
   private final Environment environment;
 
   @Autowired
-  public JpaPersistenceConfiguration(Environment environment) {
+  public JpaConfiguration(Environment environment) {
     this.environment = environment;
   }
 

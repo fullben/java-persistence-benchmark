@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "jpb.ms")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-public class MsPersistenceConfiguration {
+public class MsConfiguration {
 
   private String storageDir;
 
-  public MsPersistenceConfiguration() {
+  public MsConfiguration() {
     storageDir = null;
   }
 
