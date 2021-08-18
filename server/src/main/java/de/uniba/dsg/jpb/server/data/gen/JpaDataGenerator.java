@@ -14,6 +14,7 @@ import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.server.util.Digester;
 import de.uniba.dsg.jpb.server.util.RandomSelector;
+import de.uniba.dsg.jpb.server.util.SequenceGenerator;
 import de.uniba.dsg.jpb.server.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class JpaDataGenerator {
           "Great Plains Transport",
           "PAM Transportation",
           "FedEx");
+  private final SequenceGenerator idGenerator;
   private final int warehouseCount;
   private final int itemCount;
   private final int districtsPerWarehouseCount;
@@ -62,14 +64,11 @@ public class JpaDataGenerator {
   private List<ProductEntity> products;
   private List<CarrierEntity> carriers;
   private List<WarehouseEntity> warehouses;
-  private List<EmployeeEntity> employees;
+  private final List<EmployeeEntity> employees;
   private final List<String> existingEmails;
 
-  public JpaDataGenerator(int warehouseCount, boolean limited) {
-    faker = new Faker(Locale.US);
-    salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
-    oneInThreeRandom = new UniformRandom(1, 3);
-    emailService = new RandomSelector<>(EMAIL_SERVICES);
+  public JpaDataGenerator(int warehouseCount, boolean generateIds, boolean limited) {
+    idGenerator = generateIds ? new SequenceGenerator() : null;
     this.warehouseCount = warehouseCount;
     if (limited) {
       itemCount = 1_000;
@@ -82,11 +81,19 @@ public class JpaDataGenerator {
       customersPerDistrictCount = 3_000;
       ordersPerDistrictCount = 3_000;
     }
+    faker = new Faker(Locale.US);
+    salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
+    oneInThreeRandom = new UniformRandom(1, 3);
+    emailService = new RandomSelector<>(EMAIL_SERVICES);
     products = null;
     carriers = null;
     warehouses = null;
     employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
+  }
+
+  public JpaDataGenerator(int warehouseCount, boolean limited) {
+    this(warehouseCount, false, limited);
   }
 
   public List<WarehouseEntity> getWarehouses() {
@@ -119,6 +126,7 @@ public class JpaDataGenerator {
     List<ProductEntity> items = new ArrayList<>(itemCount);
     for (int i = 0; i < itemCount; i++) {
       ProductEntity product = new ProductEntity();
+      product.setId(nextId());
       product.setImageId(imageIdRandom.nextLong());
       product.setName(faker.commerce().productName());
       if (i % 10_000 == 0) {
@@ -137,6 +145,7 @@ public class JpaDataGenerator {
     List<AddressEmbeddable> addresses = generateAddresses(CARRIER_NAMES.size());
     for (int i = 0; i < CARRIER_NAMES.size(); i++) {
       CarrierEntity carrier = new CarrierEntity();
+      carrier.setId(nextId());
       carrier.setName(CARRIER_NAMES.get(i));
       carrier.setPhoneNumber(faker.phoneNumber().phoneNumber());
       carrier.setAddress(addresses.get(i));
@@ -150,6 +159,7 @@ public class JpaDataGenerator {
     List<AddressEmbeddable> addresses = generateAddresses(warehouseCount);
     for (int i = 0; i < warehouseCount; i++) {
       WarehouseEntity warehouse = new WarehouseEntity();
+      warehouse.setId(nextId());
       warehouse.setName(faker.address().cityName());
       warehouse.setAddress(addresses.get(i));
       warehouse.setSalesTax(salesTaxRandom.nextDouble());
@@ -167,6 +177,7 @@ public class JpaDataGenerator {
         generateAddresses(districtsPerWarehouseCount, warehouse.getAddress().getState());
     for (int i = 0; i < districtsPerWarehouseCount; i++) {
       DistrictEntity district = new DistrictEntity();
+      district.setId(nextId());
       district.setWarehouse(warehouse);
       districts.add(district);
       district.setName(faker.address().cityName());
@@ -183,6 +194,7 @@ public class JpaDataGenerator {
   private EmployeeEntity generateEmployee(
       DistrictEntity district, int warehouseNbr, int districtNbr) {
     EmployeeEntity employee = new EmployeeEntity();
+    employee.setId(nextId());
     employee.setFirstName(faker.name().firstName());
     employee.setMiddleName(faker.name().firstName());
     employee.setLastName(faker.name().lastName());
@@ -214,6 +226,7 @@ public class JpaDataGenerator {
     UniformRandom creditRandom = new UniformRandom(1, 100);
     for (int i = 0; i < customersPerDistrictCount; i++) {
       CustomerEntity customer = new CustomerEntity();
+      customer.setId(nextId());
       customer.setDistrict(district);
       customer.setAddress(addresses.get(i));
       customer.setFirstName(faker.name().firstName());
@@ -240,6 +253,7 @@ public class JpaDataGenerator {
 
   private PaymentEntity generatePayment(CustomerEntity customer) {
     PaymentEntity payment = new PaymentEntity();
+    payment.setId(nextId());
     payment.setCustomer(customer);
     payment.setDistrict(customer.getDistrict());
     payment.setDate(LocalDateTime.now());
@@ -255,6 +269,7 @@ public class JpaDataGenerator {
     UniformRandom quantityRandom = new UniformRandom(10, 100);
     for (ProductEntity product : products) {
       StockEntity stock = new StockEntity();
+      stock.setId(nextId());
       stock.setProduct(product);
       stock.setWarehouse(warehouse);
       stock.setDist01(loremFixedLength(length));
@@ -319,6 +334,7 @@ public class JpaDataGenerator {
     for (int i = 0; i < ordersPerDistrictCount; i++) {
       CustomerEntity customer = shuffledCustomers.get(i);
       OrderEntity order = new OrderEntity();
+      order.setId(nextId());
       order.setCustomer(customer);
       order.setDistrict(customer.getDistrict());
       order.setEntryDate(LocalDateTime.now());
@@ -341,6 +357,7 @@ public class JpaDataGenerator {
     UniformRandom amountRandom = new UniformRandom(0.01, 9_999.9, 2);
     for (int i = 0; i < order.getItemCount(); i++) {
       OrderItemEntity orderItem = new OrderItemEntity();
+      orderItem.setId(nextId());
       orderItem.setOrder(order);
       orderItem.setNumber(i + 1);
       orderItem.setProduct(products.get(itemIdxRandom.nextInt()));
@@ -388,5 +405,9 @@ public class JpaDataGenerator {
     }
     existingEmails.add(email);
     return email;
+  }
+
+  private Long nextId() {
+    return idGenerator == null ? null : idGenerator.next();
   }
 }
