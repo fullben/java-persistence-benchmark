@@ -113,7 +113,7 @@ public class JpaToMsConverter {
       warehouse.setSalesTax(w.getSalesTax());
       warehouse.setStocks(
           w.getStocks().stream()
-              .map(s -> stock(s, warehouse, findProductById(s.getId(), products)))
+              .map(s -> stock(s, warehouse, findProductById(s.getProduct().getId(), products)))
               .collect(Collectors.toList()));
       warehouses.add(warehouse);
     }
