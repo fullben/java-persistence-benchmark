@@ -18,7 +18,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -263,7 +263,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly" enabled="false">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">500</stringProp>
         </LoopController>
@@ -739,7 +739,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly without wait times" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly without wait times" enabled="false">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">50</stringProp>
         </LoopController>
