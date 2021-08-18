@@ -1,5 +1,11 @@
 package de.uniba.dsg.jpb.server.service.jpa;
 
+import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.OrderItemRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.OrderRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.ProductRepository;
+import de.uniba.dsg.jpb.server.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.DistrictEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.OrderEntity;
@@ -11,12 +17,6 @@ import de.uniba.dsg.jpb.server.messages.OrderRequest;
 import de.uniba.dsg.jpb.server.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.server.messages.OrderResponse;
 import de.uniba.dsg.jpb.server.messages.OrderResponseItem;
-import de.uniba.dsg.jpb.server.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.DistrictRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.OrderItemRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.OrderRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.ProductRepository;
-import de.uniba.dsg.jpb.server.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.server.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -85,17 +85,7 @@ public class JpaNewOrderService extends NewOrderService {
     double orderItemSum = 0;
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemEntity orderItem = orderItems.get(i);
-      // This may result in null due to requirement of 1% of all transactions using an unused id
-      ProductEntity product =
-          productRepository.findById(orderItem.getProduct().getId()).orElse(null);
-      if (product == null) {
-        // TODO this is not really appropriate, how do I roll back the transaction now
-        OrderResponse res = newOrderResponse(req, order, warehouse, district, customer);
-        res.setTotalAmount(0);
-        res.setOrderItems(null);
-        res.setMessage("Item number is not valid");
-        return res;
-      }
+      ProductEntity product = productRepository.getById(orderItem.getProduct().getId());
       StockEntity stock =
           stockRepository
               .findByProductIdAndWarehouseId(
