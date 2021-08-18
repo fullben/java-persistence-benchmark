@@ -96,6 +96,10 @@ public class JpaDataGenerator {
     this(warehouseCount, false, limited);
   }
 
+  public JpaDataGenerator(int warehouseCount) {
+    this(warehouseCount, false, false);
+  }
+
   public List<WarehouseEntity> getWarehouses() {
     return warehouses;
   }
