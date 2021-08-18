@@ -1,5 +1,7 @@
-package de.uniba.dsg.jpb.server.data.gen;
+package de.uniba.dsg.jpb.server.data.gen.ms;
 
+import de.uniba.dsg.jpb.server.data.gen.DataProvider;
+import de.uniba.dsg.jpb.server.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.server.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
@@ -26,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class JpaToMsConverter {
+public class JpaToMsConverter
+    implements DataProvider<WarehouseData, EmployeeData, ProductData, CarrierData> {
 
   private final List<ProductEntity> productEntities;
   private final List<CarrierEntity> carrierEntities;
@@ -58,18 +61,22 @@ public class JpaToMsConverter {
     employees = convertEmployees(employeeEntities, warehouses);
   }
 
+  @Override
   public List<ProductData> getProducts() {
     return products;
   }
 
+  @Override
   public List<CarrierData> getCarriers() {
     return carriers;
   }
 
+  @Override
   public List<WarehouseData> getWarehouses() {
     return warehouses;
   }
 
+  @Override
   public List<EmployeeData> getEmployees() {
     return employees;
   }

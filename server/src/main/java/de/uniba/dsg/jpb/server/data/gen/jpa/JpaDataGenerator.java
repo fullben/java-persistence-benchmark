@@ -1,6 +1,7 @@
-package de.uniba.dsg.jpb.server.data.gen;
+package de.uniba.dsg.jpb.server.data.gen.jpa;
 
 import com.github.javafaker.Faker;
+import de.uniba.dsg.jpb.server.data.gen.DataProvider;
 import de.uniba.dsg.jpb.server.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.CustomerEntity;
@@ -22,7 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class JpaDataGenerator {
+public class JpaDataGenerator
+    implements DataProvider<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
 
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
@@ -100,18 +102,22 @@ public class JpaDataGenerator {
     this(warehouseCount, false, false);
   }
 
+  @Override
   public List<WarehouseEntity> getWarehouses() {
     return warehouses;
   }
 
+  @Override
   public List<EmployeeEntity> getEmployees() {
     return employees;
   }
 
+  @Override
   public List<ProductEntity> getProducts() {
     return products;
   }
 
+  @Override
   public List<CarrierEntity> getCarriers() {
     return carriers;
   }

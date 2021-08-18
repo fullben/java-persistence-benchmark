@@ -1,16 +1,23 @@
-package de.uniba.dsg.jpb.server.data.gen;
+package de.uniba.dsg.jpb.server.data.gen.jpa;
 
 import de.uniba.dsg.jpb.server.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.server.data.access.jpa.WarehouseRepository;
+import de.uniba.dsg.jpb.server.data.gen.DataProvider;
+import de.uniba.dsg.jpb.server.data.gen.DatabaseWriter;
+import de.uniba.dsg.jpb.server.data.model.jpa.CarrierEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.EmployeeEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
+import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
-public class JpaDatabaseWriter {
+public class JpaDatabaseWriter
+    implements DatabaseWriter<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
 
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
@@ -29,10 +36,12 @@ public class JpaDatabaseWriter {
     this.employeeRepository = employeeRepository;
   }
 
-  public void writeAll(JpaDataGenerator generator) {
-    productRepository.saveAll(generator.getProducts());
-    carrierRepository.saveAll(generator.getCarriers());
-    warehouseRepository.saveAll(generator.getWarehouses());
-    employeeRepository.saveAll(generator.getEmployees());
+  @Override
+  public void writeAll(
+      DataProvider<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> dataProvider) {
+    productRepository.saveAll(dataProvider.getProducts());
+    carrierRepository.saveAll(dataProvider.getCarriers());
+    warehouseRepository.saveAll(dataProvider.getWarehouses());
+    employeeRepository.saveAll(dataProvider.getEmployees());
   }
 }
