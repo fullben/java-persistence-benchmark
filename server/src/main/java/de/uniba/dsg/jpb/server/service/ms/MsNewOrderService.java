@@ -1,5 +1,8 @@
 package de.uniba.dsg.jpb.server.service.ms;
 
+import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
+import de.uniba.dsg.jpb.server.data.access.ms.ProductRepository;
 import de.uniba.dsg.jpb.server.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.server.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.server.data.model.ms.OrderData;
@@ -11,9 +14,6 @@ import de.uniba.dsg.jpb.server.messages.OrderRequest;
 import de.uniba.dsg.jpb.server.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.server.messages.OrderResponse;
 import de.uniba.dsg.jpb.server.messages.OrderResponseItem;
-import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
-import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.server.data.access.ms.ProductRepository;
 import de.uniba.dsg.jpb.server.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -63,10 +63,6 @@ public class MsNewOrderService extends NewOrderService {
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemData orderItem = orderItems.get(i);
       ProductData product = productRepository.findById(orderItem.getProduct().getId());
-      if (product == null) {
-        // TODO handle
-        return null;
-      }
       StockData stock =
           warehouse.getStocks().stream()
               .filter(s -> s.getProduct().getId().equals(product.getId()))
