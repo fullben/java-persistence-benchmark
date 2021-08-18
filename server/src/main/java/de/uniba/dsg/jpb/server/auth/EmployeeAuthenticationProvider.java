@@ -34,7 +34,7 @@ public class EmployeeAuthenticationProvider implements AuthenticationProvider {
     EmployeeUserDetails userDetails = userDetailsService.loadUserByUsername(username);
     String hashedPassword = digester.digest(password, userDetails.getSalt());
     if (userDetails.getPassword().equals(hashedPassword)) {
-      LOG.info("Authenticated employee \"{}\"", username);
+      LOG.debug("Authenticated employee \"{}\"", username);
       return new UsernamePasswordAuthenticationToken(
           username, hashedPassword, userDetails.getAuthorities());
     } else {
