@@ -30,10 +30,10 @@ public class MsDatabaseWriter
     if (closed) {
       return;
     }
-    dataRoot.getProductRepository().saveAll(dataProvider.getProducts());
-    dataRoot.getCarrierRepository().saveAll(dataProvider.getCarriers());
-    dataRoot.getWarehouseRepository().saveAll(dataProvider.getWarehouses());
-    dataRoot.getEmployeeRepository().saveAll(dataProvider.getEmployees());
+    dataRoot.productRepository().saveAll(dataProvider.getProducts());
+    dataRoot.carrierRepository().saveAll(dataProvider.getCarriers());
+    dataRoot.warehouseRepository().saveAll(dataProvider.getWarehouses());
+    dataRoot.employeeRepository().saveAll(dataProvider.getEmployees());
   }
 
   @Override

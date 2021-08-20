@@ -32,7 +32,7 @@ public class MsNewOrderService extends NewOrderService {
 
   public MsNewOrderService(DataRoot dataRoot) {
     this.dataRoot = dataRoot;
-    productRepository = dataRoot.getProductRepository();
+    productRepository = dataRoot.productRepository();
     // TODO
     customerRepository = null;
   }

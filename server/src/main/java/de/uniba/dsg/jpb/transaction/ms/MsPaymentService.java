@@ -25,7 +25,7 @@ public class MsPaymentService extends PaymentService {
 
   public MsPaymentService(DataRoot dataRoot) {
     this.dataRoot = dataRoot;
-    warehouseRepository = dataRoot.getWarehouseRepository();
+    warehouseRepository = dataRoot.warehouseRepository();
     // TODO
     customerRepository = null;
   }

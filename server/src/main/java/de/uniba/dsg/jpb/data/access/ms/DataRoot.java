@@ -16,19 +16,19 @@ public class DataRoot {
     employeeRepository = new EmployeeRepository();
   }
 
-  public ProductRepository getProductRepository() {
+  public ProductRepository productRepository() {
     return productRepository;
   }
 
-  public CarrierRepository getCarrierRepository() {
+  public CarrierRepository carrierRepository() {
     return carrierRepository;
   }
 
-  public WarehouseRepository getWarehouseRepository() {
+  public WarehouseRepository warehouseRepository() {
     return warehouseRepository;
   }
 
-  public EmployeeRepository getEmployeeRepository() {
+  public EmployeeRepository employeeRepository() {
     return employeeRepository;
   }
 
