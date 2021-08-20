@@ -216,8 +216,9 @@ public class JpaDataGenerator
         generateUniqueEmail(
             employee.getFirstName(), employee.getMiddleName(), employee.getLastName()));
     employee.setAddress(newAddressSameZip(district.getAddress()));
-    employee.setUsername(EMPLOYEE_USERNAME_PREFIX + warehouseNbr + "_" + districtNbr);
-    employee.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
+    String postfix = warehouseNbr + "_" + districtNbr;
+    employee.setUsername(EMPLOYEE_USERNAME_PREFIX + postfix);
+    employee.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD + "_" + postfix));
     employee.setDistrict(district);
     employee.setTitle(faker.job().title());
     return employee;
