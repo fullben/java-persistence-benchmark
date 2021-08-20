@@ -4,24 +4,38 @@ import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 
 public class DataRoot {
 
-  private final WarehouseRepository warehouseRepository;
   private final ProductRepository productRepository;
+  private final CarrierRepository carrierRepository;
+  private final WarehouseRepository warehouseRepository;
+  private final EmployeeRepository employeeRepository;
 
   public DataRoot() {
-    warehouseRepository = new WarehouseRepository();
     productRepository = new ProductRepository();
-  }
-
-  public WarehouseRepository getWarehouseRepository() {
-    return warehouseRepository;
+    carrierRepository = new CarrierRepository();
+    warehouseRepository = new WarehouseRepository();
+    employeeRepository = new EmployeeRepository();
   }
 
   public ProductRepository getProductRepository() {
     return productRepository;
   }
 
+  public CarrierRepository getCarrierRepository() {
+    return carrierRepository;
+  }
+
+  public WarehouseRepository getWarehouseRepository() {
+    return warehouseRepository;
+  }
+
+  public EmployeeRepository getEmployeeRepository() {
+    return employeeRepository;
+  }
+
   public void setStorageManager(EmbeddedStorageManager storageManager) {
-    warehouseRepository.setStorageManager(storageManager);
     productRepository.setStorageManager(storageManager);
+    carrierRepository.setStorageManager(storageManager);
+    warehouseRepository.setStorageManager(storageManager);
+    employeeRepository.setStorageManager(storageManager);
   }
 }

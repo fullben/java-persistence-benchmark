@@ -1,12 +1,15 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-public class CarrierData {
+import de.uniba.dsg.jpb.data.model.Identifiable;
+
+public class CarrierData implements Identifiable<Long> {
 
   private Long id;
   private String name;
   private String phoneNumber;
   private AddressData address;
 
+  @Override
   public Long getId() {
     return id;
   }

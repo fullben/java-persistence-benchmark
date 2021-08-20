@@ -2,6 +2,7 @@ package de.uniba.dsg.jpb;
 
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.data.gen.ms.JpaToMsConverter;
+import de.uniba.dsg.jpb.data.gen.ms.MsDatabaseWriter;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +17,13 @@ import org.springframework.stereotype.Component;
 public class MsDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(MsDataInitializer.class);
+  private final MsDatabaseWriter databaseWriter;
 
   @Autowired
-  public MsDataInitializer(Environment environment, PasswordEncoder passwordEncoder) {
+  public MsDataInitializer(
+      Environment environment, PasswordEncoder passwordEncoder, MsDatabaseWriter databaseWriter) {
     super(environment, passwordEncoder);
+    this.databaseWriter = databaseWriter;
   }
 
   @Override
@@ -37,7 +41,13 @@ public class MsDataInitializer extends DataInitializer {
     LOG.info(
         "Successfully converted model data to MicroStream data, took {} milliseconds",
         stopwatch.getDurationMillis());
-    // TODO write to MicroStream storage
+    stopwatch.start();
+    databaseWriter.writeAll(converter);
+    databaseWriter.close();
+    stopwatch.stop();
+    LOG.info(
+        "Successfully wrote model data to MicroStream storage, took {} seconds",
+        stopwatch.getDurationSeconds());
   }
 
   @Override
