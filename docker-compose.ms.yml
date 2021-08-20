@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  jpb-server:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      JPB_PERSISTENCE_MODE: "ms"

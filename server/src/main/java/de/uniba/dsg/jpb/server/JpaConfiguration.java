@@ -39,6 +39,7 @@ public class JpaConfiguration {
     dataSource.setUrl(environment.getProperty("jpb.jpa.datasource.url"));
     dataSource.setUsername(environment.getProperty("jpb.jpa.datasource.username"));
     dataSource.setPassword(environment.getProperty("jpb.jpa.datasource.password"));
+    dataSource.setSchema(environment.getProperty("jpb.jpa.datasource.schema"));
     return dataSource;
   }
 
@@ -52,12 +53,12 @@ public class JpaConfiguration {
     factory.setJpaVendorAdapter(vendorAdapter);
     factory.setPackagesToScan("de.uniba.dsg.jpb.server.data.model.jpa");
     factory.setDataSource(dataSource());
-    final String dialectKey = "jpb.jpa.database-platform";
     final String ddlAutoKey = "jpb.jpa.hibernate.ddl-auto";
-    final String timeZoneKey = "jpb.jpa.properties.hibernate.jdbc.time_zone";
+    final String dialectKey = "jpb.jpa.hibernate.dialect";
+    final String timeZoneKey = "jpb.jpa.hibernate.jdbc.time_zone";
     Map<String, Object> props = new HashMap<>();
-    props.put(dialectKey, environment.getProperty(dialectKey));
     props.put(ddlAutoKey, environment.getProperty(ddlAutoKey));
+    props.put(dialectKey, environment.getProperty(dialectKey));
     props.put(timeZoneKey, environment.getProperty(timeZoneKey));
     factory.setJpaPropertyMap(props);
     factory.afterPropertiesSet();
