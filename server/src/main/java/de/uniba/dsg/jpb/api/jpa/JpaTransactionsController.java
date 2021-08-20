@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.api.jpa;
 
+import de.uniba.dsg.jpb.api.TransactionsController;
 import de.uniba.dsg.jpb.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.messages.DeliveryResponse;
 import de.uniba.dsg.jpb.messages.OrderRequest;
@@ -10,12 +11,11 @@ import de.uniba.dsg.jpb.messages.PaymentRequest;
 import de.uniba.dsg.jpb.messages.PaymentResponse;
 import de.uniba.dsg.jpb.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.messages.StockLevelResponse;
-import de.uniba.dsg.jpb.api.TransactionsController;
-import de.uniba.dsg.jpb.service.jpa.JpaDeliveryService;
-import de.uniba.dsg.jpb.service.jpa.JpaNewOrderService;
-import de.uniba.dsg.jpb.service.jpa.JpaOrderStatusService;
-import de.uniba.dsg.jpb.service.jpa.JpaPaymentService;
-import de.uniba.dsg.jpb.service.jpa.JpaStockLevelService;
+import de.uniba.dsg.jpb.transaction.jpa.JpaDeliveryService;
+import de.uniba.dsg.jpb.transaction.jpa.JpaNewOrderService;
+import de.uniba.dsg.jpb.transaction.jpa.JpaOrderStatusService;
+import de.uniba.dsg.jpb.transaction.jpa.JpaPaymentService;
+import de.uniba.dsg.jpb.transaction.jpa.JpaStockLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.service;
+package de.uniba.dsg.jpb.transaction;
 
 import de.uniba.dsg.jpb.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.messages.StockLevelResponse;

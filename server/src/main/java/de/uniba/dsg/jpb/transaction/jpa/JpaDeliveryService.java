@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.service.jpa;
+package de.uniba.dsg.jpb.transaction.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
@@ -12,7 +12,7 @@ import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.messages.DeliveryResponse;
-import de.uniba.dsg.jpb.service.DeliveryService;
+import de.uniba.dsg.jpb.transaction.DeliveryService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

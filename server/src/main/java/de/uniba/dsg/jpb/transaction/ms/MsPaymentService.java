@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.service.ms;
+package de.uniba.dsg.jpb.transaction.ms;
 
 import de.uniba.dsg.jpb.data.access.ms.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
@@ -9,7 +9,7 @@ import de.uniba.dsg.jpb.data.model.ms.PaymentData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
 import de.uniba.dsg.jpb.messages.PaymentRequest;
 import de.uniba.dsg.jpb.messages.PaymentResponse;
-import de.uniba.dsg.jpb.service.PaymentService;
+import de.uniba.dsg.jpb.transaction.PaymentService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.api.ms;
 
+import de.uniba.dsg.jpb.api.TransactionsController;
 import de.uniba.dsg.jpb.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.messages.DeliveryResponse;
 import de.uniba.dsg.jpb.messages.OrderRequest;
@@ -10,9 +11,8 @@ import de.uniba.dsg.jpb.messages.PaymentRequest;
 import de.uniba.dsg.jpb.messages.PaymentResponse;
 import de.uniba.dsg.jpb.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.messages.StockLevelResponse;
-import de.uniba.dsg.jpb.api.TransactionsController;
-import de.uniba.dsg.jpb.service.ms.MsNewOrderService;
-import de.uniba.dsg.jpb.service.ms.MsPaymentService;
+import de.uniba.dsg.jpb.transaction.ms.MsNewOrderService;
+import de.uniba.dsg.jpb.transaction.ms.MsPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
