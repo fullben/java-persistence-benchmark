@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableSpringConfigured
@@ -35,9 +36,9 @@ public class Application {
   }
 
   @Bean
-  public CommandLineRunner cmdRunner(JpaDatabaseWriter writer) {
+  public CommandLineRunner cmdRunner(PasswordEncoder passwordEncoder, JpaDatabaseWriter writer) {
     return args -> {
-      JpaDataGenerator jpaDataGenerator = new JpaDataGenerator(1, true);
+      JpaDataGenerator jpaDataGenerator = new JpaDataGenerator(1, true, passwordEncoder);
       LOG.info("Beginning data generation...");
       Stopwatch stopwatch = new Stopwatch(true);
       jpaDataGenerator.generate();

@@ -8,17 +8,12 @@ public class EmployeeUserDetails implements UserDetails {
 
   private final String username;
   private final String password;
-  private final String salt;
   private final Collection<? extends GrantedAuthority> grantedAuthorities;
 
   public EmployeeUserDetails(
-      String username,
-      String password,
-      String salt,
-      Collection<? extends GrantedAuthority> grantedAuthorities) {
+      String username, String password, Collection<? extends GrantedAuthority> grantedAuthorities) {
     this.username = username;
     this.password = password;
-    this.salt = salt;
     this.grantedAuthorities = grantedAuthorities;
   }
 
@@ -30,10 +25,6 @@ public class EmployeeUserDetails implements UserDetails {
   @Override
   public String getPassword() {
     return password;
-  }
-
-  public String getSalt() {
-    return salt;
   }
 
   @Override

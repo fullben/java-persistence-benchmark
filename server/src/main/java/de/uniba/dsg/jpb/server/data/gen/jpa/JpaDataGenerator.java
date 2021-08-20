@@ -13,7 +13,6 @@ import de.uniba.dsg.jpb.server.data.model.jpa.PaymentEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.server.data.model.jpa.WarehouseEntity;
-import de.uniba.dsg.jpb.server.util.Digester;
 import de.uniba.dsg.jpb.server.util.RandomSelector;
 import de.uniba.dsg.jpb.server.util.SequenceGenerator;
 import de.uniba.dsg.jpb.server.util.UniformRandom;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class JpaDataGenerator
     implements DataProvider<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
@@ -68,8 +68,10 @@ public class JpaDataGenerator
   private List<WarehouseEntity> warehouses;
   private final List<EmployeeEntity> employees;
   private final List<String> existingEmails;
+  private final PasswordEncoder passwordEncoder;
 
-  public JpaDataGenerator(int warehouseCount, boolean generateIds, boolean limited) {
+  public JpaDataGenerator(
+      int warehouseCount, boolean generateIds, boolean limited, PasswordEncoder passwordEncoder) {
     idGenerator = generateIds ? new SequenceGenerator() : null;
     this.warehouseCount = warehouseCount;
     if (limited) {
@@ -92,14 +94,15 @@ public class JpaDataGenerator
     warehouses = null;
     employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
+    this.passwordEncoder = passwordEncoder;
   }
 
-  public JpaDataGenerator(int warehouseCount, boolean limited) {
-    this(warehouseCount, false, limited);
+  public JpaDataGenerator(int warehouseCount, boolean limited, PasswordEncoder passwordEncoder) {
+    this(warehouseCount, false, limited, passwordEncoder);
   }
 
-  public JpaDataGenerator(int warehouseCount) {
-    this(warehouseCount, false, false);
+  public JpaDataGenerator(int warehouseCount, PasswordEncoder passwordEncoder) {
+    this(warehouseCount, false, false, passwordEncoder);
   }
 
   @Override
@@ -213,10 +216,8 @@ public class JpaDataGenerator
         generateUniqueEmail(
             employee.getFirstName(), employee.getMiddleName(), employee.getLastName()));
     employee.setAddress(newAddressSameZip(district.getAddress()));
-    Digester digester = new Digester();
     employee.setUsername(EMPLOYEE_USERNAME_PREFIX + warehouseNbr + "_" + districtNbr);
-    employee.setSalt(digester.randomSalt());
-    employee.setPasswordHash(digester.digest(DEFAULT_PASSWORD, employee.getSalt()));
+    employee.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
     employee.setDistrict(district);
     employee.setTitle(faker.job().title());
     return employee;

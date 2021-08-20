@@ -28,8 +28,7 @@ public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
     }
     return new EmployeeUserDetails(
         employee.getUsername(),
-        employee.getPasswordHash(),
-        employee.getSalt(),
+        employee.getPassword(),
         List.of(new SimpleGrantedAuthority(Role.TERMINAL_USER.prefixedName())));
   }
 }

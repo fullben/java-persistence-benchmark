@@ -19,8 +19,7 @@ public class EmployeeEntity extends PersonEntity {
   @Column(unique = true)
   private String username;
 
-  @JsonIgnore private String salt;
-  @JsonIgnore private String passwordHash;
+  @JsonIgnore private String password;
 
   public DistrictEntity getDistrict() {
     return district;
@@ -46,19 +45,11 @@ public class EmployeeEntity extends PersonEntity {
     this.username = username;
   }
 
-  public String getSalt() {
-    return salt;
+  public String getPassword() {
+    return password;
   }
 
-  public void setSalt(String salt) {
-    this.salt = salt;
-  }
-
-  public String getPasswordHash() {
-    return passwordHash;
-  }
-
-  public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
+  public void setPassword(String password) {
+    this.password = password;
   }
 }

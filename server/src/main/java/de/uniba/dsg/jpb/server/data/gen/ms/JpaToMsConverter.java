@@ -150,8 +150,7 @@ public class JpaToMsConverter
       employee.setPhoneNumber(e.getPhoneNumber());
       employee.setEmail(e.getEmail());
       employee.setUsername(e.getUsername());
-      employee.setPasswordHash(e.getPasswordHash());
-      employee.setSalt(e.getSalt());
+      employee.setPassword(e.getPassword());
       employee.setTitle(e.getTitle());
       employee.setDistrict(findDistrictById(e.getDistrict().getId(), warehouses));
       employees.add(employee);
