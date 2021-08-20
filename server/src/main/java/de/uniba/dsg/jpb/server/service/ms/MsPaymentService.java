@@ -1,14 +1,14 @@
 package de.uniba.dsg.jpb.server.service.ms;
 
+import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
+import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
+import de.uniba.dsg.jpb.server.data.access.ms.WarehouseRepository;
 import de.uniba.dsg.jpb.server.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.server.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.server.data.model.ms.PaymentData;
 import de.uniba.dsg.jpb.server.data.model.ms.WarehouseData;
 import de.uniba.dsg.jpb.server.messages.PaymentRequest;
 import de.uniba.dsg.jpb.server.messages.PaymentResponse;
-import de.uniba.dsg.jpb.server.data.access.ms.CustomerRepository;
-import de.uniba.dsg.jpb.server.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.server.data.access.ms.WarehouseRepository;
 import de.uniba.dsg.jpb.server.service.PaymentService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +50,13 @@ public class MsPaymentService extends PaymentService {
     payment.setData(warehouse.getName() + "    " + district.getName());
     payment.setAmount(req.getAmount());
     // TODO save payment AND customer
-    return new PaymentResponse();
+    PaymentResponse res = new PaymentResponse(req);
+    res.setPaymentId(payment.getId());
+    res.setCustomerCredit(customer.getCredit());
+    res.setCustomerCreditLimit(customer.getCreditLimit());
+    res.setCustomerDiscount(customer.getDiscount());
+    res.setCustomerBalance(customer.getBalance());
+    return res;
   }
 
   private static DistrictData findDistrictById(Long id, List<DistrictData> districts) {

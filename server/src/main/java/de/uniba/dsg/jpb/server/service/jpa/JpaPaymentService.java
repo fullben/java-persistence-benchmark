@@ -68,8 +68,12 @@ public class JpaPaymentService extends PaymentService {
     payment.setData(warehouse.getName() + "    " + district.getName());
     payment.setAmount(req.getAmount());
     payment = paymentRepository.save(payment);
-    PaymentResponse res = new PaymentResponse();
+    PaymentResponse res = new PaymentResponse(req);
     res.setPaymentId(payment.getId());
+    res.setCustomerCredit(customer.getCredit());
+    res.setCustomerCreditLimit(customer.getCreditLimit());
+    res.setCustomerDiscount(customer.getDiscount());
+    res.setCustomerBalance(customer.getBalance());
     return res;
   }
 }
