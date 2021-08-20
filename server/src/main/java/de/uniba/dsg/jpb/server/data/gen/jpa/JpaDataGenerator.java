@@ -71,19 +71,19 @@ public class JpaDataGenerator
   private final PasswordEncoder passwordEncoder;
 
   public JpaDataGenerator(
-      int warehouseCount, boolean generateIds, boolean limited, PasswordEncoder passwordEncoder) {
+      int warehouseCount, boolean generateIds, boolean fullScale, PasswordEncoder passwordEncoder) {
     idGenerator = generateIds ? new SequenceGenerator() : null;
     this.warehouseCount = warehouseCount;
-    if (limited) {
-      itemCount = 1_000;
-      districtsPerWarehouseCount = 10;
-      customersPerDistrictCount = 30;
-      ordersPerDistrictCount = 30;
-    } else {
+    if (fullScale) {
       itemCount = 100_000;
       districtsPerWarehouseCount = 10;
       customersPerDistrictCount = 3_000;
       ordersPerDistrictCount = 3_000;
+    } else {
+      itemCount = 1_000;
+      districtsPerWarehouseCount = 10;
+      customersPerDistrictCount = 30;
+      ordersPerDistrictCount = 30;
     }
     faker = new Faker(Locale.US);
     salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
@@ -97,8 +97,8 @@ public class JpaDataGenerator
     this.passwordEncoder = passwordEncoder;
   }
 
-  public JpaDataGenerator(int warehouseCount, boolean limited, PasswordEncoder passwordEncoder) {
-    this(warehouseCount, false, limited, passwordEncoder);
+  public JpaDataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
+    this(warehouseCount, false, fullScale, passwordEncoder);
   }
 
   public JpaDataGenerator(int warehouseCount, PasswordEncoder passwordEncoder) {
