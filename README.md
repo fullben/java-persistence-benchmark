@@ -1,10 +1,10 @@
 # Wholesale Supplier Java Persistence Benchmark (JPB)
 
-Benchmark for comparing the performance of a [JPA](https://www.oracle.com/java/technologies/persistence-jsp.html) implementation with that of [MicroStream](https://microstream.one/platforms/microstream-for-java/).
+Benchmark for comparing the performance of a [JPA](https://www.oracle.com/java/technologies/persistence-jsp.html) implementation with that of [MicroStream](https://microstream.one/platforms/microstream-for-java/), loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
 ## Structure
 
-The JPB is based on the famous [TPC-C](http://www.tpc.org/tpcc/) benchmark. Like TPC-C, it models the activities of a(n old) wholesale supplier. This supplier has 100 000 products and a number of warehouses in which these products are stocked. Each warehouse has 10 districts and an employee responsible for each district. The customers and employees of the supplier can execute certain tasks (*transactions*):
+The JPB is based on the famous TPC-C benchmark. Like TPC-C, it models the activities of a(n old) wholesale supplier. This supplier has 100 000 products and a number of warehouses in which these products are stocked. Each warehouse has 10 districts, and an employee responsible for each district and its 3000 customers. The customers and employees of the supplier can execute certain tasks (*transactions*):
 
 * Place a new order
 * Perform a payment
@@ -46,7 +46,7 @@ Make sure that the `spring.profiles.active` property in the `application.yml` fi
 
 Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
 
-Once the server has been launched, you may start the JMeter test plan (defined in the `clients/*.jmx` file found in this project). For actual performance evaluation, JMeter should be used in its CLI-mode. For this, one may use a command such as `jmeter -n -t jpb-terminals.jmx -l results.jtl`. This will execute the test defined in `jpb-terminals.jmx` and write the results to the `results.jtl` file.
+Once the server has been launched, you may start the JMeter test plan defined in the `clients/*.jmx` file found in this project. For actual performance evaluation, JMeter should be used in its CLI-mode. For this, one may use a command such as `jmeter -n -t jpb-terminals.jmx -l results.jtl`. This will execute the test defined in `jpb-terminals.jmx` and write the results to the `results.jtl` file.
 
 ### Deployment
 
