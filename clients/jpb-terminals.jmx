@@ -263,12 +263,12 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Simulate employee transactions/work" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">500</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </LoopController>
         <hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="New-Order controller" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Create a new order" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
             <boolProp name="ThroughputController.perThread">false</boolProp>
             <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -383,7 +383,7 @@ vars.put(&quot;orderItems&quot;, orderItems)
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Payment controller" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Make a payment" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
             <boolProp name="ThroughputController.perThread">false</boolProp>
             <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -477,7 +477,7 @@ vars.put(&quot;paymentRequest&quot;, req)
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Order-Status controller" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Request order status" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
             <boolProp name="ThroughputController.perThread">false</boolProp>
             <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -568,7 +568,7 @@ vars.put(&quot;orderStatusReq&quot;, req)
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Delivery controller" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Set order fulfillment information" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
             <boolProp name="ThroughputController.perThread">false</boolProp>
             <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -652,7 +652,7 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
             </UniformRandomTimer>
             <hashTree/>
           </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Stock-Level controller" enabled="true">
+          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Count low stock products" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
             <boolProp name="ThroughputController.perThread">false</boolProp>
             <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -739,408 +739,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Execute transactions repeateadly without wait times" enabled="false">
-          <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">50</stringProp>
-        </LoopController>
-        <hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="New-Order controller" enabled="true">
-            <intProp name="ThroughputController.style">1</intProp>
-            <boolProp name="ThroughputController.perThread">false</boolProp>
-            <intProp name="ThroughputController.maxThroughput">1</intProp>
-            <FloatProperty>
-              <name>ThroughputController.percentThroughput</name>
-              <value>45.0</value>
-              <savedValue>0.0</savedValue>
-            </FloatProperty>
-          </ThroughputController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Transaction:new-order" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-  &quot;districtId&quot;: ${randomDistrictId},&#xd;
-  &quot;customerId&quot;: ${randomCustomerId},&#xd;
-  &quot;items&quot;: ${orderItems}&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/api/transactions/new-order</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Define new order params" enabled="true">
-                <stringProp name="scriptLanguage">groovy</stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="script">import groovy.json.JsonSlurper
-import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-def warehouseId = vars.get(&quot;empWarehouseId&quot;);
-
-// List of all warehouse ids except for that of the employee&apos;s warehouse
-def warehouseIds = Arrays.asList(vars.get(&quot;warehouseId_ALL&quot;).split(&quot;,&quot;))
-warehouseIds.remove(warehouseId)
-
-// District is one of the home warehouse&apos;s districts, randomly selected
-String[] districtIds = vars.get(&quot;districtId_ALL&quot;).split(&quot;,&quot;)
-String randomDistrictId = districtIds[ThreadLocalRandom.current().nextInt(districtIds.size())]
-vars.put(&quot;randomDistrictId&quot;, randomDistrictId)
-
-// Customer is one of the selected district&apos;s customers, randomly selected
-def customers = new JsonSlurper().parseText(&quot;[&quot; + vars.get(&quot;customer_&quot; + randomDistrictId + &quot;_ALL&quot;) + &quot;]&quot;)
-def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.size())]
-vars.put(&quot;randomCustomerId&quot;, randomCustomer.id.toString());
-
-// Number of order items is random between 5 and 15
-def itemCount= ThreadLocalRandom.current().nextInt(5, 16)
-vars.put(&quot;itemCount&quot;, itemCount.toString())
-
-// Construct individual order items here, as number of items is dynamic
-def productIds = vars.get(&quot;productId_ALL&quot;).split(&quot;,&quot;)
-def orderItems = &quot;[&quot;
-for (i = 0; i &lt; itemCount; i++) {
-	def randomProductId = productIds[ThreadLocalRandom.current().nextInt(productIds.size())]
-	def quantity = ThreadLocalRandom.current().nextInt(10, 21)
-	def supplyingWarehouseId = warehouseId.size() &gt; 0 ? ThreadLocalRandom.current().nextInt(1, 101) &gt; 100 ? warehouseIds[ThreadLocalRandom.current().nextInt(warehouseIds.size())] : warehouseId : warehouseId
-	orderItems += &quot;{\&quot;productId\&quot;: &quot;+ randomProductId.toString() +&quot;,\&quot;quantity\&quot;: &quot; + quantity.toString() + &quot;,\&quot;supplyingWarehouseId\&quot;: &quot; + supplyingWarehouseId.toString() + &quot;}&quot;
-	if (i != itemCount - 1) {
-		orderItems += &quot;,&quot;
-	}
-}
-orderItems += &quot;]&quot;
-vars.put(&quot;orderItems&quot;, orderItems)
-</stringProp>
-              </JSR223PreProcessor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="49586">200</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Payment controller" enabled="true">
-            <intProp name="ThroughputController.style">1</intProp>
-            <boolProp name="ThroughputController.perThread">false</boolProp>
-            <intProp name="ThroughputController.maxThroughput">1</intProp>
-            <FloatProperty>
-              <name>ThroughputController.percentThroughput</name>
-              <value>43.0</value>
-              <savedValue>0.0</savedValue>
-            </FloatProperty>
-          </ThroughputController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Transaction:payment" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">${paymentRequest}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/api/transactions/payment</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Define payment params" enabled="true">
-                <stringProp name="scriptLanguage">groovy</stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="script">import groovy.json.JsonSlurper
-import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-def warehouseId = vars.get(&quot;empWarehouseId&quot;)
-
-// District is one of the home warehouse&apos;s districts, randomly selected
-String[] districtIds = vars.get(&quot;districtId_ALL&quot;).split(&quot;,&quot;)
-String randomDistrictId = districtIds[ThreadLocalRandom.current().nextInt(districtIds.size())]
-
-// Customer is one of the selected district&apos;s customers, randomly selected
-// 60% of the time the email is provided, 40% the id
-def customers = new JsonSlurper().parseText(&quot;[&quot; + vars.get(&quot;customer_&quot; + randomDistrictId + &quot;_ALL&quot;) + &quot;]&quot;)
-def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.size())]
-def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
-
-// Amount is random (double) between 1.0 and 5000
-def amount = ThreadLocalRandom.current().nextInt(1, 5001)
-
-// Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;amount\&quot;: &quot; + amount.toString() + &quot;, \&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;, \&quot;customerId\&quot;: &quot; + (provideEmail ? null : randomCustomer.id.toString()) + &quot;, \&quot;districtId\&quot;: &quot; + randomDistrictId + &quot;, \&quot;warehouseId\&quot;: &quot; + warehouseId + &quot;}&quot;
-vars.put(&quot;paymentRequest&quot;, req)
-</stringProp>
-              </JSR223PreProcessor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="49586">200</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Order-Status controller" enabled="true">
-            <intProp name="ThroughputController.style">1</intProp>
-            <boolProp name="ThroughputController.perThread">false</boolProp>
-            <intProp name="ThroughputController.maxThroughput">1</intProp>
-            <FloatProperty>
-              <name>ThroughputController.percentThroughput</name>
-              <value>4.0</value>
-              <savedValue>0.0</savedValue>
-            </FloatProperty>
-          </ThroughputController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Transaction:order-status" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">${orderStatusReq}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/api/transactions/order-status</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Define order status params" enabled="true">
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="script">import groovy.json.JsonSlurper
-import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-def warehouseId = vars.get(&quot;empWarehouseId&quot;);
-
-// District is one of the home warehouse&apos;s districts, randomly selected
-String[] districtIds = vars.get(&quot;districtId_ALL&quot;).split(&quot;,&quot;)
-String randomDistrictId = districtIds[ThreadLocalRandom.current().nextInt(districtIds.size())]
-
-// Customer is one of the selected district&apos;s customers, randomly selected
-// 60% of the time the email is provided, 40% the id
-def customers = new JsonSlurper().parseText(&quot;[&quot; + vars.get(&quot;customer_&quot; + randomDistrictId + &quot;_ALL&quot;) + &quot;]&quot;)
-def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.size())]
-def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
-
-// Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;warehouseId\&quot;: &quot; + warehouseId + &quot;, \&quot;districtId\&quot;: &quot; + randomDistrictId + &quot;,\&quot;customerId\&quot;: &quot; + (provideEmail ? null : randomCustomer.id.toString()) + &quot;,\&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;}&quot;
-vars.put(&quot;orderStatusReq&quot;, req)
-</stringProp>
-                <stringProp name="scriptLanguage">groovy</stringProp>
-              </JSR223PreProcessor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="49586">200</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Delivery controller" enabled="true">
-            <intProp name="ThroughputController.style">1</intProp>
-            <boolProp name="ThroughputController.perThread">false</boolProp>
-            <intProp name="ThroughputController.maxThroughput">1</intProp>
-            <FloatProperty>
-              <name>ThroughputController.percentThroughput</name>
-              <value>4.0</value>
-              <savedValue>0.0</savedValue>
-            </FloatProperty>
-          </ThroughputController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PUT Transaction:delivery" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-	&quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-	&quot;carrierId&quot;: ${randomCarrierId}&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/api/transactions/delivery</stringProp>
-              <stringProp name="HTTPSampler.method">PUT</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Select random carrier id" enabled="true">
-                <stringProp name="scriptLanguage">groovy</stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-// def warehouseId = vars.get(&quot;empWarehouseId&quot;);
-
-// Carrier id is randomly selected from all available carriers
-String[] carrierIds = vars.get(&quot;carrierId_ALL&quot;).split(&quot;,&quot;)
-String randomValue = carrierIds[ThreadLocalRandom.current().nextInt(carrierIds.length)]
-vars.put(&quot;randomCarrierId&quot;, randomValue)
-</stringProp>
-              </JSR223PreProcessor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="49586">200</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-          <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Stock-Level controller" enabled="true">
-            <intProp name="ThroughputController.style">1</intProp>
-            <boolProp name="ThroughputController.perThread">false</boolProp>
-            <intProp name="ThroughputController.maxThroughput">1</intProp>
-            <FloatProperty>
-              <name>ThroughputController.percentThroughput</name>
-              <value>4.0</value>
-              <savedValue>0.0</savedValue>
-            </FloatProperty>
-          </ThroughputController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Transaction:stock-level" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-  &quot;districtId&quot;: ${empDistrictId},&#xd;
-  &quot;stockThreshold&quot;: ${minStockLevel}&#xd;
-}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/api/transactions/stock-level</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Define stock level params" enabled="true">
-                <stringProp name="scriptLanguage">groovy</stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-// def warehouseId = vars.get(&quot;empWarehouseId&quot;);
-
-// District is the employee&apos;s district
-// def districtId = vars.get(&quot;empDistrictId&quot;);
-
-// Minimum stock level is randomly selected from a value between 10 and 20
-vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).toString());
-</stringProp>
-              </JSR223PreProcessor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="49586">200</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
-          </hashTree>
-        </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -1177,13 +776,13 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="false">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
         </DebugSampler>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
