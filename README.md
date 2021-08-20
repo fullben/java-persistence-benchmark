@@ -50,7 +50,7 @@ Once the server has been launched, you may start the JMeter test plan defined in
 
 ### Deployment
 
-The server application is meant to be deployed and run as a docker container. Depending on the persistence solution to be evaluated, one of the two provided *docker-compose* files must be utilized (note that in either case, the Gradle task `bootJar` must be executed before starting the containers):
+The server application is meant to be deployed and run as a Docker container. Depending on the persistence solution to be evaluated, one of the two provided *docker-compose* files must be utilized (note that in either case, the Gradle task `bootJar` must be executed before starting the containers):
 
 * `docker-compose.jpa.yml`: Creates a container for the server application (persistence mode will be set to JPA) and launches it after having started another container with a PostgreSQL database.
 * `docker-compose.ms.yml`: Just creates a container for the server application (persistence mode will be set to MicroStream) and launches it, without creating any additional containers.
