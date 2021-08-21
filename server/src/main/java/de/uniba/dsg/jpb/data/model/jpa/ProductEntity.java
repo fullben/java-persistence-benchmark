@@ -15,7 +15,7 @@ public class ProductEntity {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  private Long imageId;
+  private String imagePath;
   private String name;
   private double price;
   private String data;
@@ -28,12 +28,12 @@ public class ProductEntity {
     this.id = id;
   }
 
-  public Long getImageId() {
-    return imageId;
+  public String getImagePath() {
+    return imagePath;
   }
 
-  public void setImageId(Long imageId) {
-    this.imageId = imageId;
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
   }
 
   public String getName() {

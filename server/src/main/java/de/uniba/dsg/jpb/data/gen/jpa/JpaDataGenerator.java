@@ -135,12 +135,11 @@ public class JpaDataGenerator
 
   private List<ProductEntity> generateProducts() {
     UniformRandom priceRandom = new UniformRandom(1.0, 100.0, 2);
-    UniformRandom imageIdRandom = new UniformRandom(1_000_000, 5_000_000);
     List<ProductEntity> items = new ArrayList<>(itemCount);
     for (int i = 0; i < itemCount; i++) {
       ProductEntity product = new ProductEntity();
       product.setId(nextId());
-      product.setImageId(imageIdRandom.nextLong());
+      product.setImagePath(faker.file().fileName(null, null, "jpg", "/"));
       product.setName(faker.commerce().productName());
       if (i % 10_000 == 0) {
         product.setData(insertOriginal(lorem26To50()));

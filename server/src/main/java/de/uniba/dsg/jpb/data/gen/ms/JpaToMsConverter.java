@@ -87,7 +87,7 @@ public class JpaToMsConverter
       ProductData product = new ProductData();
       product.setId(p.getId());
       product.setName(p.getName());
-      product.setImageId(p.getImageId());
+      product.setImagePath(p.getImagePath());
       product.setPrice(p.getPrice());
       product.setData(p.getData());
       products.add(product);
