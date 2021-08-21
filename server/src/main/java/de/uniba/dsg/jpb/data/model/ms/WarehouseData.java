@@ -20,6 +20,7 @@ public class WarehouseData implements Identifiable<Long> {
     return id;
   }
 
+  @Override
   public void setId(Long id) {
     this.id = id;
   }
