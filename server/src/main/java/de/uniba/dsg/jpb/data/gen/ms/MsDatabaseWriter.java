@@ -37,7 +37,7 @@ public class MsDatabaseWriter
   }
 
   @Override
-  public void close() throws Exception {
+  public void close() {
     if (closed) {
       return;
     }

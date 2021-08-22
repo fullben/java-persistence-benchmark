@@ -1,5 +1,7 @@
 package de.uniba.dsg.jpb.data.gen.jpa;
 
+import static java.util.Objects.requireNonNull;
+
 import com.github.javafaker.Faker;
 import de.uniba.dsg.jpb.data.gen.DataProvider;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
@@ -72,6 +74,9 @@ public class JpaDataGenerator
 
   public JpaDataGenerator(
       int warehouseCount, boolean generateIds, boolean fullScale, PasswordEncoder passwordEncoder) {
+    if (warehouseCount < 1) {
+      throw new IllegalArgumentException("Warehouse count must be greater than zero");
+    }
     idGenerator = generateIds ? new SequenceGenerator() : null;
     this.warehouseCount = warehouseCount;
     if (fullScale) {
@@ -94,7 +99,7 @@ public class JpaDataGenerator
     warehouses = null;
     employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
-    this.passwordEncoder = passwordEncoder;
+    this.passwordEncoder = requireNonNull(passwordEncoder);
   }
 
   public JpaDataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
