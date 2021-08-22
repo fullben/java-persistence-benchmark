@@ -28,6 +28,8 @@ The server can be launched with one of the two following profiles (configurable 
 The persistence layer of the server application is implemented both for JPA and MicroStream. Which implementation is to be utilized at runtime can be configured using the `application-dev.properties` and `application-prod.properties` files.
 
 * `jpb.persistence.mode`: Set `jpa` to use JPA-based relational persistence or use `ms` to use MicroStream as persistence provider
+* `jpb.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
+* `jpb.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
 * `jpb.jpa.*`: Configuration values of the JPA persistence implementation
 * `jpb.ms.*`: Configuration values of the MicroStream persistence implementation
 
