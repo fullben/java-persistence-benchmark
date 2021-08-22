@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.transaction.ms;
+package de.uniba.dsg.jpb.service.ms;
 
 import de.uniba.dsg.jpb.data.access.ms.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
@@ -14,7 +14,7 @@ import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderResponseItem;
-import de.uniba.dsg.jpb.transaction.NewOrderService;
+import de.uniba.dsg.jpb.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +53,7 @@ public class MsNewOrderService extends NewOrderService {
     order.setAllLocal(
         req.getItems().stream()
             .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
+    district.getOrders().add(order);
     customer.getOrders().add(order);
     // FIXME we only need to persist customer.orders...
     customerRepository.save(customer);

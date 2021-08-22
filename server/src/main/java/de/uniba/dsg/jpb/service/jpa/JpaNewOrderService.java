@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.transaction.jpa;
+package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.jpa.DistrictRepository;
@@ -17,7 +17,7 @@ import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderRequestItem;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderResponseItem;
-import de.uniba.dsg.jpb.transaction.NewOrderService;
+import de.uniba.dsg.jpb.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

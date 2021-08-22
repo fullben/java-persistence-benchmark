@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.transaction;
+package de.uniba.dsg.jpb.service;
 
 public interface TransactionService<T, P> {
 

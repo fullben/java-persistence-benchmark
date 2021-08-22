@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.transaction.jpa;
+package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderItemRepository;
@@ -10,7 +10,7 @@ import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderItemStatusResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusResponse;
-import de.uniba.dsg.jpb.transaction.OrderStatusService;
+import de.uniba.dsg.jpb.service.OrderStatusService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

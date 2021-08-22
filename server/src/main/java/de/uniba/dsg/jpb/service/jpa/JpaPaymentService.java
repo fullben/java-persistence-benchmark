@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.transaction.jpa;
+package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.jpa.DistrictRepository;
@@ -10,7 +10,7 @@ import de.uniba.dsg.jpb.data.model.jpa.PaymentEntity;
 import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
-import de.uniba.dsg.jpb.transaction.PaymentService;
+import de.uniba.dsg.jpb.service.PaymentService;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

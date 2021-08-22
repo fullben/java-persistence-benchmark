@@ -1,11 +1,11 @@
-package de.uniba.dsg.jpb.transaction.jpa;
+package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.jpb.transaction.StockLevelService;
+import de.uniba.dsg.jpb.service.StockLevelService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
