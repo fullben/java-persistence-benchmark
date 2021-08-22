@@ -5,7 +5,7 @@ import de.uniba.dsg.jpb.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.WarehouseRepository;
 import de.uniba.dsg.jpb.data.gen.DataProvider;
-import de.uniba.dsg.jpb.data.gen.DatabaseWriter;
+import de.uniba.dsg.jpb.data.gen.DataWriter;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.EmployeeEntity;
 import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
-public class JpaDatabaseWriter
-    implements DatabaseWriter<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
+public class JpaDataWriter
+    implements DataWriter<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
 
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
@@ -25,7 +25,7 @@ public class JpaDatabaseWriter
   private final EmployeeRepository employeeRepository;
 
   @Autowired
-  public JpaDatabaseWriter(
+  public JpaDataWriter(
       ProductRepository productRepository,
       CarrierRepository carrierRepository,
       WarehouseRepository warehouseRepository,

@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb;
+package de.uniba.dsg.jpb.data.gen;
 
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import org.springframework.boot.CommandLineRunner;
@@ -10,12 +10,12 @@ public abstract class DataInitializer implements CommandLineRunner {
   private final Environment environment;
   private final PasswordEncoder passwordEncoder;
 
-  DataInitializer(Environment environment, PasswordEncoder passwordEncoder) {
+  public DataInitializer(Environment environment, PasswordEncoder passwordEncoder) {
     this.environment = environment;
     this.passwordEncoder = passwordEncoder;
   }
 
-  JpaDataGenerator createJpaDataGenerator() {
+  protected JpaDataGenerator createJpaDataGenerator() {
     return new JpaDataGenerator(
         environment.getProperty("jpb.model.warehouse-count", Integer.class, 1),
         generateIds(),
@@ -23,5 +23,5 @@ public abstract class DataInitializer implements CommandLineRunner {
         passwordEncoder);
   }
 
-  abstract boolean generateIds();
+  protected abstract boolean generateIds();
 }

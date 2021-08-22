@@ -1,7 +1,6 @@
-package de.uniba.dsg.jpb;
+package de.uniba.dsg.jpb.data.gen.jpa;
 
-import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
-import de.uniba.dsg.jpb.data.gen.jpa.JpaDatabaseWriter;
+import de.uniba.dsg.jpb.data.gen.DataInitializer;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,11 +15,11 @@ import org.springframework.stereotype.Component;
 public class JpaDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(JpaDataInitializer.class);
-  private final JpaDatabaseWriter databaseWriter;
+  private final JpaDataWriter databaseWriter;
 
   @Autowired
   public JpaDataInitializer(
-      Environment environment, PasswordEncoder passwordEncoder, JpaDatabaseWriter databaseWriter) {
+      Environment environment, PasswordEncoder passwordEncoder, JpaDataWriter databaseWriter) {
     super(environment, passwordEncoder);
     this.databaseWriter = databaseWriter;
   }
@@ -42,7 +41,7 @@ public class JpaDataInitializer extends DataInitializer {
   }
 
   @Override
-  boolean generateIds() {
+  protected boolean generateIds() {
     return false;
   }
 }

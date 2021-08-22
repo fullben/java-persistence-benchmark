@@ -2,7 +2,7 @@ package de.uniba.dsg.jpb.data.gen.ms;
 
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.data.gen.DataProvider;
-import de.uniba.dsg.jpb.data.gen.DatabaseWriter;
+import de.uniba.dsg.jpb.data.gen.DataWriter;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.EmployeeData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
@@ -12,14 +12,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-public class MsDatabaseWriter
-    implements DatabaseWriter<WarehouseData, EmployeeData, ProductData, CarrierData>,
-        AutoCloseable {
+public class MsDataWriter
+    implements DataWriter<WarehouseData, EmployeeData, ProductData, CarrierData>, AutoCloseable {
 
   private DataRoot dataRoot;
   private boolean closed;
 
-  public MsDatabaseWriter(DataRoot dataRoot) {
+  public MsDataWriter(DataRoot dataRoot) {
     this.dataRoot = dataRoot;
     closed = false;
   }
