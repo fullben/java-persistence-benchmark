@@ -1,7 +1,6 @@
 package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderItemRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
@@ -37,7 +36,6 @@ public class JpaNewOrderService extends NewOrderService {
   private final OrderItemRepository orderItemRepository;
   private final OrderRepository orderRepository;
   private final CustomerRepository customerRepository;
-  private final DistrictRepository districtRepository;
 
   @Autowired
   public JpaNewOrderService(
@@ -45,20 +43,18 @@ public class JpaNewOrderService extends NewOrderService {
       StockRepository stockRepository,
       OrderItemRepository orderItemRepository,
       OrderRepository orderRepository,
-      CustomerRepository customerRepository,
-      DistrictRepository districtRepository) {
+      CustomerRepository customerRepository) {
     this.productRepository = itemRepository;
     this.stockRepository = stockRepository;
     this.orderItemRepository = orderItemRepository;
     this.orderRepository = orderRepository;
     this.customerRepository = customerRepository;
-    this.districtRepository = districtRepository;
   }
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public OrderResponse process(OrderRequest req) {
-    // 1. Fetch warehouse, district and customer
+    // Fetch warehouse, district and customer
     CustomerEntity customer = customerRepository.getById(req.getCustomerId());
     DistrictEntity district = customer.getDistrict();
     if (district == null
@@ -67,7 +63,8 @@ public class JpaNewOrderService extends NewOrderService {
       throw new IllegalArgumentException();
     }
     WarehouseEntity warehouse = district.getWarehouse();
-    // 2. Create and persist a new order and order entry
+
+    // Create and persist a new order and order entry
     OrderEntity order = new OrderEntity();
     order.setCustomer(customer);
     order.setDistrict(district);
@@ -79,7 +76,7 @@ public class JpaNewOrderService extends NewOrderService {
         req.getItems().stream()
             .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
     order = orderRepository.save(order);
-    // 3. Process individual order items
+    // Process individual order items
     List<OrderItemEntity> orderItems = toOrderItems(req.getItems(), order);
     List<OrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
     double orderItemSum = 0;
@@ -111,7 +108,8 @@ public class JpaNewOrderService extends NewOrderService {
       orderItemRepository.save(orderItem);
       orderItemSum += orderItem.getAmount();
     }
-    // 4. Prepare the response object
+
+    // Prepare the response object
     OrderResponse res = newOrderResponse(req, order, warehouse, district, customer);
     res.setOrderId(order.getId());
     res.setOrderTimestamp(order.getEntryDate());
@@ -140,35 +138,19 @@ public class JpaNewOrderService extends NewOrderService {
     return res;
   }
 
-  private static String getRandomDistrictInfo(StockEntity stock) {
-    return getDistrictInfo(randomDistrictNumber(), stock);
-  }
-
-  private static String getDistrictInfo(int districtNbr, StockEntity stock) {
-    switch (districtNbr) {
-      case 1:
-        return stock.getDist01();
-      case 2:
-        return stock.getDist02();
-      case 3:
-        return stock.getDist03();
-      case 4:
-        return stock.getDist04();
-      case 5:
-        return stock.getDist05();
-      case 6:
-        return stock.getDist06();
-      case 7:
-        return stock.getDist07();
-      case 8:
-        return stock.getDist08();
-      case 9:
-        return stock.getDist09();
-      case 10:
-        return stock.getDist10();
-      default:
-        throw new IllegalArgumentException();
-    }
+  private String getRandomDistrictInfo(StockEntity stock) {
+    return randomDistrictData(
+        List.of(
+            stock.getDist01(),
+            stock.getDist02(),
+            stock.getDist03(),
+            stock.getDist04(),
+            stock.getDist05(),
+            stock.getDist06(),
+            stock.getDist07(),
+            stock.getDist08(),
+            stock.getDist09(),
+            stock.getDist10()));
   }
 
   private static OrderResponseItem newOrderResponseLine(OrderItemEntity item) {

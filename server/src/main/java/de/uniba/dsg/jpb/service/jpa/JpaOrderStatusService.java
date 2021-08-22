@@ -40,6 +40,7 @@ public class JpaOrderStatusService extends OrderStatusService {
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
+    // Fetch customer (either by id or email)
     Long customerId = req.getCustomerId();
     CustomerEntity customer;
     if (customerId == null) {
@@ -51,6 +52,8 @@ public class JpaOrderStatusService extends OrderStatusService {
     } else {
       customer = customerRepository.getById(customerId);
     }
+
+    // Find the most recent order of the customer and parse the delivery dates (and some other info)
     OrderEntity order =
         orderRepository
             .findMostRecentOrderOfCustomer(customerId)

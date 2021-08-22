@@ -42,6 +42,7 @@ public class JpaPaymentService extends PaymentService {
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public PaymentResponse process(PaymentRequest req) {
+    // Fetch warehouse, district, and customer (either by id or email)
     WarehouseEntity warehouse = warehouseRepository.getById(req.getWarehouseId());
     DistrictEntity district = districtRepository.getById(req.getDistrictId());
     Long customerId = req.getCustomerId();
@@ -54,20 +55,38 @@ public class JpaPaymentService extends PaymentService {
     } else {
       customer = customerRepository.getById(customerId);
     }
+
+    // Update warehouse and district year to data balance
     warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
     warehouse = warehouseRepository.save(warehouse);
     district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
     district = districtRepository.save(district);
+
+    // Update customer balance, year to data payment, and payment count
     customer.setBalance(customer.getBalance() - req.getAmount());
     customer.setYearToDatePayment(customer.getYearToDatePayment() + req.getAmount());
+    customer.setPaymentCount(customer.getPaymentCount() + 1);
+    // Update customer data if the customer has bad credit
+    if (customerHasBadCredit(customer.getCredit())) {
+      customer.setData(
+          buildNewCustomerData(
+              customer.getId(),
+              customer.getDistrict().getId(),
+              customer.getDistrict().getWarehouse().getId(),
+              req.getAmount(),
+              customer.getData()));
+    }
     customer = customerRepository.save(customer);
+
+    // Create a new entry for this payment
     PaymentEntity payment = new PaymentEntity();
     payment.setCustomer(customer);
     payment.setDate(LocalDateTime.now());
     payment.setDistrict(district);
-    payment.setData(warehouse.getName() + "    " + district.getName());
+    payment.setData(buildPaymentData(warehouse.getName(), district.getName()));
     payment.setAmount(req.getAmount());
     payment = paymentRepository.save(payment);
+
     PaymentResponse res = new PaymentResponse(req);
     res.setPaymentId(payment.getId());
     res.setCustomerCredit(customer.getCredit());

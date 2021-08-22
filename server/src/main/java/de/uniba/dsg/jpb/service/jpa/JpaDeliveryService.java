@@ -58,10 +58,12 @@ public class JpaDeliveryService extends DeliveryService {
         // No unfulfilled orders for this district, do nothing
         continue;
       }
+
       // Update carrier of order
       CarrierEntity carrier = carrierRepository.getById(req.getCarrierId());
       order.setCarrier(carrier);
       order = orderRepository.save(order);
+
       // Find all order items, set delivery date to now and sum amount
       List<OrderItemEntity> orderItems =
           orderItemRepository.findByOrderIdOrderByNumberAsc(order.getId());
@@ -70,9 +72,11 @@ public class JpaDeliveryService extends DeliveryService {
         amountSum += orderItem.getAmount();
       }
       orderItemRepository.saveAll(orderItems);
+
       // Update fulfillment status of order
       order.setFulfilled(true);
       order = orderRepository.save(order);
+
       // Update customer balance and delivery count
       CustomerEntity customer = order.getCustomer();
       customer.setBalance(customer.getBalance() + amountSum);

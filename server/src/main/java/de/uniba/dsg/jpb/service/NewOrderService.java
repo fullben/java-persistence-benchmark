@@ -4,6 +4,7 @@ import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public abstract class NewOrderService implements TransactionService<OrderRequest, OrderResponse> {
 
@@ -11,11 +12,18 @@ public abstract class NewOrderService implements TransactionService<OrderRequest
 
   public NewOrderService() {}
 
-  protected static int randomDistrictNumber() {
+  protected String randomDistrictData(List<String> districtData) {
+    if (districtData.size() != 10) {
+      throw new IllegalArgumentException();
+    }
+    return districtData.get(randomDistrictNumber());
+  }
+
+  private static int randomDistrictNumber() {
     return DIST_RANDOM.nextInt();
   }
 
-  protected static String determineBrandGeneric(String itemData, String stockData) {
+  protected String determineBrandGeneric(String itemData, String stockData) {
     final String s = "ORIGINAL";
     return itemData.contains(s) || stockData.contains(s) ? "B" : "G";
   }

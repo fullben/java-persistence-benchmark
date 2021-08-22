@@ -39,11 +39,12 @@ public class MsNewOrderService extends NewOrderService {
 
   @Override
   public OrderResponse process(OrderRequest req) {
-    // 1. Fetch warehouse, district and customer
-    CustomerData customer = customerRepository.findById(req.getCustomerId());
+    // Fetch warehouse, district and customer
+    CustomerData customer = customerRepository.getById(req.getCustomerId());
     DistrictData district = customer.getDistrict();
     WarehouseData warehouse = district.getWarehouse();
-    // 2. Create and persist a new order and order entry
+
+    // Create and persist a new order and order entry
     OrderData order = new OrderData();
     order.setCustomer(customer);
     order.setDistrict(district);
@@ -57,13 +58,13 @@ public class MsNewOrderService extends NewOrderService {
     customer.getOrders().add(order);
     // FIXME we only need to persist customer.orders...
     customerRepository.save(customer);
-    // 3. Process individual order items
+    // Process individual order items
     List<OrderItemData> orderItems = toOrderItems(req.getItems(), order);
     List<OrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
     double orderItemSum = 0;
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemData orderItem = orderItems.get(i);
-      ProductData product = productRepository.findById(orderItem.getProduct().getId());
+      ProductData product = productRepository.getById(orderItem.getProduct().getId());
       StockData stock =
           warehouse.getStocks().stream()
               .filter(s -> s.getProduct().getId().equals(product.getId()))
@@ -89,7 +90,8 @@ public class MsNewOrderService extends NewOrderService {
       // TODO save orderItem
       orderItemSum += orderItem.getAmount();
     }
-    // 4. Prepare the response object
+
+    // Prepare the response object
     OrderResponse res =
         newOrderResponse(
             req,
@@ -109,35 +111,19 @@ public class MsNewOrderService extends NewOrderService {
     return res;
   }
 
-  private static String getRandomDistrictInfo(StockData stock) {
-    return getDistrictInfo(randomDistrictNumber(), stock);
-  }
-
-  private static String getDistrictInfo(int districtNbr, StockData stock) {
-    switch (districtNbr) {
-      case 1:
-        return stock.getDist01();
-      case 2:
-        return stock.getDist02();
-      case 3:
-        return stock.getDist03();
-      case 4:
-        return stock.getDist04();
-      case 5:
-        return stock.getDist05();
-      case 6:
-        return stock.getDist06();
-      case 7:
-        return stock.getDist07();
-      case 8:
-        return stock.getDist08();
-      case 9:
-        return stock.getDist09();
-      case 10:
-        return stock.getDist10();
-      default:
-        throw new IllegalArgumentException();
-    }
+  private String getRandomDistrictInfo(StockData stock) {
+    return randomDistrictData(
+        List.of(
+            stock.getDist01(),
+            stock.getDist02(),
+            stock.getDist03(),
+            stock.getDist04(),
+            stock.getDist05(),
+            stock.getDist06(),
+            stock.getDist07(),
+            stock.getDist08(),
+            stock.getDist09(),
+            stock.getDist10()));
   }
 
   private static OrderResponseItem newOrderResponseLine(OrderItemData item) {
