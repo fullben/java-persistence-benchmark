@@ -34,6 +34,8 @@ public abstract class BaseRepository<T extends Identifiable<I>, I> {
 
   public abstract Collection<T> saveAll(Collection<T> item);
 
+  public abstract void clear();
+
   public abstract int count();
 
   void setStorageManager(EmbeddedStorageManager storageManager) {

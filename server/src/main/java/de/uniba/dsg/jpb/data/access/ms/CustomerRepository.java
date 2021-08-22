@@ -101,6 +101,13 @@ public class CustomerRepository extends BaseRepository<CustomerData, Long> {
   }
 
   @Override
+  public void clear() {
+    idToCustomer.clear();
+    emailToCustomer.clear();
+    getStorageManager().storeAll(idToCustomer, emailToCustomer);
+  }
+
+  @Override
   public int count() {
     return read(idToCustomer::size);
   }

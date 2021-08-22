@@ -95,6 +95,12 @@ public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
   }
 
   @Override
+  public void clear() {
+    idToItem.clear();
+    getStorageManager().store(idToItem);
+  }
+
+  @Override
   public int count() {
     return read(idToItem::size);
   }
