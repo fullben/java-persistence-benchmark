@@ -1,22 +1,24 @@
 package de.uniba.dsg.jpb.util;
 
-public class SequenceGenerator {
+import java.util.concurrent.atomic.AtomicLong;
 
-  private Long last;
+public class SequenceGenerator implements IdentifierGenerator<Long> {
+
+  private final AtomicLong currentValue;
 
   public SequenceGenerator() {
     this(0);
   }
 
   public SequenceGenerator(long start) {
-    last = start;
+    currentValue = new AtomicLong(start);
   }
 
-  public synchronized long next() {
-    return last++;
+  public Long next() {
+    return currentValue.addAndGet(1);
   }
 
-  public synchronized long current() {
-    return last;
+  public Long current() {
+    return currentValue.get();
   }
 }
