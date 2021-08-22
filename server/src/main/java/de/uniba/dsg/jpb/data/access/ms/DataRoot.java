@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.data.access.ms;
 
+import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 
 public class DataRoot {
@@ -37,5 +38,12 @@ public class DataRoot {
     carrierRepository.setStorageManager(storageManager);
     warehouseRepository.setStorageManager(storageManager);
     employeeRepository.setStorageManager(storageManager);
+  }
+
+  public void setIdGenerator(IdentifierGenerator<Long> idGenerator) {
+    productRepository.setIdGenerator(idGenerator);
+    carrierRepository.setIdGenerator(idGenerator);
+    warehouseRepository.setIdGenerator(idGenerator);
+    employeeRepository.setIdGenerator(idGenerator);
   }
 }

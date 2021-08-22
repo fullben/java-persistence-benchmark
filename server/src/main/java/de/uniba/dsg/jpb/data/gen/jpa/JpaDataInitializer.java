@@ -39,9 +39,4 @@ public class JpaDataInitializer extends DataInitializer {
         "Successfully wrote model data to database, took {} seconds",
         stopwatch.getDurationSeconds());
   }
-
-  @Override
-  protected boolean generateIds() {
-    return false;
-  }
 }

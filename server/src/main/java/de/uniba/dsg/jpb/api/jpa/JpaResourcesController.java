@@ -78,7 +78,7 @@ public class JpaResourcesController implements ResourcesController {
   @Override
   public EmployeeRepresentation getEmployee(@PathVariable String username) {
     return modelMapper.map(
-        employeeRepository.findByUsername(username), EmployeeRepresentation.class);
+        employeeRepository.findByUsername(username).orElse(null), EmployeeRepresentation.class);
   }
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

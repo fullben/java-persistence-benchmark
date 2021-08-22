@@ -3,6 +3,7 @@ package de.uniba.dsg.jpb.data.gen.jpa;
 import static java.util.Objects.requireNonNull;
 
 import com.github.javafaker.Faker;
+import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import de.uniba.dsg.jpb.data.gen.DataProvider;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
@@ -16,7 +17,6 @@ import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.util.RandomSelector;
-import de.uniba.dsg.jpb.util.SequenceGenerator;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,7 +55,6 @@ public class JpaDataGenerator
           "Great Plains Transport",
           "PAM Transportation",
           "FedEx");
-  private final SequenceGenerator idGenerator;
   private final int warehouseCount;
   private final int itemCount;
   private final int districtsPerWarehouseCount;
@@ -71,13 +70,12 @@ public class JpaDataGenerator
   private final List<EmployeeEntity> employees;
   private final List<String> existingEmails;
   private final PasswordEncoder passwordEncoder;
+  private IdentifierGenerator<Long> idGenerator;
 
-  public JpaDataGenerator(
-      int warehouseCount, boolean generateIds, boolean fullScale, PasswordEncoder passwordEncoder) {
+  public JpaDataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
     if (warehouseCount < 1) {
       throw new IllegalArgumentException("Warehouse count must be greater than zero");
     }
-    idGenerator = generateIds ? new SequenceGenerator() : null;
     this.warehouseCount = warehouseCount;
     if (fullScale) {
       itemCount = 100_000;
@@ -100,14 +98,15 @@ public class JpaDataGenerator
     employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
     this.passwordEncoder = requireNonNull(passwordEncoder);
-  }
-
-  public JpaDataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
-    this(warehouseCount, false, fullScale, passwordEncoder);
+    idGenerator = null;
   }
 
   public JpaDataGenerator(int warehouseCount, PasswordEncoder passwordEncoder) {
-    this(warehouseCount, false, false, passwordEncoder);
+    this(warehouseCount, true, passwordEncoder);
+  }
+
+  public void setIdGenerator(IdentifierGenerator<Long> idGenerator) {
+    this.idGenerator = idGenerator;
   }
 
   @Override

@@ -9,142 +9,101 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Supplier;
-import one.microstream.storage.embedded.types.EmbeddedStorageManager;
+import javax.swing.text.html.Option;
 
-public abstract class IndexedIdRepository<T extends Identifiable<I>, I> {
+public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
+    extends BaseRepository<T, I> {
 
   private final Map<I, T> idToItem;
-  private final transient ReentrantReadWriteLock lock;
-  private transient EmbeddedStorageManager storageManager;
-
-  IndexedIdRepository(EmbeddedStorageManager storageManager) {
-    this.storageManager = storageManager;
-    lock = new ReentrantReadWriteLock();
-    idToItem = new HashMap<>();
-  }
 
   IndexedIdRepository() {
+    super();
     idToItem = new HashMap<>();
-    lock = new ReentrantReadWriteLock();
-    storageManager = null;
   }
 
+  @Override
   public T getById(I id) {
     requireNonNull(id);
     return read(() -> requireFound(idToItem.get(id)));
   }
 
+
+  @Override
   public Optional<T> findById(I id) {
     requireNonNull(id);
     return read(() -> Optional.ofNullable(idToItem.get(id)));
   }
 
+
+
+  @Override
   public List<T> findAll() {
     return read(() -> new ArrayList<>(idToItem.values()));
   }
 
+  @Override
   public T save(T item) {
     requireNonNull(item);
     return write(
         () -> {
-          T res = idToItem.put(item.getId(), item);
-          persist();
-          return res;
+          if (item.getId() == null) {
+            // New object, thus set id and add to all collections and persist
+            item.setId(generateNextId(idToItem::containsKey));
+            idToItem.put(item.getId(), item);
+            getStorageManager().storeAll(idToItem);
+          } else {
+            if (!idToItem.containsKey(item.getId())) {
+              // Illegal: an identifier was set by someone else
+              throw new UnknownIdentifierException("Unable to find item with id " + item.getId());
+            }
+            // Existing object which is supposed to be overwritten
+            getStorageManager().createEagerStorer().store(item);
+          }
+          return item;
         });
   }
 
-  public List<T> saveAll(Collection<T> items) {
+  @Override
+  public Collection<T> saveAll(Collection<T> items) {
     requireNonNull(items);
     if (items.isEmpty()) {
-      return new ArrayList<>(0);
+      return items;
     }
     return write(
         () -> {
+          List<T> newItems = new ArrayList<>();
+          List<T> updatedItems = new ArrayList<>();
           for (T item : items) {
-            idToItem.put(item.getId(), item);
+            if (item.getId() == null) {
+              // New object, thus set id and add to collection
+              item.setId(generateNextId(idToItem::containsKey));
+              idToItem.put(item.getId(), item);
+              newItems.add(item);
+            } else {
+              // Existing object which is supposed to be overwritten
+              if (!idToItem.containsKey(item.getId())) {
+                // Illegal: an identifier was set by someone else
+                throw new UnknownIdentifierException("Unable to find item for id " + item.getId());
+              }
+              updatedItems.add(item);
+            }
           }
-          persist();
+          if (!newItems.isEmpty()) {
+            getStorageManager().store(idToItem);
+          }
+          if (!updatedItems.isEmpty()) {
+            getStorageManager().createEagerStorer().store(updatedItems);
+          }
           return new ArrayList<>(items);
         });
   }
 
-  public void delete(T item) {
-    requireNonNull(item);
-    write(
-        () -> {
-          idToItem.remove(item.getId());
-          persist();
-        });
+  @Override
+  public int count() {
+    return read(idToItem::size);
   }
 
-  public void deleteAll(Collection<T> items) {
-    requireNonNull(items);
-    if (items.isEmpty()) {
-      return;
-    }
-    write(
-        () -> {
-          for (T item : items) {
-            idToItem.remove(item.getId());
-          }
-          persist();
-        });
-  }
-
-  void setStorageManager(EmbeddedStorageManager storageManager) {
-    this.storageManager = storageManager;
-  }
-
-  EmbeddedStorageManager getStorageManager() {
-    return storageManager;
-  }
-
-  void persist() {
-    storageManager.storeAll(idToItem);
-  }
-
-  <S> S read(Supplier<S> operation) {
-    lock.readLock().lock();
-    try {
-      return operation.get();
-    } finally {
-      lock.readLock().unlock();
-    }
-  }
-
-  void read(Runnable operation) {
-    lock.readLock().lock();
-    try {
-      operation.run();
-    } finally {
-      lock.readLock().unlock();
-    }
-  }
-
-  <S> S write(Supplier<S> operation) {
-    lock.writeLock().lock();
-    try {
-      return operation.get();
-    } finally {
-      lock.writeLock().unlock();
-    }
-  }
-
-  void write(Runnable operation) {
-    lock.writeLock().lock();
-    try {
-      operation.run();
-    } finally {
-      lock.writeLock().unlock();
-    }
-  }
-
-  static <T> T requireFound(T value) {
-    if (value == null) {
-      throw new DataNotFoundException();
-    }
-    return value;
+  final Map<I, T> getIndexedItems() {
+    return idToItem;
   }
 }

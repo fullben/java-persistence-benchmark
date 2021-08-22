@@ -1,11 +1,11 @@
-package de.uniba.dsg.jpb.auth;
+package de.uniba.dsg.jpb.auth.jpa;
 
+import de.uniba.dsg.jpb.auth.EmployeeUserDetails;
+import de.uniba.dsg.jpb.auth.EmployeeUserDetailsService;
 import de.uniba.dsg.jpb.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.data.model.jpa.EmployeeEntity;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +22,10 @@ public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
 
   @Override
   public EmployeeUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    EmployeeEntity employee = employeeRepository.findByUsername(username);
+    EmployeeEntity employee = employeeRepository.findByUsername(username).orElse(null);
     if (employee == null) {
       throw new UsernameNotFoundException("Unable to find user with name " + username);
     }
-    return new EmployeeUserDetails(
-        employee.getUsername(),
-        employee.getPassword(),
-        List.of(new SimpleGrantedAuthority(Role.TERMINAL_USER.prefixedName())));
+    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
   }
 }

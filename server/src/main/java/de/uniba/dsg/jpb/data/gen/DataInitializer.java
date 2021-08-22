@@ -18,10 +18,7 @@ public abstract class DataInitializer implements CommandLineRunner {
   protected JpaDataGenerator createJpaDataGenerator() {
     return new JpaDataGenerator(
         environment.getProperty("jpb.model.warehouse-count", Integer.class, 1),
-        generateIds(),
         environment.getProperty("jpb.model.full-scale", Boolean.class, true),
         passwordEncoder);
   }
-
-  protected abstract boolean generateIds();
 }

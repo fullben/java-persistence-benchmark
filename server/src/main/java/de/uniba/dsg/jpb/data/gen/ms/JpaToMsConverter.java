@@ -1,7 +1,7 @@
 package de.uniba.dsg.jpb.data.gen.ms;
 
-import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.data.gen.DataProvider;
+import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
@@ -59,6 +59,7 @@ public class JpaToMsConverter
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
     employees = convertEmployees(employeeEntities, warehouses);
+    clearIds();
   }
 
   @Override
@@ -79,6 +80,29 @@ public class JpaToMsConverter
   @Override
   public List<EmployeeData> getEmployees() {
     return employees;
+  }
+
+  private void clearIds() {
+    if (products == null || carriers == null || warehouses == null || employees == null) {
+      throw new IllegalStateException();
+    }
+    products.forEach(p -> p.setId(null));
+    carriers.forEach(c -> c.setId(null));
+    for (WarehouseData warehouse : warehouses) {
+      warehouse.setId(null);
+      for (DistrictData district : warehouse.getDistricts()) {
+        district.setId(null);
+        for (CustomerData customer : district.getCustomers()) {
+          customer.setId(null);
+          customer.getPayments().forEach(p -> p.setId(null));
+        }
+        for (OrderData order : district.getOrders()) {
+          order.setId(null);
+          order.getItems().forEach(i -> i.setId(null));
+        }
+      }
+    }
+    employees.forEach(e -> e.setId(null));
   }
 
   private List<ProductData> convertProducts(List<ProductEntity> ps) {
@@ -197,6 +221,7 @@ public class JpaToMsConverter
       customer.setDeliveryCount(c.getDeliveryCount());
       customer.setPayments(payments(c.getPayments(), customer, d));
       customer.setOrders(findOrdersByCustomerId(c.getId(), d.getOrders()));
+      customer.getOrders().forEach(o -> o.setCustomer(customer));
       customer.setDistrict(d);
     }
     return customers;
@@ -215,10 +240,13 @@ public class JpaToMsConverter
       order.setItemCount(o.getItemCount());
       order.setEntryDate(o.getEntryDate());
       order.setFulfilled(o.isFulfilled());
-      order.setCarrier(findCarrierById(o.getCarrier().getId(), cs));
+      order.setCarrier(o.getCarrier() == null ? null : findCarrierById(o.getCarrier().getId(), cs));
       order.setAllLocal(o.isAllLocal());
       order.setDistrict(d);
-      order.setCustomer(findCustomerById(o.getCustomer().getId(), d.getCustomers()));
+      // Setting the actual customer must be handled by the caller!!!
+      CustomerData customerDummy = new CustomerData();
+      customerDummy.setId(o.getCustomer().getId());
+      order.setCustomer(customerDummy);
       order.setItems(orderItems(o.getItems(), order, ws, ps));
       orders.add(order);
     }
