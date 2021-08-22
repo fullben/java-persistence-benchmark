@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.swing.text.html.Option;
 
 public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
     extends BaseRepository<T, I> {
@@ -27,14 +26,11 @@ public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
     return read(() -> requireFound(idToItem.get(id)));
   }
 
-
   @Override
   public Optional<T> findById(I id) {
     requireNonNull(id);
     return read(() -> Optional.ofNullable(idToItem.get(id)));
   }
-
-
 
   @Override
   public List<T> findAll() {

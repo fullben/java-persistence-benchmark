@@ -36,11 +36,6 @@ public abstract class BaseRepository<T extends Identifiable<I>, I> {
 
   public abstract int count();
 
-  @Deprecated
-  public void persistRelated(Object... related) {
-    storageManager.storeAll(related);
-  }
-
   void setStorageManager(EmbeddedStorageManager storageManager) {
     this.storageManager = storageManager;
   }
