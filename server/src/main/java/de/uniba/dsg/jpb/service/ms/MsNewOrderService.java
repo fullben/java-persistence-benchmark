@@ -26,12 +26,10 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsNewOrderService extends NewOrderService {
 
-  private final DataRoot dataRoot;
   private final ProductRepository productRepository;
   private final CustomerRepository customerRepository;
 
   public MsNewOrderService(DataRoot dataRoot) {
-    this.dataRoot = dataRoot;
     productRepository = dataRoot.productRepository();
     // TODO
     customerRepository = null;
