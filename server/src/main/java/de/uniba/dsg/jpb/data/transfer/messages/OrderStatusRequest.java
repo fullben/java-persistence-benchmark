@@ -1,9 +1,8 @@
-package de.uniba.dsg.jpb.messages;
+package de.uniba.dsg.jpb.data.transfer.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
-public class OrderRequest {
+public class OrderStatusRequest {
 
   @JsonProperty(required = true)
   private Long warehouseId;
@@ -11,11 +10,11 @@ public class OrderRequest {
   @JsonProperty(required = true)
   private Long districtId;
 
-  @JsonProperty(required = true)
+  @JsonProperty(required = false)
   private Long customerId;
 
-  @JsonProperty(required = true)
-  private List<OrderRequestItem> items;
+  @JsonProperty(required = false)
+  private String customerEmail;
 
   public Long getWarehouseId() {
     return warehouseId;
@@ -41,11 +40,11 @@ public class OrderRequest {
     this.customerId = customerId;
   }
 
-  public List<OrderRequestItem> getItems() {
-    return items;
+  public String getCustomerEmail() {
+    return customerEmail;
   }
 
-  public void setItems(List<OrderRequestItem> items) {
-    this.items = items;
+  public void setCustomerEmail(String customerEmail) {
+    this.customerEmail = customerEmail;
   }
 }

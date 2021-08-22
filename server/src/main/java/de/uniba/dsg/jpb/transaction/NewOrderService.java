@@ -1,12 +1,11 @@
 package de.uniba.dsg.jpb.transaction;
 
-import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 
-public abstract class NewOrderService
-    implements TransactionService<OrderRequest, OrderResponse> {
+public abstract class NewOrderService implements TransactionService<OrderRequest, OrderResponse> {
 
   private static final UniformRandom DIST_RANDOM = new UniformRandom(1, 10);
 

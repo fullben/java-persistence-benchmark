@@ -1,8 +1,8 @@
-package de.uniba.dsg.jpb.messages;
+package de.uniba.dsg.jpb.data.transfer.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class OrderStatusRequest {
+public class PaymentRequest {
 
   @JsonProperty(required = true)
   private Long warehouseId;
@@ -15,6 +15,9 @@ public class OrderStatusRequest {
 
   @JsonProperty(required = false)
   private String customerEmail;
+
+  @JsonProperty(required = true)
+  private double amount;
 
   public Long getWarehouseId() {
     return warehouseId;
@@ -46,5 +49,13 @@ public class OrderStatusRequest {
 
   public void setCustomerEmail(String customerEmail) {
     this.customerEmail = customerEmail;
+  }
+
+  public double getAmount() {
+    return amount;
+  }
+
+  public void setAmount(double amount) {
+    this.amount = amount;
   }
 }

@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.messages;
+package de.uniba.dsg.jpb.data.transfer.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

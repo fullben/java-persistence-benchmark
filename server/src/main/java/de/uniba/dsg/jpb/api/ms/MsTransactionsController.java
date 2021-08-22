@@ -1,16 +1,16 @@
 package de.uniba.dsg.jpb.api.ms;
 
 import de.uniba.dsg.jpb.api.TransactionsController;
-import de.uniba.dsg.jpb.messages.DeliveryRequest;
-import de.uniba.dsg.jpb.messages.DeliveryResponse;
-import de.uniba.dsg.jpb.messages.OrderRequest;
-import de.uniba.dsg.jpb.messages.OrderResponse;
-import de.uniba.dsg.jpb.messages.OrderStatusRequest;
-import de.uniba.dsg.jpb.messages.OrderStatusResponse;
-import de.uniba.dsg.jpb.messages.PaymentRequest;
-import de.uniba.dsg.jpb.messages.PaymentResponse;
-import de.uniba.dsg.jpb.messages.StockLevelRequest;
-import de.uniba.dsg.jpb.messages.StockLevelResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.StockLevelRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.StockLevelResponse;
 import de.uniba.dsg.jpb.transaction.ms.MsNewOrderService;
 import de.uniba.dsg.jpb.transaction.ms.MsPaymentService;
 import org.springframework.beans.factory.annotation.Autowired;

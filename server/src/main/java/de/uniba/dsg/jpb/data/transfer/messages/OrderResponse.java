@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.messages;
+package de.uniba.dsg.jpb.data.transfer.messages;
 
 import java.time.LocalDateTime;
 import java.util.List;
