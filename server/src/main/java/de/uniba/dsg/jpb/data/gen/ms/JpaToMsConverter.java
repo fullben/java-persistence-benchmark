@@ -36,9 +36,9 @@ public class JpaToMsConverter
   private final List<WarehouseEntity> warehouseEntities;
   private final List<EmployeeEntity> employeeEntities;
   private List<ProductData> products;
+  private List<CarrierData> carriers;
   private List<WarehouseData> warehouses;
   private List<EmployeeData> employees;
-  private List<CarrierData> carriers;
 
   public JpaToMsConverter(JpaDataGenerator dataGenerator) {
     if (dataGenerator.getWarehouses() == null) {
