@@ -1,4 +1,4 @@
-package de.uniba.dsg.jpb.data.model;
+package de.uniba.dsg.jpb.util;
 
 public interface Identifiable<T> {
 

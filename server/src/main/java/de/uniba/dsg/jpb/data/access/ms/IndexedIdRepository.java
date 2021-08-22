@@ -2,7 +2,7 @@ package de.uniba.dsg.jpb.data.access.ms;
 
 import static java.util.Objects.requireNonNull;
 
-import de.uniba.dsg.jpb.data.model.Identifiable;
+import de.uniba.dsg.jpb.util.Identifiable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import de.uniba.dsg.jpb.data.model.Identifiable;
+import de.uniba.dsg.jpb.util.Identifiable;
 
 public class CarrierData implements Identifiable<Long> {
 

@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.data.access.ms;
 
-import de.uniba.dsg.jpb.data.model.Identifiable;
+import de.uniba.dsg.jpb.util.Identifiable;
 import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import java.util.Collection;
 import java.util.List;
