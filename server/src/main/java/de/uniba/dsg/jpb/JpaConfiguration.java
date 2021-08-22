@@ -35,10 +35,11 @@ public class JpaConfiguration {
   @Primary
   public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(environment.getProperty("jpb.jpa.datasource.driverClassName"));
-    dataSource.setUrl(environment.getProperty("jpb.jpa.datasource.url"));
-    dataSource.setUsername(environment.getProperty("jpb.jpa.datasource.username"));
-    dataSource.setPassword(environment.getProperty("jpb.jpa.datasource.password"));
+    dataSource.setDriverClassName(
+        environment.getRequiredProperty("jpb.jpa.datasource.driverClassName"));
+    dataSource.setUrl(environment.getRequiredProperty("jpb.jpa.datasource.url"));
+    dataSource.setUsername(environment.getRequiredProperty("jpb.jpa.datasource.username"));
+    dataSource.setPassword(environment.getRequiredProperty("jpb.jpa.datasource.password"));
     dataSource.setSchema(environment.getProperty("jpb.jpa.datasource.schema"));
     return dataSource;
   }
@@ -57,9 +58,9 @@ public class JpaConfiguration {
     final String dialectKey = "jpb.jpa.hibernate.dialect";
     final String timeZoneKey = "jpb.jpa.hibernate.jdbc.time_zone";
     Map<String, Object> props = new HashMap<>();
-    props.put(ddlAutoKey, environment.getProperty(ddlAutoKey));
-    props.put(dialectKey, environment.getProperty(dialectKey));
-    props.put(timeZoneKey, environment.getProperty(timeZoneKey));
+    props.put(ddlAutoKey, environment.getRequiredProperty(ddlAutoKey));
+    props.put(dialectKey, environment.getRequiredProperty(dialectKey));
+    props.put(timeZoneKey, environment.getRequiredProperty(timeZoneKey));
     factory.setJpaPropertyMap(props);
     factory.afterPropertiesSet();
 

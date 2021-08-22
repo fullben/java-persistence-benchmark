@@ -4,27 +4,28 @@ import de.uniba.dsg.jpb.data.access.ms.DataRoot;
 import one.microstream.storage.embedded.configuration.types.EmbeddedStorageConfiguration;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
-@ConfigurationProperties(prefix = "jpb.ms")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsConfiguration {
 
-  private String storageDir;
+  private final Environment environment;
 
-  public MsConfiguration() {
-    storageDir = null;
+  @Autowired
+  public MsConfiguration(Environment environment) {
+    this.environment = environment;
   }
 
   @Bean
   public EmbeddedStorageManager embeddedStorageManager() {
     EmbeddedStorageFoundation<?> foundation =
         EmbeddedStorageConfiguration.Builder()
-            .setStorageDirectory(storageDir)
+            .setStorageDirectory(environment.getRequiredProperty("jpb.ms.storage-dir"))
             .setChannelCount(Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1))
             .createEmbeddedStorageFoundation();
     return foundation.createEmbeddedStorageManager().start();
@@ -39,13 +40,5 @@ public class MsConfiguration {
     }
     root.setStorageManager(embeddedStorageManager);
     return root;
-  }
-
-  public String getStorageDir() {
-    return storageDir;
-  }
-
-  public void setStorageDir(String storageDir) {
-    this.storageDir = storageDir;
   }
 }

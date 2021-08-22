@@ -16,12 +16,10 @@ public abstract class DataInitializer implements CommandLineRunner {
   }
 
   JpaDataGenerator createJpaDataGenerator() {
-    final String warehouseCount = environment.getProperty("jpb.model.warehouse-count");
-    final String fullScale = environment.getProperty("jpb.model.full-scale");
     return new JpaDataGenerator(
-        warehouseCount == null ? 1 : Integer.parseInt(warehouseCount),
+        environment.getProperty("jpb.model.warehouse-count", Integer.class, 1),
         generateIds(),
-        fullScale == null || Boolean.parseBoolean(fullScale),
+        environment.getProperty("jpb.model.full-scale", Boolean.class, true),
         passwordEncoder);
   }
 
