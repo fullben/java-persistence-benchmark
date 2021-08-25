@@ -29,10 +29,11 @@ public class MsDataWriter
     if (closed) {
       return;
     }
-    dataRoot.productRepository().saveAll(dataProvider.getProducts());
-    dataRoot.carrierRepository().saveAll(dataProvider.getCarriers());
-    dataRoot.warehouseRepository().saveAll(dataProvider.getWarehouses());
-    dataRoot.employeeRepository().saveAll(dataProvider.getEmployees());
+    dataRoot.init(
+        dataProvider.getProducts(),
+        dataProvider.getCarriers(),
+        dataProvider.getWarehouses(),
+        dataProvider.getEmployees());
   }
 
   @Override

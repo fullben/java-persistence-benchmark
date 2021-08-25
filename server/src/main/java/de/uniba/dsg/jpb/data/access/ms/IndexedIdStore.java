@@ -3,21 +3,25 @@ package de.uniba.dsg.jpb.data.access.ms;
 import static java.util.Objects.requireNonNull;
 
 import de.uniba.dsg.jpb.util.Identifiable;
+import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
-    extends BaseRepository<T, I> {
+public abstract class IndexedIdStore<T extends Identifiable<I>, I> extends ReadWriteStore
+    implements Store<T, I> {
 
   private final Map<I, T> idToItem;
+  private transient IdentifierGenerator<I> idGenerator;
 
-  IndexedIdRepository() {
+  IndexedIdStore() {
     super();
     idToItem = new HashMap<>();
+    idGenerator = null;
   }
 
   @Override
@@ -105,7 +109,26 @@ public abstract class IndexedIdRepository<T extends Identifiable<I>, I>
     return read(idToItem::size);
   }
 
+  void setIdGenerator(IdentifierGenerator<I> idGenerator) {
+    this.idGenerator = idGenerator;
+  }
+
+  I generateNextId(Predicate<I> notAllowed) {
+    I nextId;
+    do {
+      nextId = idGenerator.next();
+    } while (notAllowed.test(nextId));
+    return nextId;
+  }
+
   final Map<I, T> getIndexedItems() {
     return idToItem;
+  }
+
+  static <T> T requireFound(T value) {
+    if (value == null) {
+      throw new DataNotFoundException();
+    }
+    return value;
   }
 }

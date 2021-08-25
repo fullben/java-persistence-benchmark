@@ -1,8 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.data.access.ms.WarehouseRepository;
+import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.PaymentData;
@@ -20,32 +18,31 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsPaymentService extends PaymentService {
 
-  private final WarehouseRepository warehouseRepository;
-  private final CustomerRepository customerRepository;
+  private final DataManager dataManager;
 
   @Autowired
-  public MsPaymentService(DataRoot dataRoot) {
-    warehouseRepository = dataRoot.warehouseRepository();
-    // TODO
-    customerRepository = null;
+  public MsPaymentService(DataManager dataManager) {
+    this.dataManager = dataManager;
   }
 
   @Override
   public PaymentResponse process(PaymentRequest req) {
     // Fetch warehouse, district, and customer (either by id or email)
-    WarehouseData warehouse = warehouseRepository.getById(req.getCustomerId());
+    WarehouseData warehouse = null;
     DistrictData district = findDistrictById(req.getDistrictId(), warehouse.getDistricts());
     Long customerId = req.getCustomerId();
     CustomerData customer;
     if (customerId == null) {
-      customer = customerRepository.getByEmail(req.getCustomerEmail());
+      // TODO get by email
+      customer = null;
     } else {
-      customer = customerRepository.getById(req.getCustomerId());
+      // TODO get by id
+      customer = null;
     }
 
     // Update warehouse and district year to data balance
     warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
-    warehouse = warehouseRepository.save(warehouse);
+    // warehouse = warehouseRepository.save(warehouse);
     district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
     // TODO save district
 
@@ -63,7 +60,7 @@ public class MsPaymentService extends PaymentService {
               req.getAmount(),
               customer.getData()));
     }
-    customer = customerRepository.save(customer);
+    // TODO save customer
 
     // Create a new entry for this payment
     PaymentData payment = new PaymentData();

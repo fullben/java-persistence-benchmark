@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb;
 
+import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
 import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import de.uniba.dsg.jpb.util.RandomIdentifierGenerator;
@@ -34,16 +35,22 @@ public class MsConfiguration {
   }
 
   @Bean
-  public DataRoot dataRoot(
-      EmbeddedStorageManager embeddedStorageManager, IdentifierGenerator<Long> idGenerator) {
+  public DataRoot dataRoot(EmbeddedStorageManager embeddedStorageManager) {
     DataRoot root = (DataRoot) embeddedStorageManager.root();
     if (root == null) {
       root = new DataRoot();
       embeddedStorageManager.setRoot(root);
     }
-    root.setStorageManager(embeddedStorageManager);
-    root.setIdGenerator(idGenerator);
     return root;
+  }
+
+  @Bean
+  public DataManager dataManager(
+      DataRoot root, EmbeddedStorageManager storageManager, IdentifierGenerator<Long> idGenerator) {
+    DataManager dataManager = new DataManager(root);
+    dataManager.setStorageManager(storageManager);
+    dataManager.setIdGenerator(idGenerator);
+    return dataManager;
   }
 
   @Bean

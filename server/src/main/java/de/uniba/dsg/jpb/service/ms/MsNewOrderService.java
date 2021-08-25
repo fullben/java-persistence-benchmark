@@ -1,8 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.data.access.ms.ProductRepository;
+import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
@@ -26,19 +24,16 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsNewOrderService extends NewOrderService {
 
-  private final ProductRepository productRepository;
-  private final CustomerRepository customerRepository;
+  private final DataManager dataManager;
 
-  public MsNewOrderService(DataRoot dataRoot) {
-    productRepository = dataRoot.productRepository();
-    // TODO
-    customerRepository = null;
+  public MsNewOrderService(DataManager dataManager) {
+    this.dataManager = dataManager;
   }
 
   @Override
   public OrderResponse process(OrderRequest req) {
     // Fetch warehouse, district and customer
-    CustomerData customer = customerRepository.getById(req.getCustomerId());
+    CustomerData customer = null;
     DistrictData district = customer.getDistrict();
     WarehouseData warehouse = district.getWarehouse();
 
@@ -55,14 +50,13 @@ public class MsNewOrderService extends NewOrderService {
     district.getOrders().add(order);
     customer.getOrders().add(order);
     // FIXME we only need to persist customer.orders...
-    customerRepository.save(customer);
     // Process individual order items
     List<OrderItemData> orderItems = toOrderItems(req.getItems(), order);
     List<OrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
     double orderItemSum = 0;
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemData orderItem = orderItems.get(i);
-      ProductData product = productRepository.getById(orderItem.getProduct().getId());
+      ProductData product = null;
       StockData stock =
           warehouse.getStocks().stream()
               .filter(s -> s.getProduct().getId().equals(product.getId()))
