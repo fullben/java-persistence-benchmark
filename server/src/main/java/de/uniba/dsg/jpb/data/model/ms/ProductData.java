@@ -1,8 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import de.uniba.dsg.jpb.util.Identifiable;
-
-public class ProductData implements Identifiable<Long> {
+public class ProductData {
 
   private Long id;
   private String imagePath;
@@ -10,12 +8,10 @@ public class ProductData implements Identifiable<Long> {
   private double price;
   private String data;
 
-  @Override
   public Long getId() {
     return id;
   }
 
-  @Override
   public void setId(Long id) {
     this.id = id;
   }

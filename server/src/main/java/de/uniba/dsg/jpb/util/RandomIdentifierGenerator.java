@@ -18,9 +18,4 @@ public class RandomIdentifierGenerator implements IdentifierGenerator<Long> {
     current = random.nextLong();
     return current;
   }
-
-  @Override
-  public Long current() {
-    return current;
-  }
 }

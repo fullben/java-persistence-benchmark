@@ -1,11 +1,10 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import de.uniba.dsg.jpb.util.Identifiable;
 import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
-public class WarehouseData implements Identifiable<Long> {
+public class WarehouseData {
 
   private Long id;
   private String name;
@@ -20,12 +19,10 @@ public class WarehouseData implements Identifiable<Long> {
     stocks = Lazy.Reference(new ArrayList<>());
   }
 
-  @Override
   public Long getId() {
     return id;
   }
 
-  @Override
   public void setId(Long id) {
     this.id = id;
   }

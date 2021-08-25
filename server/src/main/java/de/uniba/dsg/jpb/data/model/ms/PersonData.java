@@ -1,8 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import de.uniba.dsg.jpb.util.Identifiable;
-
-public abstract class PersonData implements Identifiable<Long> {
+public abstract class PersonData {
 
   private Long id;
   private String firstName;
@@ -12,12 +10,10 @@ public abstract class PersonData implements Identifiable<Long> {
   private String phoneNumber;
   private String email;
 
-  @Override
   public Long getId() {
     return id;
   }
 
-  @Override
   public void setId(Long id) {
     this.id = id;
   }
