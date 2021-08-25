@@ -3,7 +3,6 @@ package de.uniba.dsg.jpb.service.jpa;
 import de.uniba.dsg.jpb.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.jpb.data.access.jpa.DistrictRepository;
-import de.uniba.dsg.jpb.data.access.jpa.OrderItemRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
@@ -27,7 +26,6 @@ public class JpaDeliveryService extends DeliveryService {
 
   private final DistrictRepository districtRepository;
   private final OrderRepository orderRepository;
-  private final OrderItemRepository orderItemRepository;
   private final CustomerRepository customerRepository;
   private final CarrierRepository carrierRepository;
 
@@ -35,12 +33,10 @@ public class JpaDeliveryService extends DeliveryService {
   public JpaDeliveryService(
       DistrictRepository districtRepository,
       OrderRepository orderRepository,
-      OrderItemRepository orderItemRepository,
       CustomerRepository customerRepository,
       CarrierRepository carrierRepository) {
     this.districtRepository = districtRepository;
     this.orderRepository = orderRepository;
-    this.orderItemRepository = orderItemRepository;
     this.customerRepository = customerRepository;
     this.carrierRepository = carrierRepository;
   }
@@ -65,16 +61,13 @@ public class JpaDeliveryService extends DeliveryService {
       order = orderRepository.save(order);
 
       // Find all order items, set delivery date to now and sum amount
-      List<OrderItemEntity> orderItems =
-          orderItemRepository.findByOrderIdOrderByNumberAsc(order.getId());
-      for (OrderItemEntity orderItem : orderItems) {
+      for (OrderItemEntity orderItem : order.getItems()) {
         orderItem.setDeliveryDate(LocalDateTime.now());
         amountSum += orderItem.getAmount();
       }
-      orderItemRepository.saveAll(orderItems);
-
       // Update fulfillment status of order
       order.setFulfilled(true);
+      // Save order and items
       order = orderRepository.save(order);
 
       // Update customer balance and delivery count

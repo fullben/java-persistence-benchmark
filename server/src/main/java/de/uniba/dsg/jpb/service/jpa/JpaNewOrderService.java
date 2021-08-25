@@ -1,7 +1,6 @@
 package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.jpa.OrderItemRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.StockRepository;
@@ -33,7 +32,6 @@ public class JpaNewOrderService extends NewOrderService {
 
   private final ProductRepository productRepository;
   private final StockRepository stockRepository;
-  private final OrderItemRepository orderItemRepository;
   private final OrderRepository orderRepository;
   private final CustomerRepository customerRepository;
 
@@ -41,12 +39,10 @@ public class JpaNewOrderService extends NewOrderService {
   public JpaNewOrderService(
       ProductRepository itemRepository,
       StockRepository stockRepository,
-      OrderItemRepository orderItemRepository,
       OrderRepository orderRepository,
       CustomerRepository customerRepository) {
     this.productRepository = itemRepository;
     this.stockRepository = stockRepository;
-    this.orderItemRepository = orderItemRepository;
     this.orderRepository = orderRepository;
     this.customerRepository = customerRepository;
   }
@@ -75,7 +71,6 @@ public class JpaNewOrderService extends NewOrderService {
     order.setAllLocal(
         req.getItems().stream()
             .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
-    order = orderRepository.save(order);
     // Process individual order items
     List<OrderItemEntity> orderItems = toOrderItems(req.getItems(), order);
     List<NewOrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
@@ -105,9 +100,10 @@ public class JpaNewOrderService extends NewOrderService {
       orderItem.setDeliveryDate(null);
       orderItem.setNumber(i + 1);
       orderItem.setDistInfo(getRandomDistrictInfo(stock));
-      orderItemRepository.save(orderItem);
       orderItemSum += orderItem.getAmount();
     }
+    order.setItems(orderItems);
+    order = orderRepository.save(order);
 
     // Prepare the response object
     NewOrderResponse res = newOrderResponse(req, order, warehouse, district, customer);

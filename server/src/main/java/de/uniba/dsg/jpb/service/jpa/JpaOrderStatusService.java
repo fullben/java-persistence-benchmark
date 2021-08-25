@@ -1,7 +1,6 @@
 package de.uniba.dsg.jpb.service.jpa;
 
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.jpa.OrderItemRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
@@ -25,16 +24,12 @@ public class JpaOrderStatusService extends OrderStatusService {
 
   private final CustomerRepository customerRepository;
   private final OrderRepository orderRepository;
-  private final OrderItemRepository orderItemRepository;
 
   @Autowired
   public JpaOrderStatusService(
-      CustomerRepository customerRepository,
-      OrderRepository orderRepository,
-      OrderItemRepository orderItemRepository) {
+      CustomerRepository customerRepository, OrderRepository orderRepository) {
     this.customerRepository = customerRepository;
     this.orderRepository = orderRepository;
-    this.orderItemRepository = orderItemRepository;
   }
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
