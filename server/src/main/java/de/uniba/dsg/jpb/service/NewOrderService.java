@@ -17,7 +17,7 @@ public abstract class NewOrderService
     if (districtData.size() != 10) {
       throw new IllegalArgumentException();
     }
-    return districtData.get(randomDistrictNumber());
+    return districtData.get(randomDistrictNumber() - 1);
   }
 
   private static int randomDistrictNumber() {
