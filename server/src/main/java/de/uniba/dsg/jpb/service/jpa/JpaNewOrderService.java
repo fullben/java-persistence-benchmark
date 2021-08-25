@@ -64,7 +64,7 @@ public class JpaNewOrderService extends NewOrderService {
     }
     WarehouseEntity warehouse = district.getWarehouse();
 
-    // Create and persist a new order and order entry
+    // Create and persist a new order
     OrderEntity order = new OrderEntity();
     order.setCustomer(customer);
     order.setDistrict(district);
