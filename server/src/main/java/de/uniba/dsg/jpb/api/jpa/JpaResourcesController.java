@@ -10,6 +10,7 @@ import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.StockRepository;
 import de.uniba.dsg.jpb.data.access.jpa.WarehouseRepository;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
+import de.uniba.dsg.jpb.data.model.jpa.EmployeeEntity;
 import de.uniba.dsg.jpb.data.model.jpa.OrderEntity;
 import de.uniba.dsg.jpb.data.transfer.representations.CarrierRepresentation;
 import de.uniba.dsg.jpb.data.transfer.representations.CustomerRepresentation;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api")
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaResourcesController implements ResourcesController {
 
   private final ProductRepository productRepository;
@@ -76,9 +79,12 @@ public class JpaResourcesController implements ResourcesController {
 
   @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public EmployeeRepresentation getEmployee(@PathVariable String username) {
-    return modelMapper.map(
-        employeeRepository.findByUsername(username).orElse(null), EmployeeRepresentation.class);
+  public ResponseEntity<EmployeeRepresentation> getEmployee(@PathVariable String username) {
+    EmployeeEntity employee = employeeRepository.findByUsername(username).orElse(null);
+    if (employee == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    return ResponseEntity.ok(modelMapper.map(employee, EmployeeRepresentation.class));
   }
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -93,20 +99,29 @@ public class JpaResourcesController implements ResourcesController {
       value = "warehouses/{warehouseId}/districts",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public List<DistrictRepresentation> getWarehouseDistricts(@PathVariable Long warehouseId) {
-    return districtRepository.findByWarehouseId(warehouseId).stream()
-        .map(d -> modelMapper.map(d, DistrictRepresentation.class))
-        .collect(Collectors.toList());
+  public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(
+      @PathVariable Long warehouseId) {
+    List<DistrictRepresentation> districts =
+        districtRepository.findByWarehouseId(warehouseId).stream()
+            .map(d -> modelMapper.map(d, DistrictRepresentation.class))
+            .collect(Collectors.toList());
+    if (districts.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    return ResponseEntity.ok(districts);
   }
 
   @GetMapping(
       value = "warehouses/{warehouseId}/stocks",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public List<StockRepresentation> getWarehouseStocks(@PathVariable Long warehouseId) {
-    return stockRepository.findByWarehouseId(warehouseId).stream()
-        .map(s -> modelMapper.map(s, StockRepresentation.class))
-        .collect(Collectors.toList());
+  public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(
+      @PathVariable Long warehouseId) {
+    List<StockRepresentation> stocks =
+        stockRepository.findByWarehouseId(warehouseId).stream()
+            .map(s -> modelMapper.map(s, StockRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(stocks);
   }
 
   @GetMapping(

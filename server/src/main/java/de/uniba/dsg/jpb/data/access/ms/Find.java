@@ -1,8 +1,10 @@
 package de.uniba.dsg.jpb.data.access.ms;
 
+import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
+import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
 import java.util.Collection;
@@ -15,6 +17,20 @@ public final class Find {
 
   private Find() {
     throw new AssertionError();
+  }
+
+  public static ProductData productById(Long id, Collection<ProductData> products) {
+    return products.parallelStream()
+        .filter(p -> p.getId().equals(id))
+        .findAny()
+        .orElseThrow(DataNotFoundException::new);
+  }
+
+  public static CarrierData carrierById(Long id, Collection<CarrierData> carriers) {
+    return carriers.parallelStream()
+        .filter(c -> c.getId().equals(id))
+        .findAny()
+        .orElseThrow(DataNotFoundException::new);
   }
 
   public static WarehouseData warehouseById(Long id, Collection<WarehouseData> warehouses) {

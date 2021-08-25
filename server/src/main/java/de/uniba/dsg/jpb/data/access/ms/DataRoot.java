@@ -48,11 +48,7 @@ public class DataRoot {
   }
 
   public ProductData findProductById(Long id) {
-    ProductData product = idToProduct.get(id);
-    if (product == null) {
-      throw new DataNotFoundException();
-    }
-    return product;
+    return idToProduct.get(id);
   }
 
   public List<ProductData> findAllProducts() {
@@ -60,11 +56,7 @@ public class DataRoot {
   }
 
   public CarrierData findCarrierById(Long id) {
-    CarrierData carrier = idToCarrier.get(id);
-    if (carrier == null) {
-      throw new DataNotFoundException();
-    }
-    return carrier;
+    return idToCarrier.get(id);
   }
 
   public List<CarrierData> findAllCarriers() {
@@ -72,11 +64,7 @@ public class DataRoot {
   }
 
   public WarehouseData findWarehouseById(Long id) {
-    Lazy<WarehouseData> lazy = idToWarehouse.get(id);
-    if (lazy == null) {
-      throw new DataNotFoundException();
-    }
-    return lazy.get();
+    return Lazy.get(idToWarehouse.get(id));
   }
 
   public List<WarehouseData> findAllWarehouses() {
@@ -84,18 +72,14 @@ public class DataRoot {
   }
 
   public EmployeeData findEmployeeById(Long id) {
-    EmployeeData employee = idToEmployee.get(id);
-    if (employee == null) {
-      throw new DataNotFoundException();
-    }
-    return employee;
+    return idToEmployee.get(id);
   }
 
   public EmployeeData findEmployeeByUsername(String username) {
     return idToEmployee.values().stream()
         .filter(e -> e.getUsername().equals(username))
         .findAny()
-        .orElseThrow(DataNotFoundException::new);
+        .orElse(null);
   }
 
   public List<EmployeeData> findAllEmployees() {

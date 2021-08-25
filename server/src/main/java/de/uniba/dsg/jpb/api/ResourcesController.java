@@ -15,13 +15,13 @@ public interface ResourcesController {
 
   Iterable<ProductRepresentation> getProducts();
 
-  EmployeeRepresentation getEmployee(String username);
+  ResponseEntity<EmployeeRepresentation> getEmployee(String username);
 
   List<WarehouseRepresentation> getWarehouses();
 
-  List<DistrictRepresentation> getWarehouseDistricts(Long warehouseId);
+  ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(Long warehouseId);
 
-  List<StockRepresentation> getWarehouseStocks(Long warehouseId);
+  ResponseEntity<List<StockRepresentation>> getWarehouseStocks(Long warehouseId);
 
   ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(Long warehouseId, Long districtId);
 
