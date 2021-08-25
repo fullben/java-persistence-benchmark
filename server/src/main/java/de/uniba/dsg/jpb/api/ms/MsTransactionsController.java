@@ -3,16 +3,19 @@ package de.uniba.dsg.jpb.api.ms;
 import de.uniba.dsg.jpb.api.TransactionsController;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelResponse;
+import de.uniba.dsg.jpb.service.ms.MsDeliveryService;
 import de.uniba.dsg.jpb.service.ms.MsNewOrderService;
+import de.uniba.dsg.jpb.service.ms.MsOrderStatusService;
 import de.uniba.dsg.jpb.service.ms.MsPaymentService;
+import de.uniba.dsg.jpb.service.ms.MsStockLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
@@ -28,17 +31,27 @@ public class MsTransactionsController implements TransactionsController {
 
   private final MsNewOrderService newOrderService;
   private final MsPaymentService paymentService;
+  private final MsOrderStatusService orderStatusService;
+  private final MsDeliveryService deliveryService;
+  private final MsStockLevelService stockLevelService;
 
   @Autowired
   public MsTransactionsController(
-      MsNewOrderService newOrderService, MsPaymentService paymentService) {
+      MsNewOrderService newOrderService,
+      MsPaymentService paymentService,
+      MsOrderStatusService orderStatusService,
+      MsDeliveryService deliveryService,
+      MsStockLevelService stockLevelService) {
     this.newOrderService = newOrderService;
     this.paymentService = paymentService;
+    this.orderStatusService = orderStatusService;
+    this.deliveryService = deliveryService;
+    this.stockLevelService = stockLevelService;
   }
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public OrderResponse doNewOrderTransaction(@RequestBody OrderRequest req) {
+  public NewOrderResponse doNewOrderTransaction(@RequestBody NewOrderRequest req) {
     return newOrderService.process(req);
   }
 
@@ -50,16 +63,16 @@ public class MsTransactionsController implements TransactionsController {
 
   @Override
   public OrderStatusResponse doOrderStatusTransaction(OrderStatusRequest req) {
-    return null;
+    return orderStatusService.process(req);
   }
 
   @Override
   public DeliveryResponse doDeliveryTransaction(DeliveryRequest req) {
-    return null;
+    return deliveryService.process(req);
   }
 
   @Override
   public StockLevelResponse doStockLevelTransaction(StockLevelRequest req) {
-    return null;
+    return stockLevelService.process(req);
   }
 }

@@ -21,6 +21,29 @@ public class StockData {
   private String dist09;
   private String dist10;
 
+  public StockData() {}
+
+  public StockData(StockData stock) {
+    id = stock.id;
+    product = stock.product;
+    quantity = stock.quantity;
+    warehouse = stock.warehouse;
+    yearToDateBalance = stock.yearToDateBalance;
+    orderCount = stock.orderCount;
+    remoteCount = stock.remoteCount;
+    data = stock.data;
+    dist01 = stock.dist01;
+    dist02 = stock.dist02;
+    dist03 = stock.dist03;
+    dist04 = stock.dist04;
+    dist05 = stock.dist05;
+    dist06 = stock.dist06;
+    dist07 = stock.dist07;
+    dist08 = stock.dist08;
+    dist09 = stock.dist09;
+    dist10 = stock.dist10;
+  }
+
   public Long getId() {
     return id;
   }

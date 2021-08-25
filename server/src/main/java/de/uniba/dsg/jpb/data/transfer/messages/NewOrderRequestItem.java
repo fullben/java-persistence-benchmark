@@ -2,7 +2,7 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class OrderRequestItem {
+public class NewOrderRequestItem {
 
   @JsonProperty(required = true)
   private Long productId;
@@ -13,9 +13,9 @@ public class OrderRequestItem {
   @JsonProperty(required = true)
   private int quantity;
 
-  public OrderRequestItem() {}
+  public NewOrderRequestItem() {}
 
-  public OrderRequestItem(OrderRequestItem line) {
+  public NewOrderRequestItem(NewOrderRequestItem line) {
     productId = line.productId;
     supplyingWarehouseId = line.supplyingWarehouseId;
     quantity = line.quantity;

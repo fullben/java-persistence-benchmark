@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-public class OrderResponseItem {
+public class NewOrderResponseItem {
 
   private Long supplyingWarehouseId;
   private Long itemId;
@@ -11,7 +11,7 @@ public class OrderResponseItem {
   private int stockQuantity;
   private String brandGeneric;
 
-  public OrderResponseItem() {}
+  public NewOrderResponseItem() {}
 
   public Long getSupplyingWarehouseId() {
     return supplyingWarehouseId;

@@ -58,9 +58,7 @@ public class JpaOrderStatusService extends OrderStatusService {
         orderRepository
             .findMostRecentOrderOfCustomer(customerId)
             .orElseThrow(IllegalStateException::new);
-    List<OrderItemEntity> orderItems =
-        orderItemRepository.findByOrderIdOrderByNumberAsc(order.getId());
-    return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(orderItems));
+    return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(order.getItems()));
   }
 
   private static List<OrderItemStatusResponse> toOrderItemStatusResponse(

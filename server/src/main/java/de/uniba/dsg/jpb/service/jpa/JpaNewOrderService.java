@@ -12,10 +12,10 @@ import de.uniba.dsg.jpb.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderRequestItem;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderResponseItem;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequestItem;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponseItem;
 import de.uniba.dsg.jpb.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class JpaNewOrderService extends NewOrderService {
 
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
-  public OrderResponse process(OrderRequest req) {
+  public NewOrderResponse process(NewOrderRequest req) {
     // Fetch warehouse, district and customer
     CustomerEntity customer = customerRepository.getById(req.getCustomerId());
     DistrictEntity district = customer.getDistrict();
@@ -78,7 +78,7 @@ public class JpaNewOrderService extends NewOrderService {
     order = orderRepository.save(order);
     // Process individual order items
     List<OrderItemEntity> orderItems = toOrderItems(req.getItems(), order);
-    List<OrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
+    List<NewOrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
     double orderItemSum = 0;
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemEntity orderItem = orderItems.get(i);
@@ -88,7 +88,7 @@ public class JpaNewOrderService extends NewOrderService {
               .findByProductIdAndWarehouseId(
                   product.getId(), orderItem.getSupplyingWarehouse().getId())
               .orElseThrow(NullPointerException::new);
-      OrderResponseItem responseLine = newOrderResponseLine(orderItem);
+      NewOrderResponseItem responseLine = newOrderResponseLine(orderItem);
       responseLines.add(responseLine);
       int stockQuantity = stock.getQuantity();
       int orderItemQuantity = orderItem.getQuantity();
@@ -110,7 +110,7 @@ public class JpaNewOrderService extends NewOrderService {
     }
 
     // Prepare the response object
-    OrderResponse res = newOrderResponse(req, order, warehouse, district, customer);
+    NewOrderResponse res = newOrderResponse(req, order, warehouse, district, customer);
     res.setOrderId(order.getId());
     res.setOrderTimestamp(order.getEntryDate());
     res.setTotalAmount(
@@ -120,13 +120,13 @@ public class JpaNewOrderService extends NewOrderService {
     return res;
   }
 
-  private static OrderResponse newOrderResponse(
-      OrderRequest req,
+  private static NewOrderResponse newOrderResponse(
+      NewOrderRequest req,
       OrderEntity order,
       WarehouseEntity warehouse,
       DistrictEntity district,
       CustomerEntity customer) {
-    OrderResponse res = new OrderResponse(req);
+    NewOrderResponse res = new NewOrderResponse(req);
     res.setOrderId(order.getId());
     res.setOrderTimestamp(order.getEntryDate());
     res.setWarehouseSalesTax(warehouse.getSalesTax());
@@ -153,8 +153,8 @@ public class JpaNewOrderService extends NewOrderService {
             stock.getDist10()));
   }
 
-  private static OrderResponseItem newOrderResponseLine(OrderItemEntity item) {
-    OrderResponseItem requestLine = new OrderResponseItem();
+  private static NewOrderResponseItem newOrderResponseLine(OrderItemEntity item) {
+    NewOrderResponseItem requestLine = new NewOrderResponseItem();
     requestLine.setSupplyingWarehouseId(item.getSupplyingWarehouse().getId());
     requestLine.setItemId(item.getProduct().getId());
     requestLine.setItemPrice(0);
@@ -166,7 +166,7 @@ public class JpaNewOrderService extends NewOrderService {
   }
 
   private static List<OrderItemEntity> toOrderItems(
-      List<OrderRequestItem> lines, OrderEntity order) {
+      List<NewOrderRequestItem> lines, OrderEntity order) {
     return lines.stream()
         .map(
             l -> {

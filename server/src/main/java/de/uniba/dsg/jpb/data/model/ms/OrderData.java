@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
@@ -15,6 +16,10 @@ public class OrderData {
   private int itemCount;
   private boolean allLocal;
   private boolean fulfilled;
+
+  public OrderData() {
+    items = Lazy.Reference(new ArrayList<>());
+  }
 
   public Long getId() {
     return id;

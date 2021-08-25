@@ -3,8 +3,8 @@ package de.uniba.dsg.jpb.api.jpa;
 import de.uniba.dsg.jpb.api.TransactionsController;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
@@ -53,7 +53,7 @@ public class JpaTransactionsController implements TransactionsController {
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public OrderResponse doNewOrderTransaction(@RequestBody OrderRequest req) {
+  public NewOrderResponse doNewOrderTransaction(@RequestBody NewOrderRequest req) {
     return newOrderService.process(req);
   }
 

@@ -1,7 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.uniba.dsg.jpb.util.Identifiable;
+import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
@@ -10,10 +10,15 @@ public class WarehouseData implements Identifiable<Long> {
   private Long id;
   private String name;
   private AddressData address;
-  @JsonIgnore private Lazy<List<DistrictData>> districts;
-  @JsonIgnore private Lazy<List<StockData>> stocks;
+  private Lazy<List<DistrictData>> districts;
+  private Lazy<List<StockData>> stocks;
   private double salesTax;
   private double yearToDateBalance;
+
+  public WarehouseData() {
+    districts = Lazy.Reference(new ArrayList<>());
+    stocks = Lazy.Reference(new ArrayList<>());
+  }
 
   @Override
   public Long getId() {

@@ -1,12 +1,13 @@
 package de.uniba.dsg.jpb.service;
 
-import de.uniba.dsg.jpb.data.transfer.messages.OrderRequest;
-import de.uniba.dsg.jpb.data.transfer.messages.OrderResponse;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequest;
+import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponse;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public abstract class NewOrderService implements TransactionService<OrderRequest, OrderResponse> {
+public abstract class NewOrderService
+    implements TransactionService<NewOrderRequest, NewOrderResponse> {
 
   private static final UniformRandom DIST_RANDOM = new UniformRandom(1, 10);
 
@@ -28,8 +29,8 @@ public abstract class NewOrderService implements TransactionService<OrderRequest
     return itemData.contains(s) || stockData.contains(s) ? "B" : "G";
   }
 
-  protected static OrderResponse newOrderResponse(
-      OrderRequest req,
+  protected static NewOrderResponse newOrderResponse(
+      NewOrderRequest req,
       Long orderId,
       LocalDateTime orderEntryDate,
       double warehouseSalesTax,
@@ -37,7 +38,7 @@ public abstract class NewOrderService implements TransactionService<OrderRequest
       String customerCredit,
       double customerDiscount,
       String customerLastName) {
-    OrderResponse res = new OrderResponse(req);
+    NewOrderResponse res = new NewOrderResponse(req);
     res.setOrderId(orderId);
     res.setOrderTimestamp(orderEntryDate);
     res.setWarehouseSalesTax(warehouseSalesTax);

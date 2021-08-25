@@ -3,13 +3,13 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderResponse {
+public class NewOrderResponse {
 
   private Long warehouseId;
   private Long districtId;
   private Long customerId;
   private Long orderId;
-  private List<OrderResponseItem> orderItems;
+  private List<NewOrderResponseItem> orderItems;
   private int orderItemCount;
   private LocalDateTime orderTimestamp;
   private String customerLastName;
@@ -20,7 +20,7 @@ public class OrderResponse {
   private double totalAmount;
   private String message;
 
-  public OrderResponse(OrderRequest request) {
+  public NewOrderResponse(NewOrderRequest request) {
     warehouseId = request.getWarehouseId();
     districtId = request.getDistrictId();
     customerId = request.getCustomerId();
@@ -58,11 +58,11 @@ public class OrderResponse {
     this.orderId = orderId;
   }
 
-  public List<OrderResponseItem> getOrderItems() {
+  public List<NewOrderResponseItem> getOrderItems() {
     return orderItems;
   }
 
-  public void setOrderItems(List<OrderResponseItem> orderItems) {
+  public void setOrderItems(List<NewOrderResponseItem> orderItems) {
     this.orderItems = orderItems;
   }
 

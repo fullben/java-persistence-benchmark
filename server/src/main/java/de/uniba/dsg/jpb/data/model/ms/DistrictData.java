@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
@@ -8,12 +8,17 @@ public class DistrictData {
 
   private Long id;
   private WarehouseData warehouse;
-  @JsonIgnore private Lazy<List<CustomerData>> customers;
-  @JsonIgnore private Lazy<List<OrderData>> orders;
+  private Lazy<List<CustomerData>> customers;
+  private Lazy<List<OrderData>> orders;
   private String name;
   private AddressData address;
   private double salesTax;
   private double yearToDateBalance;
+
+  public DistrictData() {
+    customers = Lazy.Reference(new ArrayList<>());
+    orders = Lazy.Reference(new ArrayList<>());
+  }
 
   public Long getId() {
     return id;
