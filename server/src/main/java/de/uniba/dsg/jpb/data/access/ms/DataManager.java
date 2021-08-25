@@ -38,7 +38,7 @@ public class DataManager {
     ReadLock readLock = lock.readLock();
     readLock.lock();
     try {
-      return validate(operation.apply(root));
+      return validateReturnValue(operation.apply(root));
     } finally {
       readLock.unlock();
     }
@@ -59,7 +59,7 @@ public class DataManager {
     WriteLock writeLock = lock.writeLock();
     writeLock.lock();
     try {
-      return validate(operation.apply(root, storageManager));
+      return validateReturnValue(operation.apply(root, storageManager));
     } finally {
       writeLock.unlock();
     }
@@ -82,7 +82,7 @@ public class DataManager {
     }
   }
 
-  private <T> T validate(T t) {
+  private static <T> T validateReturnValue(T t) {
     if (t == null) {
       return null;
     }
