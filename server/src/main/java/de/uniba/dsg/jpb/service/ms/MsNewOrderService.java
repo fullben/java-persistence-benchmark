@@ -70,10 +70,12 @@ public class MsNewOrderService extends NewOrderService {
           for (int i = 0; i < orderItems.size(); i++) {
             OrderItemData orderItem = orderItems.get(i);
             orderItem.setId(dataManager.generateNextId());
-            ProductData product = root.findProductById(orderItem.getProduct().getId());
+            ProductData product =
+                Find.productById(orderItem.getProduct().getId(), root.findAllProducts());
             orderItem.setProduct(product);
             orderItem.setSupplyingWarehouse(
-                root.findWarehouseById(orderItem.getSupplyingWarehouse().getId()));
+                Find.warehouseById(
+                    orderItem.getSupplyingWarehouse().getId(), root.findAllWarehouses()));
             StockData stock =
                 warehouse.getStocks().parallelStream()
                     .filter(s -> s.getProduct().getId().equals(product.getId()))

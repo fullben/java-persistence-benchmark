@@ -44,7 +44,10 @@ public class JpaDeliveryService extends DeliveryService {
   @Transactional(isolation = Isolation.SERIALIZABLE)
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
+    // Find districts and carrier
     List<DistrictEntity> districts = districtRepository.findByWarehouseId(req.getWarehouseId());
+    CarrierEntity carrier = carrierRepository.getById(req.getCarrierId());
+
     for (DistrictEntity district : districts) {
       double amountSum = 0;
       // Find oldest new/unfulfilled order
@@ -55,18 +58,15 @@ public class JpaDeliveryService extends DeliveryService {
         continue;
       }
 
-      // Update carrier of order
-      CarrierEntity carrier = carrierRepository.getById(req.getCarrierId());
+      // Update fulfillment status and carrier of order
       order.setCarrier(carrier);
-      order = orderRepository.save(order);
+      order.setFulfilled(true);
 
       // Find all order items, set delivery date to now and sum amount
       for (OrderItemEntity orderItem : order.getItems()) {
         orderItem.setDeliveryDate(LocalDateTime.now());
         amountSum += orderItem.getAmount();
       }
-      // Update fulfillment status of order
-      order.setFulfilled(true);
       // Save order and items
       order = orderRepository.save(order);
 

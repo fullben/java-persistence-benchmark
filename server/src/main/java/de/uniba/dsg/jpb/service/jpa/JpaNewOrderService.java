@@ -103,6 +103,7 @@ public class JpaNewOrderService extends NewOrderService {
       orderItemSum += orderItem.getAmount();
     }
     order.setItems(orderItems);
+    // Save order and items
     order = orderRepository.save(order);
 
     // Prepare the response object

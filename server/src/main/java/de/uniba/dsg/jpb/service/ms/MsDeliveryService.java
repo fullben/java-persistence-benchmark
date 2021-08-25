@@ -30,8 +30,12 @@ public class MsDeliveryService extends DeliveryService {
   public DeliveryResponse process(DeliveryRequest req) {
     return dataManager.write(
         (root, storageManager) -> {
+          // Find warehouse and carrier to be employed for delivery
           WarehouseData warehouse =
               Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
+          CarrierData carrier = Find.carrierById(req.getCarrierId(), root.findAllCarriers());
+
+          // Attempt to deliver order from each district
           for (DistrictData district : warehouse.getDistricts()) {
             double amountSum = 0;
             // Find oldest new/unfulfilled order
@@ -42,9 +46,8 @@ public class MsDeliveryService extends DeliveryService {
             }
 
             // Update fulfillment status and carrier of order
-            order.setFulfilled(true);
-            CarrierData carrier = root.findCarrierById(req.getCarrierId());
             order.setCarrier(carrier);
+            order.setFulfilled(true);
 
             // For each order item, set delivery date to now and sum amount
             for (OrderItemData orderItem : order.getItems()) {
