@@ -12,6 +12,9 @@ import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.jpb.service.DeliveryService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import one.microstream.persistence.types.Storer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,8 @@ public class MsDeliveryService extends DeliveryService {
               Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
           CarrierData carrier = Find.carrierById(req.getCarrierId(), root.findAllCarriers());
 
+          List<OrderData> editedOrders = new ArrayList<>();
+          List<CustomerCache> editedCustomers = new ArrayList<>();
           // Attempt to deliver order from each district
           for (DistrictData district : warehouse.getDistricts()) {
             double amountSum = 0;
@@ -59,26 +64,54 @@ public class MsDeliveryService extends DeliveryService {
             CustomerData customer = order.getCustomer();
             final double customerBalance = customer.getBalance();
             customer.setBalance(customerBalance + amountSum);
-            customer.setDeliveryCount(customer.getDeliveryCount() + 1);
+            final int customerDeliveryCount = customer.getDeliveryCount();
+            customer.setDeliveryCount(customerDeliveryCount + 1);
 
-            try {
-              // Persist the changes
-              Storer storer = storageManager.createEagerStorer();
-              storer.storeAll(order, customer);
-              storer.commit();
-            } catch (RuntimeException e) {
-              // Rollback in case of a runtime exception
-              order.setCarrier(null);
-              order.setFulfilled(false);
-              for (OrderItemData orderItem : order.getItems()) {
-                orderItem.setDeliveryDate(null);
-              }
-              customer.setBalance(customerBalance);
-              customer.setDeliveryCount(customer.getDeliveryCount() - 1);
-              throw e;
-            }
+            editedOrders.add(order);
+            editedCustomers.add(
+                new CustomerCache(customer, customerBalance, customerDeliveryCount));
+          }
+
+          try {
+            // Persist the changes
+            List<Object> toBeStored = new ArrayList<>(editedOrders.size() + editedCustomers.size());
+            toBeStored.addAll(editedOrders);
+            toBeStored.addAll(
+                editedCustomers.stream().map(c -> c.customer).collect(Collectors.toList()));
+            Storer storer = storageManager.createEagerStorer();
+            storer.storeAll(toBeStored);
+            storer.commit();
+          } catch (RuntimeException e) {
+            // Rollback in case of a runtime exception
+            editedOrders.forEach(
+                o -> {
+                  o.setCarrier(null);
+                  o.setFulfilled(false);
+                  for (OrderItemData orderItem : o.getItems()) {
+                    orderItem.setDeliveryDate(null);
+                  }
+                });
+            editedCustomers.forEach(
+                c -> {
+                  c.customer.setBalance(c.balance);
+                  c.customer.setDeliveryCount(c.deliveryCount);
+                });
+            throw e;
           }
           return new DeliveryResponse(req);
         });
+  }
+
+  private static class CustomerCache {
+
+    private final CustomerData customer;
+    private final double balance;
+    private final int deliveryCount;
+
+    private CustomerCache(CustomerData customer, double balance, int deliveryCount) {
+      this.customer = customer;
+      this.balance = balance;
+      this.deliveryCount = deliveryCount;
+    }
   }
 }
