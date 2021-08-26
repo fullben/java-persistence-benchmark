@@ -2,6 +2,7 @@ package de.uniba.dsg.jpb;
 
 import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
+import de.uniba.dsg.jpb.data.access.ms.FieldEvaluator;
 import one.microstream.storage.embedded.configuration.types.EmbeddedStorageConfiguration;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
@@ -29,7 +30,10 @@ public class MsConfiguration {
             .setStorageDirectory(environment.getRequiredProperty("jpb.ms.storage-dir"))
             .setChannelCount(Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1))
             .createEmbeddedStorageFoundation();
-    return foundation.createEmbeddedStorageManager().start();
+    return foundation
+        .onConnectionFoundation(f -> f.setReferenceFieldEagerEvaluator(new FieldEvaluator()))
+        .createEmbeddedStorageManager()
+        .start();
   }
 
   @Bean

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import one.microstream.persistence.types.Storer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +77,7 @@ public class MsDeliveryService extends DeliveryService {
             toBeStored.addAll(editedOrders);
             toBeStored.addAll(
                 editedCustomers.stream().map(c -> c.customer).collect(Collectors.toList()));
-            Storer storer = storageManager.createEagerStorer();
-            storer.storeAll(toBeStored);
-            storer.commit();
+            storageManager.storeAll(toBeStored);
           } catch (RuntimeException e) {
             // Rollback in case of a runtime exception
             editedOrders.forEach(

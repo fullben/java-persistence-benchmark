@@ -77,9 +77,7 @@ public class MsPaymentService extends PaymentService {
 
           try {
             // Persist the changes
-            Storer storer = storageManager.createEagerStorer();
-            storer.storeAll(payment, customer, warehouse, district);
-            storer.commit();
+            storageManager.storeAll(customer, warehouse, district);
           } catch (RuntimeException e) {
             // Reset warehouse and district balances
             warehouse.setYearToDateBalance(warehouseYearToDateBalance);
