@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
-public class OrderData {
+public class OrderData extends BaseData {
 
   private Long id;
   private DistrictData district;
@@ -18,15 +18,8 @@ public class OrderData {
   private boolean fulfilled;
 
   public OrderData() {
+    super();
     items = Lazy.Reference(new ArrayList<>());
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public DistrictData getDistrict() {

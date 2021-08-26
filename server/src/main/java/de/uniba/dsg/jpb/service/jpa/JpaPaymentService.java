@@ -45,7 +45,7 @@ public class JpaPaymentService extends PaymentService {
     // Fetch warehouse, district, and customer (either by id or email)
     WarehouseEntity warehouse = warehouseRepository.getById(req.getWarehouseId());
     DistrictEntity district = districtRepository.getById(req.getDistrictId());
-    Long customerId = req.getCustomerId();
+    String customerId = req.getCustomerId();
     CustomerEntity customer;
     if (customerId == null) {
       customer =

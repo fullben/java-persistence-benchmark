@@ -1,19 +1,10 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-public class CarrierData {
+public class CarrierData extends BaseData {
 
-  private Long id;
   private String name;
   private String phoneNumber;
   private AddressData address;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getName() {
     return name;

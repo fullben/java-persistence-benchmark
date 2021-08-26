@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PaymentRequest {
 
   @JsonProperty(required = true)
-  private Long warehouseId;
+  private String warehouseId;
 
   @JsonProperty(required = true)
-  private Long districtId;
+  private String districtId;
 
   @JsonProperty(required = false)
-  private Long customerId;
+  private String customerId;
 
   @JsonProperty(required = false)
   private String customerEmail;
@@ -19,27 +19,27 @@ public class PaymentRequest {
   @JsonProperty(required = true)
   private double amount;
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 
-  public Long getCustomerId() {
+  public String getCustomerId() {
     return customerId;
   }
 
-  public void setCustomerId(Long customerId) {
+  public void setCustomerId(String customerId) {
     this.customerId = customerId;
   }
 

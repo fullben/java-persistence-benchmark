@@ -5,27 +5,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StockLevelRequest {
 
   @JsonProperty(required = true)
-  private Long warehouseId;
+  private String warehouseId;
 
   @JsonProperty(required = true)
-  private Long districtId;
+  private String districtId;
 
   @JsonProperty(required = true)
   private int stockThreshold;
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 

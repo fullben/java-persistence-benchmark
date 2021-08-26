@@ -36,7 +36,7 @@ public class JpaOrderStatusService extends OrderStatusService {
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
     // Fetch customer (either by id or email)
-    Long customerId = req.getCustomerId();
+    String customerId = req.getCustomerId();
     CustomerEntity customer;
     if (customerId == null) {
       customer =

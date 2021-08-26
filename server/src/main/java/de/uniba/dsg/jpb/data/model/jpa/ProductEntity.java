@@ -9,24 +9,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "products")
-public class ProductEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+public class ProductEntity extends BaseEntity {
 
   private String imagePath;
   private String name;
   private double price;
   private String data;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getImagePath() {
     return imagePath;
@@ -58,22 +46,5 @@ public class ProductEntity {
 
   public void setData(String data) {
     this.data = data;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ProductEntity that = (ProductEntity) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }

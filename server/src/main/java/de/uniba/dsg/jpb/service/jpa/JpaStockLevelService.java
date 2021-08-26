@@ -35,7 +35,7 @@ public class JpaStockLevelService extends StockLevelService {
         orderRepository.find20MostRecentOrdersOfDistrict(req.getDistrictId());
 
     // Find the corresponding stock objects and count the ones below the given threshold
-    List<Long> productIds =
+    List<String> productIds =
         orders.stream()
             .flatMap(o -> o.getItems().stream().map(i -> i.getProduct().getId()))
             .distinct()

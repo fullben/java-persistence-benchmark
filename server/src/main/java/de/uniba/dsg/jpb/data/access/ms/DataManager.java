@@ -12,7 +12,6 @@ import de.uniba.dsg.jpb.data.model.ms.PersonData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
-import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
@@ -26,7 +25,6 @@ public class DataManager {
 
   private final transient ReentrantReadWriteLock lock;
   private transient EmbeddedStorageManager storageManager;
-  private transient IdentifierGenerator<Long> idGenerator;
   private final DataRoot root;
 
   public DataManager(DataRoot root) {
@@ -77,8 +75,8 @@ public class DataManager {
   }
 
   private void verifyInitialized() {
-    if (storageManager == null || idGenerator == null) {
-      throw new IllegalStateException("Storage manager and id generator must be set");
+    if (storageManager == null) {
+      throw new IllegalStateException("Storage manager must be set");
     }
   }
 
@@ -105,13 +103,5 @@ public class DataManager {
 
   public void setStorageManager(EmbeddedStorageManager storageManager) {
     this.storageManager = storageManager;
-  }
-
-  public void setIdGenerator(IdentifierGenerator<Long> idGenerator) {
-    this.idGenerator = idGenerator;
-  }
-
-  public Long generateNextId() {
-    return idGenerator.next();
   }
 }

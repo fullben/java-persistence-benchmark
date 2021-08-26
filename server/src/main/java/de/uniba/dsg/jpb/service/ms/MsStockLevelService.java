@@ -35,7 +35,7 @@ public class MsStockLevelService extends StockLevelService {
           List<OrderData> orders = Find.twentyMostRecentOrdersOfDistrict(district);
 
           // Find the corresponding stock objects and count the ones below the given threshold
-          List<Long> productIds =
+          List<String> productIds =
               orders.stream()
                   .flatMap(o -> o.getItems().stream().map(i -> i.getProduct().getId()))
                   .distinct()

@@ -59,7 +59,7 @@ public class JpaToMsConverter
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
     employees = convertEmployees(employeeEntities, warehouses);
-    clearIds();
+    // clearIds();
   }
 
   @Override
@@ -321,48 +321,48 @@ public class JpaToMsConverter
     return address;
   }
 
-  private static List<OrderData> findOrdersByCustomerId(Long id, List<OrderData> orders) {
+  private static List<OrderData> findOrdersByCustomerId(String id, List<OrderData> orders) {
     return orders.stream()
         .filter(o -> o.getCustomer().getId().equals(id))
         .collect(Collectors.toList());
   }
 
-  private static WarehouseEntity findWarehouseEntityById(Long id, List<WarehouseEntity> ws) {
+  private static WarehouseEntity findWarehouseEntityById(String id, List<WarehouseEntity> ws) {
     return ws.stream()
         .filter(w -> w.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  private static ProductData findProductById(Long id, List<ProductData> products) {
+  private static ProductData findProductById(String id, List<ProductData> products) {
     return products.stream()
         .filter(p -> p.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  private static WarehouseData findWarehouseById(Long id, List<WarehouseData> warehouses) {
+  private static WarehouseData findWarehouseById(String id, List<WarehouseData> warehouses) {
     return warehouses.stream()
         .filter(w -> w.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  private static CustomerData findCustomerById(Long id, List<CustomerData> customers) {
+  private static CustomerData findCustomerById(String id, List<CustomerData> customers) {
     return customers.stream()
         .filter(c -> c.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  private static CarrierData findCarrierById(Long id, List<CarrierData> carriers) {
+  private static CarrierData findCarrierById(String id, List<CarrierData> carriers) {
     return carriers.stream()
         .filter(c -> c.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalArgumentException::new);
   }
 
-  private static DistrictData findDistrictById(Long id, List<WarehouseData> warehouses) {
+  private static DistrictData findDistrictById(String id, List<WarehouseData> warehouses) {
     return warehouses.stream()
         .flatMap(w -> w.getDistricts().stream())
         .filter(d -> d.getId().equals(id))

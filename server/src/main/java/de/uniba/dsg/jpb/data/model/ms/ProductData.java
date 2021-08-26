@@ -1,20 +1,11 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-public class ProductData {
+public class ProductData extends BaseData {
 
-  private Long id;
   private String imagePath;
   private String name;
   private double price;
   private String data;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getImagePath() {
     return imagePath;

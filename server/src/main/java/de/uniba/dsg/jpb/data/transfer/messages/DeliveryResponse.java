@@ -2,8 +2,8 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 
 public class DeliveryResponse {
 
-  private Long warehouseId;
-  private Long carrierId;
+  private String warehouseId;
+  private String carrierId;
 
   public DeliveryResponse() {}
 
@@ -12,19 +12,19 @@ public class DeliveryResponse {
     carrierId = req.getCarrierId();
   }
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getCarrierId() {
+  public String getCarrierId() {
     return carrierId;
   }
 
-  public void setCarrierId(Long carrierId) {
+  public void setCarrierId(String carrierId) {
     this.carrierId = carrierId;
   }
 }

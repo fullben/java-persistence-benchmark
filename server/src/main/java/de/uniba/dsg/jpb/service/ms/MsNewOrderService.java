@@ -49,7 +49,6 @@ public class MsNewOrderService extends NewOrderService {
 
           // Create a new order
           OrderData order = new OrderData();
-          order.setId(dataManager.generateNextId());
           order.setCustomer(customer);
           order.setDistrict(district);
           order.setCarrier(null);
@@ -65,11 +64,10 @@ public class MsNewOrderService extends NewOrderService {
           List<NewOrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
           double orderItemSum = 0;
           // Cache old stock state
-          Map<Long, StockData> originalStocks = new HashMap<>();
+          Map<String, StockData> originalStocks = new HashMap<>();
           Set<StockData> changedStocks = new HashSet<>();
           for (int i = 0; i < orderItems.size(); i++) {
             OrderItemData orderItem = orderItems.get(i);
-            orderItem.setId(dataManager.generateNextId());
             ProductData product =
                 Find.productById(orderItem.getProduct().getId(), root.findAllProducts());
             orderItem.setProduct(product);

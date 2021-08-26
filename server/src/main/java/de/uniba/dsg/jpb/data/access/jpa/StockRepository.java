@@ -7,16 +7,16 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface StockRepository extends JpaRepository<StockEntity, Long> {
+public interface StockRepository extends JpaRepository<StockEntity, String> {
 
-  Optional<StockEntity> findByProductIdAndWarehouseId(Long productId, Long warehouseId);
+  Optional<StockEntity> findByProductIdAndWarehouseId(String productId, String warehouseId);
 
   @Query(
       value =
           "SELECT * FROM stocks s WHERE s.warehouse_id = :warehouseId AND s.product_id IN :productIds AND s.quantity < :quantityThreshold",
       nativeQuery = true)
   List<StockEntity> findByWarehouseIdAndProductIdAndQuantityThreshold(
-      Long warehouseId, Collection<Long> productIds, int quantityThreshold);
+      String warehouseId, Collection<String> productIds, int quantityThreshold);
 
-  List<StockEntity> findByWarehouseId(Long warehouseId);
+  List<StockEntity> findByWarehouseId(String warehouseId);
 }

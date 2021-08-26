@@ -1,22 +1,11 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class PersonEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+@MappedSuperclass
+public abstract class PersonEntity extends BaseEntity {
 
   private String firstName;
   private String middleName;
@@ -26,14 +15,6 @@ public abstract class PersonEntity {
 
   @Column(unique = true)
   private String email;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getFirstName() {
     return firstName;
@@ -81,22 +62,5 @@ public abstract class PersonEntity {
 
   public void setEmail(String email) {
     this.email = email;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    PersonEntity that = (PersonEntity) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class OrderItemRepresentation {
 
-  private Long id;
+  private String id;
   private OrderRepresentation order;
   private int number;
   private ProductRepresentation product;
@@ -14,11 +14,11 @@ public class OrderItemRepresentation {
   private double amount;
   private String distInfo;
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NewOrderRequestItem {
 
   @JsonProperty(required = true)
-  private Long productId;
+  private String productId;
 
   @JsonProperty(required = true)
-  private Long supplyingWarehouseId;
+  private String supplyingWarehouseId;
 
   @JsonProperty(required = true)
   private int quantity;
@@ -21,19 +21,19 @@ public class NewOrderRequestItem {
     quantity = line.quantity;
   }
 
-  public Long getProductId() {
+  public String getProductId() {
     return productId;
   }
 
-  public void setProductId(Long productId) {
+  public void setProductId(String productId) {
     this.productId = productId;
   }
 
-  public Long getSupplyingWarehouseId() {
+  public String getSupplyingWarehouseId() {
     return supplyingWarehouseId;
   }
 
-  public void setSupplyingWarehouseId(Long supplyingWarehouseId) {
+  public void setSupplyingWarehouseId(String supplyingWarehouseId) {
     this.supplyingWarehouseId = supplyingWarehouseId;
   }
 

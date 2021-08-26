@@ -4,7 +4,7 @@ import de.uniba.dsg.jpb.data.model.jpa.EmployeeEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String> {
 
   Optional<EmployeeEntity> findByUsername(String username);
 }

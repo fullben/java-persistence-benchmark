@@ -19,13 +19,15 @@ public interface ResourcesController {
 
   List<WarehouseRepresentation> getWarehouses();
 
-  ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(Long warehouseId);
+  ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(String warehouseId);
 
-  ResponseEntity<List<StockRepresentation>> getWarehouseStocks(Long warehouseId);
+  ResponseEntity<List<StockRepresentation>> getWarehouseStocks(String warehouseId);
 
-  ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(Long warehouseId, Long districtId);
+  ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
+      String warehouseId, String districtId);
 
-  ResponseEntity<List<OrderRepresentation>> getDistrictOrders(Long warehouseId, Long districtId);
+  ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
+      String warehouseId, String districtId);
 
   List<CarrierRepresentation> getCarriers();
 }

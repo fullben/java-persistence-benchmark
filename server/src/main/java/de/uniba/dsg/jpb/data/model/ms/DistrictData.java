@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
-public class DistrictData {
+public class DistrictData extends BaseData {
 
-  private Long id;
   private WarehouseData warehouse;
   private Lazy<List<CustomerData>> customers;
   private Lazy<List<OrderData>> orders;
@@ -16,16 +15,9 @@ public class DistrictData {
   private double yearToDateBalance;
 
   public DistrictData() {
+    super();
     customers = Lazy.Reference(new ArrayList<>());
     orders = Lazy.Reference(new ArrayList<>());
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public WarehouseData getWarehouse() {

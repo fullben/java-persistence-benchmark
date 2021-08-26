@@ -2,8 +2,8 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 
 public class NewOrderResponseItem {
 
-  private Long supplyingWarehouseId;
-  private Long itemId;
+  private String supplyingWarehouseId;
+  private String itemId;
   private String itemName;
   private double itemPrice;
   private double amount;
@@ -13,19 +13,19 @@ public class NewOrderResponseItem {
 
   public NewOrderResponseItem() {}
 
-  public Long getSupplyingWarehouseId() {
+  public String getSupplyingWarehouseId() {
     return supplyingWarehouseId;
   }
 
-  public void setSupplyingWarehouseId(Long supplyingWarehouseId) {
+  public void setSupplyingWarehouseId(String supplyingWarehouseId) {
     this.supplyingWarehouseId = supplyingWarehouseId;
   }
 
-  public Long getItemId() {
+  public String getItemId() {
     return itemId;
   }
 
-  public void setItemId(Long itemId) {
+  public void setItemId(String itemId) {
     this.itemId = itemId;
   }
 

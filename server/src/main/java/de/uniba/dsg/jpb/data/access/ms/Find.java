@@ -19,35 +19,35 @@ public final class Find {
     throw new AssertionError();
   }
 
-  public static ProductData productById(Long id, Collection<ProductData> products) {
+  public static ProductData productById(String id, Collection<ProductData> products) {
     return products.parallelStream()
         .filter(p -> p.getId().equals(id))
         .findAny()
         .orElseThrow(DataNotFoundException::new);
   }
 
-  public static CarrierData carrierById(Long id, Collection<CarrierData> carriers) {
+  public static CarrierData carrierById(String id, Collection<CarrierData> carriers) {
     return carriers.parallelStream()
         .filter(c -> c.getId().equals(id))
         .findAny()
         .orElseThrow(DataNotFoundException::new);
   }
 
-  public static WarehouseData warehouseById(Long id, Collection<WarehouseData> warehouses) {
+  public static WarehouseData warehouseById(String id, Collection<WarehouseData> warehouses) {
     return warehouses.stream()
         .filter(w -> w.getId().equals(id))
         .findAny()
         .orElseThrow(DataNotFoundException::new);
   }
 
-  public static DistrictData districtById(Long id, WarehouseData warehouse) {
+  public static DistrictData districtById(String id, WarehouseData warehouse) {
     return warehouse.getDistricts().stream()
         .filter(d -> d.getId().equals(id))
         .findAny()
         .orElseThrow(DataNotFoundException::new);
   }
 
-  public static CustomerData customerById(Long id, DistrictData district) {
+  public static CustomerData customerById(String id, DistrictData district) {
     return district.getCustomers().parallelStream()
         .filter(c -> c.getId().equals(id))
         .findAny()
@@ -61,7 +61,7 @@ public final class Find {
         .orElseThrow(DataNotFoundException::new);
   }
 
-  public static Optional<OrderData> mostRecentOrderOfCustomer(Long id, DistrictData district) {
+  public static Optional<OrderData> mostRecentOrderOfCustomer(String id, DistrictData district) {
     return district.getOrders().parallelStream()
         .filter(o -> o.getCustomer().getId().equals(id))
         .max(Comparator.comparing(OrderData::getEntryDate));
@@ -82,7 +82,7 @@ public final class Find {
   }
 
   public static List<StockData> stocksByProductIdsAndQuantityThreshold(
-      Collection<Long> productIds, int quantityThreshold, Collection<StockData> stocks) {
+      Collection<String> productIds, int quantityThreshold, Collection<StockData> stocks) {
     return stocks.parallelStream()
         .filter(
             s -> productIds.contains(s.getProduct().getId()) && s.getQuantity() < quantityThreshold)

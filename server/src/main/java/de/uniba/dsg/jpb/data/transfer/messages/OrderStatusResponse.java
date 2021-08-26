@@ -5,39 +5,39 @@ import java.util.List;
 
 public class OrderStatusResponse {
 
-  private Long warehouseId;
-  private Long districtId;
-  private Long customerId;
+  private String warehouseId;
+  private String districtId;
+  private String customerId;
   private String customerFirstName;
   private String customerMiddleName;
   private String customerLastName;
   private double customerBalance;
-  private Long orderId;
+  private String orderId;
   private LocalDateTime orderEntryDate;
-  private Long orderCarrierId;
+  private String orderCarrierId;
   private List<OrderItemStatusResponse> itemStatus;
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 
-  public Long getCustomerId() {
+  public String getCustomerId() {
     return customerId;
   }
 
-  public void setCustomerId(Long customerId) {
+  public void setCustomerId(String customerId) {
     this.customerId = customerId;
   }
 
@@ -73,11 +73,11 @@ public class OrderStatusResponse {
     this.customerBalance = customerBalance;
   }
 
-  public Long getOrderId() {
+  public String getOrderId() {
     return orderId;
   }
 
-  public void setOrderId(Long orderId) {
+  public void setOrderId(String orderId) {
     this.orderId = orderId;
   }
 
@@ -89,11 +89,11 @@ public class OrderStatusResponse {
     this.orderEntryDate = orderEntryDate;
   }
 
-  public Long getOrderCarrierId() {
+  public String getOrderCarrierId() {
     return orderCarrierId;
   }
 
-  public void setOrderCarrierId(Long orderCarrierId) {
+  public void setOrderCarrierId(String orderCarrierId) {
     this.orderCarrierId = orderCarrierId;
   }
 

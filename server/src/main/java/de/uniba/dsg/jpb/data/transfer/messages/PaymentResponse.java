@@ -2,10 +2,10 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 
 public class PaymentResponse {
 
-  private Long warehouseId;
-  private Long districtId;
-  private Long customerId;
-  private Long paymentId;
+  private String warehouseId;
+  private String districtId;
+  private String customerId;
+  private String paymentId;
   private String customerCredit;
   private double customerCreditLimit;
   private double customerDiscount;
@@ -19,35 +19,35 @@ public class PaymentResponse {
     paymentAmount = req.getAmount();
   }
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 
-  public Long getCustomerId() {
+  public String getCustomerId() {
     return customerId;
   }
 
-  public void setCustomerId(Long customerId) {
+  public void setCustomerId(String customerId) {
     this.customerId = customerId;
   }
 
-  public Long getPaymentId() {
+  public String getPaymentId() {
     return paymentId;
   }
 
-  public void setPaymentId(Long paymentId) {
+  public void setPaymentId(String paymentId) {
     this.paymentId = paymentId;
   }
 

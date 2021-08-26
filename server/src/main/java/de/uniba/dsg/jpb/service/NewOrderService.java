@@ -31,7 +31,7 @@ public abstract class NewOrderService
 
   protected static NewOrderResponse newOrderResponse(
       NewOrderRequest req,
-      Long orderId,
+      String orderId,
       LocalDateTime orderEntryDate,
       double warehouseSalesTax,
       double districtSalesTax,

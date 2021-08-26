@@ -265,7 +265,7 @@
         </hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Simulate employee transactions/work" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">10</stringProp>
         </LoopController>
         <hashTree>
           <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Create a new order" enabled="true">
@@ -296,9 +296,9 @@
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
                     <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-  &quot;districtId&quot;: ${randomDistrictId},&#xd;
-  &quot;customerId&quot;: ${randomCustomerId},&#xd;
+  &quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
+  &quot;districtId&quot;: &quot;${randomDistrictId}&quot;,&#xd;
+  &quot;customerId&quot;: &quot;${randomCustomerId}&quot;,&#xd;
   &quot;items&quot;: ${orderItems}&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
@@ -356,7 +356,7 @@ for (i = 0; i &lt; itemCount; i++) {
 	def randomProductId = productIds[ThreadLocalRandom.current().nextInt(productIds.size())]
 	def quantity = ThreadLocalRandom.current().nextInt(10, 21)
 	def supplyingWarehouseId = warehouseId.size() &gt; 0 ? ThreadLocalRandom.current().nextInt(1, 101) &gt; 100 ? warehouseIds[ThreadLocalRandom.current().nextInt(warehouseIds.size())] : warehouseId : warehouseId
-	orderItems += &quot;{\&quot;productId\&quot;: &quot;+ randomProductId.toString() +&quot;,\&quot;quantity\&quot;: &quot; + quantity.toString() + &quot;,\&quot;supplyingWarehouseId\&quot;: &quot; + supplyingWarehouseId.toString() + &quot;}&quot;
+	orderItems += &quot;{\&quot;productId\&quot;: \&quot;&quot;+ randomProductId.toString() +&quot;\&quot;,\&quot;quantity\&quot;: &quot; + quantity.toString() + &quot;,\&quot;supplyingWarehouseId\&quot;: \&quot;&quot; + supplyingWarehouseId.toString() + &quot;\&quot;}&quot;
 	if (i != itemCount - 1) {
 		orderItems += &quot;,&quot;
 	}
@@ -455,7 +455,7 @@ def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
 def amount = ThreadLocalRandom.current().nextInt(1, 5001)
 
 // Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;amount\&quot;: &quot; + amount.toString() + &quot;, \&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;, \&quot;customerId\&quot;: &quot; + (provideEmail ? null : randomCustomer.id.toString()) + &quot;, \&quot;districtId\&quot;: &quot; + randomDistrictId + &quot;, \&quot;warehouseId\&quot;: &quot; + warehouseId + &quot;}&quot;
+def req = &quot;{\&quot;amount\&quot;: &quot; + amount.toString() + &quot;, \&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;, \&quot;customerId\&quot;: &quot; + (provideEmail ? null : (&quot;\&quot;&quot; +randomCustomer.id.toString() + &quot;\&quot;&quot;)) + &quot;, \&quot;districtId\&quot;: \&quot;&quot; + randomDistrictId + &quot;\&quot;, \&quot;warehouseId\&quot;: \&quot;&quot; + warehouseId + &quot;\&quot;}&quot;
 vars.put(&quot;paymentRequest&quot;, req)
 </stringProp>
               </JSR223PreProcessor>
@@ -545,7 +545,7 @@ def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.siz
 def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
 
 // Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;warehouseId\&quot;: &quot; + warehouseId + &quot;, \&quot;districtId\&quot;: &quot; + randomDistrictId + &quot;,\&quot;customerId\&quot;: &quot; + (provideEmail ? null : randomCustomer.id.toString()) + &quot;,\&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;}&quot;
+def req = &quot;{\&quot;warehouseId\&quot;: \&quot;&quot; + warehouseId + &quot;\&quot;, \&quot;districtId\&quot;: \&quot;&quot; + randomDistrictId + &quot;\&quot;,\&quot;customerId\&quot;: &quot; + (provideEmail ? null : (&quot;\&quot;&quot; + randomCustomer.id.toString()) + &quot;\&quot;&quot;) + &quot;,\&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;}&quot;
 vars.put(&quot;orderStatusReq&quot;, req)
 </stringProp>
                 <stringProp name="scriptLanguage">groovy</stringProp>
@@ -596,8 +596,8 @@ vars.put(&quot;orderStatusReq&quot;, req)
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
                     <stringProp name="Argument.value">{&#xd;
-	&quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-	&quot;carrierId&quot;: ${randomCarrierId}&#xd;
+	&quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
+	&quot;carrierId&quot;: &quot;${randomCarrierId}&quot;&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
@@ -680,8 +680,8 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
                     <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: ${empWarehouseId},&#xd;
-  &quot;districtId&quot;: ${empDistrictId},&#xd;
+  &quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
+  &quot;districtId&quot;: &quot;${empDistrictId}&quot;,&#xd;
   &quot;stockThreshold&quot;: ${minStockLevel}&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
@@ -739,7 +739,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
             <hashTree/>
           </hashTree>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -776,7 +776,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="false">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>

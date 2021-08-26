@@ -1,22 +1,14 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "stocks")
-public class StockEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+public class StockEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "product_id")
@@ -42,14 +34,6 @@ public class StockEntity {
   private String dist08;
   private String dist09;
   private String dist10;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public ProductEntity getProduct() {
     return product;
@@ -185,22 +169,5 @@ public class StockEntity {
 
   public void setDist10(String dist10) {
     this.dist10 = dist10;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    StockEntity that = (StockEntity) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }

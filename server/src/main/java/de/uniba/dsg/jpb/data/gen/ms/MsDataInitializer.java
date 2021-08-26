@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.gen.ms;
 
-import de.uniba.dsg.jpb.util.IdentifierGenerator;
 import de.uniba.dsg.jpb.data.gen.DataInitializer;
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.util.Stopwatch;
@@ -18,23 +17,17 @@ public class MsDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(MsDataInitializer.class);
   private final MsDataWriter databaseWriter;
-  private final IdentifierGenerator<Long> idGenerator;
 
   @Autowired
   public MsDataInitializer(
-      Environment environment,
-      PasswordEncoder passwordEncoder,
-      MsDataWriter databaseWriter,
-      IdentifierGenerator<Long> idGenerator) {
+      Environment environment, PasswordEncoder passwordEncoder, MsDataWriter databaseWriter) {
     super(environment, passwordEncoder);
     this.databaseWriter = databaseWriter;
-    this.idGenerator = idGenerator;
   }
 
   @Override
   public void run(String... args) throws Exception {
     JpaDataGenerator jpaDataGenerator = createJpaDataGenerator();
-    jpaDataGenerator.setIdGenerator(idGenerator);
     LOG.info("Beginning model data generation");
     Stopwatch stopwatch = new Stopwatch(true);
     jpaDataGenerator.generate();

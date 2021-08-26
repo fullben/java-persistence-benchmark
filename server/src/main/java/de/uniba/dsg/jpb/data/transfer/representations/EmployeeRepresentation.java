@@ -2,7 +2,7 @@ package de.uniba.dsg.jpb.data.transfer.representations;
 
 public class EmployeeRepresentation {
 
-  private Long id;
+  private String id;
   private String firstName;
   private String middleName;
   private String lastName;
@@ -13,11 +13,11 @@ public class EmployeeRepresentation {
   private String title;
   private String username;
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

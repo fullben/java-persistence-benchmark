@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
-public class WarehouseData {
+public class WarehouseData extends BaseData {
 
-  private Long id;
   private String name;
   private AddressData address;
   private Lazy<List<DistrictData>> districts;
@@ -17,14 +16,6 @@ public class WarehouseData {
   public WarehouseData() {
     districts = Lazy.Reference(new ArrayList<>());
     stocks = Lazy.Reference(new ArrayList<>());
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public String getName() {

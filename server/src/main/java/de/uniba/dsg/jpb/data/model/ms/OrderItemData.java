@@ -2,9 +2,8 @@ package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
 
-public class OrderItemData {
+public class OrderItemData extends BaseData {
 
-  private Long id;
   private OrderData order;
   private int number;
   private ProductData product;
@@ -13,14 +12,6 @@ public class OrderItemData {
   private int quantity;
   private double amount;
   private String distInfo;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public OrderData getOrder() {
     return order;

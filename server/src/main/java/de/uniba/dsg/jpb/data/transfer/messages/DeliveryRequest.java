@@ -5,24 +5,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DeliveryRequest {
 
   @JsonProperty(required = true)
-  private Long warehouseId;
+  private String warehouseId;
 
   @JsonProperty(required = true)
-  private Long carrierId;
+  private String carrierId;
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getCarrierId() {
+  public String getCarrierId() {
     return carrierId;
   }
 
-  public void setCarrierId(Long carrierId) {
+  public void setCarrierId(String carrierId) {
     this.carrierId = carrierId;
   }
 }

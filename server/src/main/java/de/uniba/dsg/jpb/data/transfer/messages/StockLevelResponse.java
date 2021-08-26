@@ -2,8 +2,8 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 
 public class StockLevelResponse {
 
-  private Long warehouseId;
-  private Long districtId;
+  private String warehouseId;
+  private String districtId;
   private int stockThreshold;
   private int lowStocksCount;
 
@@ -13,19 +13,19 @@ public class StockLevelResponse {
     stockThreshold = req.getStockThreshold();
   }
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 

@@ -100,7 +100,7 @@ public class JpaResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(
-      @PathVariable Long warehouseId) {
+      @PathVariable String warehouseId) {
     List<DistrictRepresentation> districts =
         districtRepository.findByWarehouseId(warehouseId).stream()
             .map(d -> modelMapper.map(d, DistrictRepresentation.class))
@@ -116,7 +116,7 @@ public class JpaResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(
-      @PathVariable Long warehouseId) {
+      @PathVariable String warehouseId) {
     List<StockRepresentation> stocks =
         stockRepository.findByWarehouseId(warehouseId).stream()
             .map(s -> modelMapper.map(s, StockRepresentation.class))
@@ -129,7 +129,7 @@ public class JpaResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
-      @PathVariable Long warehouseId, @PathVariable Long districtId) {
+      @PathVariable String warehouseId, @PathVariable String districtId) {
     List<CustomerEntity> customers = customerRepository.findByDistrictId(districtId);
     if (customers.parallelStream()
         .anyMatch(c -> !c.getDistrict().getWarehouse().getId().equals(warehouseId))) {
@@ -147,7 +147,7 @@ public class JpaResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
-      @PathVariable Long warehouseId, @PathVariable Long districtId) {
+      @PathVariable String warehouseId, @PathVariable String districtId) {
     List<OrderEntity> orders = orderRepository.findByDistrictId(districtId);
     if (orders.stream()
         .anyMatch(o -> !o.getDistrict().getWarehouse().getId().equals(warehouseId))) {

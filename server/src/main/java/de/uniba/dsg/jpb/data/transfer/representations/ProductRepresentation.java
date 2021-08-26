@@ -2,17 +2,17 @@ package de.uniba.dsg.jpb.data.transfer.representations;
 
 public class ProductRepresentation {
 
-  private Long id;
+  private String id;
   private String imagePath;
   private String name;
   private double price;
   private String data;
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

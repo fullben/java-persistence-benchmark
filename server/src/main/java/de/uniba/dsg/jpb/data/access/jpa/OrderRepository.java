@@ -6,25 +6,25 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
+public interface OrderRepository extends JpaRepository<OrderEntity, String> {
 
-  List<OrderEntity> findByDistrictId(Long districtId);
+  List<OrderEntity> findByDistrictId(String districtId);
 
   @Query(
       value =
           "SELECT * FROM orders o WHERE o.customer_id = :customerId ORDER BY o.entrydate DESC LIMIT 1",
       nativeQuery = true)
-  Optional<OrderEntity> findMostRecentOrderOfCustomer(Long customerId);
+  Optional<OrderEntity> findMostRecentOrderOfCustomer(String customerId);
 
   @Query(
       value =
           "SELECT * FROM orders o WHERE o.district_id = :districtId AND o.fulfilled = false ORDER BY o.entrydate ASC LIMIT 1",
       nativeQuery = true)
-  Optional<OrderEntity> findOldestUnfulfilledOrderOfDistrict(Long districtId);
+  Optional<OrderEntity> findOldestUnfulfilledOrderOfDistrict(String districtId);
 
   @Query(
       value =
           "SELECT * FROM orders o WHERE o.district_id = :districtId ORDER BY o.entrydate DESC LIMIT 20",
       nativeQuery = true)
-  List<OrderEntity> find20MostRecentOrdersOfDistrict(Long districtId);
+  List<OrderEntity> find20MostRecentOrdersOfDistrict(String districtId);
 }

@@ -5,10 +5,10 @@ import java.util.List;
 
 public class NewOrderResponse {
 
-  private Long warehouseId;
-  private Long districtId;
-  private Long customerId;
-  private Long orderId;
+  private String warehouseId;
+  private String districtId;
+  private String customerId;
+  private String orderId;
   private List<NewOrderResponseItem> orderItems;
   private int orderItemCount;
   private LocalDateTime orderTimestamp;
@@ -26,35 +26,35 @@ public class NewOrderResponse {
     customerId = request.getCustomerId();
   }
 
-  public Long getWarehouseId() {
+  public String getWarehouseId() {
     return warehouseId;
   }
 
-  public void setWarehouseId(Long warehouseId) {
+  public void setWarehouseId(String warehouseId) {
     this.warehouseId = warehouseId;
   }
 
-  public Long getDistrictId() {
+  public String getDistrictId() {
     return districtId;
   }
 
-  public void setDistrictId(Long districtId) {
+  public void setDistrictId(String districtId) {
     this.districtId = districtId;
   }
 
-  public Long getCustomerId() {
+  public String getCustomerId() {
     return customerId;
   }
 
-  public void setCustomerId(Long customerId) {
+  public void setCustomerId(String customerId) {
     this.customerId = customerId;
   }
 
-  public Long getOrderId() {
+  public String getOrderId() {
     return orderId;
   }
 
-  public void setOrderId(Long orderId) {
+  public void setOrderId(String orderId) {
     this.orderId = orderId;
   }
 

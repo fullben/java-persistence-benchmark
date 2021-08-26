@@ -2,7 +2,7 @@ package de.uniba.dsg.jpb.data.transfer.representations;
 
 public class StockRepresentation {
 
-  private Long id;
+  private String id;
   private ProductRepresentation product;
   private int quantity;
   private WarehouseRepresentation warehouse;
@@ -21,11 +21,11 @@ public class StockRepresentation {
   private String dist09;
   private String dist10;
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

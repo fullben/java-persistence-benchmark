@@ -4,25 +4,25 @@ import java.time.LocalDateTime;
 
 public class OrderItemStatusResponse {
 
-  private Long supplyingWarehouseId;
-  private Long productId;
+  private String supplyingWarehouseId;
+  private String productId;
   private int quantity;
   private double amount;
   private LocalDateTime deliveryDate;
 
-  public Long getSupplyingWarehouseId() {
+  public String getSupplyingWarehouseId() {
     return supplyingWarehouseId;
   }
 
-  public void setSupplyingWarehouseId(Long supplyingWarehouseId) {
+  public void setSupplyingWarehouseId(String supplyingWarehouseId) {
     this.supplyingWarehouseId = supplyingWarehouseId;
   }
 
-  public Long getProductId() {
+  public String getProductId() {
     return productId;
   }
 
-  public void setProductId(Long productId) {
+  public void setProductId(String productId) {
     this.productId = productId;
   }
 

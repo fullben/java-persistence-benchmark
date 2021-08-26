@@ -1,8 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-public class StockData {
+public class StockData extends BaseData {
 
-  private Long id;
   private ProductData product;
   private int quantity;
   private WarehouseData warehouse;
@@ -24,7 +23,8 @@ public class StockData {
   public StockData() {}
 
   public StockData(StockData stock) {
-    id = stock.id;
+    super();
+    setId(stock.getId());
     product = stock.product;
     quantity = stock.quantity;
     warehouse = stock.warehouse;
@@ -42,14 +42,6 @@ public class StockData {
     dist08 = stock.dist08;
     dist09 = stock.dist09;
     dist10 = stock.dist10;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public ProductData getProduct() {

@@ -80,7 +80,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(
-      @PathVariable Long warehouseId) {
+      @PathVariable String warehouseId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -101,7 +101,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(
-      @PathVariable Long warehouseId) {
+      @PathVariable String warehouseId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -122,7 +122,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
-      @PathVariable Long warehouseId, @PathVariable Long districtId) {
+      @PathVariable String warehouseId, @PathVariable String districtId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -152,7 +152,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
-      @PathVariable Long warehouseId, @PathVariable Long districtId) {
+      @PathVariable String warehouseId, @PathVariable String districtId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);

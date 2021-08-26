@@ -2,22 +2,13 @@ package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
 
-public class PaymentData {
+public class PaymentData extends BaseData {
 
-  private Long id;
   private CustomerData customer;
   private LocalDateTime date;
   private DistrictData district;
   private double amount;
   private String data;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public CustomerData getCustomer() {
     return customer;

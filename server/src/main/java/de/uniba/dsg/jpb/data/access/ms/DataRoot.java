@@ -16,10 +16,10 @@ import one.microstream.reference.Referencing;
 
 public class DataRoot {
 
-  private final Map<Long, ProductData> idToProduct;
-  private final Map<Long, CarrierData> idToCarrier;
-  private final Map<Long, Lazy<WarehouseData>> idToWarehouse;
-  private final Map<Long, EmployeeData> idToEmployee;
+  private final Map<String, ProductData> idToProduct;
+  private final Map<String, CarrierData> idToCarrier;
+  private final Map<String, Lazy<WarehouseData>> idToWarehouse;
+  private final Map<String, EmployeeData> idToEmployee;
 
   public DataRoot() {
     idToProduct = new HashMap<>();
@@ -47,7 +47,7 @@ public class DataRoot {
         employees.stream().collect(Collectors.toMap(EmployeeData::getId, Function.identity())));
   }
 
-  public ProductData findProductById(Long id) {
+  public ProductData findProductById(String id) {
     return idToProduct.get(id);
   }
 
@@ -55,7 +55,7 @@ public class DataRoot {
     return new ArrayList<>(idToProduct.values());
   }
 
-  public CarrierData findCarrierById(Long id) {
+  public CarrierData findCarrierById(String id) {
     return idToCarrier.get(id);
   }
 
@@ -63,7 +63,7 @@ public class DataRoot {
     return new ArrayList<>(idToCarrier.values());
   }
 
-  public WarehouseData findWarehouseById(Long id) {
+  public WarehouseData findWarehouseById(String id) {
     return Lazy.get(idToWarehouse.get(id));
   }
 
@@ -71,7 +71,7 @@ public class DataRoot {
     return idToWarehouse.values().stream().map(Referencing::get).collect(Collectors.toList());
   }
 
-  public EmployeeData findEmployeeById(Long id) {
+  public EmployeeData findEmployeeById(String id) {
     return idToEmployee.get(id);
   }
 

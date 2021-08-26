@@ -34,7 +34,7 @@ public class MsPaymentService extends PaymentService {
           WarehouseData warehouse =
               Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
           DistrictData district = Find.districtById(req.getDistrictId(), warehouse);
-          Long customerId = req.getCustomerId();
+          String customerId = req.getCustomerId();
           CustomerData customer;
           if (customerId == null) {
             customer = Find.customerByEmail(req.getCustomerEmail(), district);

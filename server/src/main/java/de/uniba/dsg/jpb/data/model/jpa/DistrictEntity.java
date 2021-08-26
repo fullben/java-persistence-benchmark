@@ -2,14 +2,10 @@ package de.uniba.dsg.jpb.data.model.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,11 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "districts")
-public class DistrictEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+public class DistrictEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "warehouse_id")
@@ -39,14 +31,6 @@ public class DistrictEntity {
   @Embedded private AddressEmbeddable address;
   private double salesTax;
   private double yearToDateBalance;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public WarehouseEntity getWarehouse() {
     return warehouse;
@@ -102,22 +86,5 @@ public class DistrictEntity {
 
   public void setYearToDateBalance(double yearToDateBalance) {
     this.yearToDateBalance = yearToDateBalance;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    DistrictEntity that = (DistrictEntity) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }

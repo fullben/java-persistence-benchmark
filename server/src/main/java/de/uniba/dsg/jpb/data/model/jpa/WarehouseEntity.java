@@ -2,24 +2,16 @@ package de.uniba.dsg.jpb.data.model.jpa;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "warehouses")
-public class WarehouseEntity {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+public class WarehouseEntity extends BaseEntity {
 
   private String name;
   @Embedded private AddressEmbeddable address;
@@ -34,14 +26,6 @@ public class WarehouseEntity {
 
   private double salesTax;
   private double yearToDateBalance;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getName() {
     return name;
@@ -89,22 +73,5 @@ public class WarehouseEntity {
 
   public void setYearToDateBalance(double yearToDateBalance) {
     this.yearToDateBalance = yearToDateBalance;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    WarehouseEntity that = (WarehouseEntity) o;
-    return id.equals(that.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
   }
 }

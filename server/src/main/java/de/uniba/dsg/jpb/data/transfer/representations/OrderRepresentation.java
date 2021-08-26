@@ -5,7 +5,7 @@ import java.util.List;
 
 public class OrderRepresentation {
 
-  private Long id;
+  private String id;
   private DistrictRepresentation district;
   private CustomerRepresentation customer;
   private LocalDateTime entryDate;
@@ -15,11 +15,11 @@ public class OrderRepresentation {
   private boolean allLocal;
   private boolean fulfilled;
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
