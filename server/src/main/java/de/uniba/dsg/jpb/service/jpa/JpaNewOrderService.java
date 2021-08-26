@@ -82,7 +82,7 @@ public class JpaNewOrderService extends NewOrderService {
           stockRepository
               .findByProductIdAndWarehouseId(
                   product.getId(), orderItem.getSupplyingWarehouse().getId())
-              .orElseThrow(NullPointerException::new);
+              .orElseThrow(IllegalStateException::new);
       NewOrderResponseItem responseLine = newOrderResponseLine(orderItem);
       responseLines.add(responseLine);
       int stockQuantity = stock.getQuantity();
