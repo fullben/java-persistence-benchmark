@@ -1,20 +1,21 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 public class NewOrderRequest {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Warehouse id is required")
   private String warehouseId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "District id is required")
   private String districtId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Customer id is required")
   private String customerId;
 
-  @JsonProperty(required = true)
+  @NotEmpty(message = "Order items are required")
   private List<NewOrderRequestItem> items;
 
   public String getWarehouseId() {

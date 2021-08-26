@@ -1,13 +1,13 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class DeliveryRequest {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Warehouse id is required")
   private String warehouseId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Carrier id is required")
   private String carrierId;
 
   public String getWarehouseId() {

@@ -1,22 +1,21 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 public class PaymentRequest {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Warehouse id is required")
   private String warehouseId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "District id is required")
   private String districtId;
 
-  @JsonProperty(required = false)
   private String customerId;
 
-  @JsonProperty(required = false)
   private String customerEmail;
 
-  @JsonProperty(required = true)
+  @Min(value = 1, message = "Amount must be greater than zero")
   private double amount;
 
   public String getWarehouseId() {

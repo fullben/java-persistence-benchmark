@@ -16,9 +16,11 @@ import de.uniba.dsg.jpb.service.ms.MsNewOrderService;
 import de.uniba.dsg.jpb.service.ms.MsOrderStatusService;
 import de.uniba.dsg.jpb.service.ms.MsPaymentService;
 import de.uniba.dsg.jpb.service.ms.MsStockLevelService;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
+@Validated
 public class MsTransactionsController implements TransactionsController {
 
   private final MsNewOrderService newOrderService;
@@ -51,28 +54,28 @@ public class MsTransactionsController implements TransactionsController {
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public NewOrderResponse doNewOrderTransaction(@RequestBody NewOrderRequest req) {
+  public NewOrderResponse doNewOrderTransaction(@Valid @RequestBody NewOrderRequest req) {
     return newOrderService.process(req);
   }
 
   @PostMapping(value = "transactions/payment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public PaymentResponse doPaymentTransaction(@RequestBody PaymentRequest req) {
+  public PaymentResponse doPaymentTransaction(@Valid @RequestBody PaymentRequest req) {
     return paymentService.process(req);
   }
 
   @Override
-  public OrderStatusResponse doOrderStatusTransaction(OrderStatusRequest req) {
+  public OrderStatusResponse doOrderStatusTransaction(@Valid @RequestBody OrderStatusRequest req) {
     return orderStatusService.process(req);
   }
 
   @Override
-  public DeliveryResponse doDeliveryTransaction(DeliveryRequest req) {
+  public DeliveryResponse doDeliveryTransaction(@Valid @RequestBody DeliveryRequest req) {
     return deliveryService.process(req);
   }
 
   @Override
-  public StockLevelResponse doStockLevelTransaction(StockLevelRequest req) {
+  public StockLevelResponse doStockLevelTransaction(@Valid @RequestBody StockLevelRequest req) {
     return stockLevelService.process(req);
   }
 }

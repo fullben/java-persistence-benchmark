@@ -1,19 +1,17 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
 
 public class OrderStatusRequest {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Warehouse id is required")
   private String warehouseId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "District id is required")
   private String districtId;
 
-  @JsonProperty(required = false)
   private String customerId;
 
-  @JsonProperty(required = false)
   private String customerEmail;
 
   public String getWarehouseId() {

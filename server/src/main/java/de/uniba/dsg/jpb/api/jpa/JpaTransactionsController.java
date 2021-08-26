@@ -16,9 +16,11 @@ import de.uniba.dsg.jpb.service.jpa.JpaNewOrderService;
 import de.uniba.dsg.jpb.service.jpa.JpaOrderStatusService;
 import de.uniba.dsg.jpb.service.jpa.JpaPaymentService;
 import de.uniba.dsg.jpb.service.jpa.JpaStockLevelService;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
+@Validated
 public class JpaTransactionsController implements TransactionsController {
 
   private final JpaNewOrderService newOrderService;
@@ -53,31 +56,31 @@ public class JpaTransactionsController implements TransactionsController {
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public NewOrderResponse doNewOrderTransaction(@RequestBody NewOrderRequest req) {
+  public NewOrderResponse doNewOrderTransaction(@Valid @RequestBody NewOrderRequest req) {
     return newOrderService.process(req);
   }
 
   @PostMapping(value = "transactions/payment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public PaymentResponse doPaymentTransaction(@RequestBody PaymentRequest req) {
+  public PaymentResponse doPaymentTransaction(@Valid @RequestBody PaymentRequest req) {
     return paymentService.process(req);
   }
 
   @GetMapping(value = "transactions/order-status", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public OrderStatusResponse doOrderStatusTransaction(@RequestBody OrderStatusRequest req) {
+  public OrderStatusResponse doOrderStatusTransaction(@Valid @RequestBody OrderStatusRequest req) {
     return orderStatusService.process(req);
   }
 
   @PutMapping(value = "transactions/delivery", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public DeliveryResponse doDeliveryTransaction(@RequestBody DeliveryRequest req) {
+  public DeliveryResponse doDeliveryTransaction(@Valid @RequestBody DeliveryRequest req) {
     return deliveryService.process(req);
   }
 
   @GetMapping(value = "transactions/stock-level", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public StockLevelResponse doStockLevelTransaction(@RequestBody StockLevelRequest req) {
+  public StockLevelResponse doStockLevelTransaction(@Valid @RequestBody StockLevelRequest req) {
     return stockLevelService.process(req);
   }
 }

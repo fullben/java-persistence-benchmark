@@ -3,6 +3,7 @@ package de.uniba.dsg.jpb.data.transfer.messages;
 public class DeliveryResponse {
 
   private String warehouseId;
+
   private String carrierId;
 
   public DeliveryResponse() {}

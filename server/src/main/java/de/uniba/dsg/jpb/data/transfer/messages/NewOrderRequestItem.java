@@ -1,16 +1,17 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 public class NewOrderRequestItem {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Product id is required")
   private String productId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Supplying warehouse id is required")
   private String supplyingWarehouseId;
 
-  @JsonProperty(required = true)
+  @Min(value = 1, message = "Quantity must be greater than zero")
   private int quantity;
 
   public NewOrderRequestItem() {}

@@ -15,12 +15,14 @@ import de.uniba.dsg.jpb.data.transfer.representations.StockRepresentation;
 import de.uniba.dsg.jpb.data.transfer.representations.WarehouseRepresentation;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotBlank;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
+@Validated
 public class MsResourcesController implements ResourcesController {
 
   private final DataManager dataManager;
@@ -53,7 +56,8 @@ public class MsResourcesController implements ResourcesController {
 
   @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
-  public ResponseEntity<EmployeeRepresentation> getEmployee(@PathVariable String username) {
+  public ResponseEntity<EmployeeRepresentation> getEmployee(
+      @NotBlank @PathVariable String username) {
     return dataManager.read(
         (root) -> {
           EmployeeData employee = root.findEmployeeByUsername(username);
@@ -80,7 +84,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(
-      @PathVariable String warehouseId) {
+      @NotBlank @PathVariable String warehouseId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -101,7 +105,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(
-      @PathVariable String warehouseId) {
+      @NotBlank @PathVariable String warehouseId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -122,7 +126,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
-      @PathVariable String warehouseId, @PathVariable String districtId) {
+      @NotBlank @PathVariable String warehouseId, @NotBlank @PathVariable String districtId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);
@@ -152,7 +156,7 @@ public class MsResourcesController implements ResourcesController {
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Override
   public ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
-      @PathVariable String warehouseId, @PathVariable String districtId) {
+      @NotBlank @PathVariable String warehouseId, @NotBlank @PathVariable String districtId) {
     return dataManager.read(
         (root) -> {
           WarehouseData warehouse = root.findWarehouseById(warehouseId);

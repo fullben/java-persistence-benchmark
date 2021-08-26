@@ -1,16 +1,17 @@
 package de.uniba.dsg.jpb.data.transfer.messages;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 public class StockLevelRequest {
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "Warehouse id is required")
   private String warehouseId;
 
-  @JsonProperty(required = true)
+  @NotBlank(message = "District id is required")
   private String districtId;
 
-  @JsonProperty(required = true)
+  @Min(value = 10, message = "Stock level threshold must be greater than nine")
   private int stockThreshold;
 
   public String getWarehouseId() {
