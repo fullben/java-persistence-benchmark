@@ -41,11 +41,24 @@ public class MsNewOrderService extends NewOrderService {
   public NewOrderResponse process(NewOrderRequest req) {
     return dataManager.write(
         (root, storageManager) -> {
-          // Fetch warehouse, district and customer
+          // Get warehouse, district and customer
           WarehouseData warehouse =
               Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
           DistrictData district = Find.districtById(req.getDistrictId(), warehouse);
           CustomerData customer = Find.customerById(req.getCustomerId(), district);
+
+          // Get all supplying warehouses and products to ensure no invalid ids have been provided
+          List<WarehouseData> supplyingWarehouses = new ArrayList<>();
+          List<WarehouseData> allWarehouses = root.findAllWarehouses();
+          List<ProductData> orderItemProducts = new ArrayList<>();
+          List<ProductData> allProducts = root.findAllProducts();
+          req.getItems()
+              .forEach(
+                  i -> {
+                    supplyingWarehouses.add(
+                        Find.warehouseById(i.getSupplyingWarehouseId(), allWarehouses));
+                    orderItemProducts.add(Find.productById(i.getProductId(), allProducts));
+                  });
 
           // Create a new order
           OrderData order = new OrderData();
@@ -68,12 +81,9 @@ public class MsNewOrderService extends NewOrderService {
           Set<StockData> changedStocks = new HashSet<>();
           for (int i = 0; i < orderItems.size(); i++) {
             OrderItemData orderItem = orderItems.get(i);
-            ProductData product =
-                Find.productById(orderItem.getProduct().getId(), root.findAllProducts());
+            ProductData product = orderItemProducts.get(i);
             orderItem.setProduct(product);
-            orderItem.setSupplyingWarehouse(
-                Find.warehouseById(
-                    orderItem.getSupplyingWarehouse().getId(), root.findAllWarehouses()));
+            orderItem.setSupplyingWarehouse(supplyingWarehouses.get(i));
             StockData stock =
                 warehouse.getStocks().parallelStream()
                     .filter(s -> s.getProduct().getId().equals(product.getId()))
