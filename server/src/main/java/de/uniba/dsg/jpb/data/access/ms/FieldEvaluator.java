@@ -21,7 +21,6 @@ public class FieldEvaluator implements PersistenceEagerStoringFieldEvaluator {
     } else if (clazz == CustomerData.class
         && (field.getName().equals("balance")
             || field.getName().equals("yearToDatePayment")
-            || field.getName().equals("payments")
             || field.getName().equals("paymentCount")
             || field.getName().equals("deliveryCount")
             || field.getName().equals("data"))) {

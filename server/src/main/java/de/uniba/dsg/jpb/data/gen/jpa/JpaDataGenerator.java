@@ -18,10 +18,12 @@ import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.util.RandomSelector;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class JpaDataGenerator
@@ -69,6 +71,35 @@ public class JpaDataGenerator
   private final List<EmployeeEntity> employees;
   private final List<String> existingEmails;
   private final PasswordEncoder passwordEncoder;
+  private final LocalDateTime now;
+
+  public JpaDataGenerator(
+      int warehouses,
+      int districts,
+      int customers,
+      int orders,
+      int products,
+      PasswordEncoder passwordEncoder) {
+    if (warehouses < 1 || districts < 1 || customers < 1 || orders < 1 || products < 1) {
+      throw new IllegalArgumentException("Warehouse count must be greater than zero");
+    }
+    warehouseCount = warehouses;
+    productCount = products;
+    districtsPerWarehouseCount = districts;
+    customersPerDistrictCount = customers;
+    ordersPerDistrictCount = orders;
+    faker = new Faker(Locale.US);
+    salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
+    oneInThreeRandom = new UniformRandom(1, 3);
+    emailService = new RandomSelector<>(EMAIL_SERVICES);
+    this.products = null;
+    carriers = null;
+    this.warehouses = null;
+    employees = new ArrayList<>();
+    existingEmails = new ArrayList<>();
+    this.passwordEncoder = requireNonNull(passwordEncoder);
+    now = LocalDateTime.now();
+  }
 
   public JpaDataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
     if (warehouseCount < 1) {
@@ -96,6 +127,7 @@ public class JpaDataGenerator
     employees = new ArrayList<>();
     existingEmails = new ArrayList<>();
     this.passwordEncoder = requireNonNull(passwordEncoder);
+    now = LocalDateTime.now();
   }
 
   public JpaDataGenerator(int warehouseCount, PasswordEncoder passwordEncoder) {
@@ -238,7 +270,7 @@ public class JpaDataGenerator
       customer.setEmail(
           generateUniqueEmail(
               customer.getFirstName(), customer.getMiddleName(), customer.getLastName()));
-      customer.setSince(LocalDateTime.now());
+      customer.setSince(randomTimeBefore(now.minusMonths(2), 3));
       customer.setPayments(List.of(generatePayment(customer)));
       customer.setCredit(creditRandom.nextInt() < 11 ? BAD_CREDIT : GOOD_CREDIT);
       customer.setCreditLimit(50_000);
@@ -257,7 +289,7 @@ public class JpaDataGenerator
     PaymentEntity payment = new PaymentEntity();
     payment.setCustomer(customer);
     payment.setDistrict(customer.getDistrict());
-    payment.setDate(LocalDateTime.now());
+    payment.setDate(randomTimeAfter(customer.getSince()));
     payment.setAmount(10.0);
     payment.setData(lorem26To50());
     return payment;
@@ -336,7 +368,7 @@ public class JpaDataGenerator
       OrderEntity order = new OrderEntity();
       order.setCustomer(customer);
       order.setDistrict(customer.getDistrict());
-      order.setEntryDate(LocalDateTime.now());
+      order.setEntryDate(randomTimeAfter(customer.getSince()));
       order.setCarrier(oneInThreeRandom.nextInt() < 3 ? carrierSelector.next() : null);
       order.setItemCount(orderItemCountRandom.nextInt());
       order.setAllLocal(true);
@@ -403,5 +435,37 @@ public class JpaDataGenerator
     }
     existingEmails.add(email);
     return email;
+  }
+
+  private static LocalDateTime randomTimeBefore(LocalDateTime before, int maxMonthOffset) {
+    if (maxMonthOffset < 1 || maxMonthOffset > 12) {
+      throw new IllegalArgumentException();
+    }
+    int minYear;
+    int minMonth;
+    int minDay = 15;
+    if (before.getMonthValue() <= maxMonthOffset) {
+      minYear = before.getYear() - 1;
+      minMonth = 12 - maxMonthOffset + before.getMonthValue();
+    } else {
+      minYear = before.getYear();
+      minMonth = before.getMonthValue() - maxMonthOffset;
+    }
+    long minSeconds =
+        LocalDateTime.of(
+                minYear, minMonth, minDay, (int) (Math.random() * 23), (int) (Math.random() * 59))
+            .toEpochSecond(ZoneOffset.UTC);
+    long maxSeconds = before.toEpochSecond(ZoneOffset.UTC);
+    long randomDay = ThreadLocalRandom.current().nextLong(minSeconds, maxSeconds);
+    return LocalDateTime.ofEpochSecond(
+        randomDay, (int) (Math.random() * before.getNano()), ZoneOffset.UTC);
+  }
+
+  private static LocalDateTime randomTimeAfter(LocalDateTime min) {
+    long minSeconds = min.toEpochSecond(ZoneOffset.UTC);
+    long maxSeconds = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+    long randomDay = ThreadLocalRandom.current().nextLong(minSeconds, maxSeconds);
+    return LocalDateTime.ofEpochSecond(
+        randomDay, (int) (Math.random() * min.getNano()), ZoneOffset.UTC);
   }
 }

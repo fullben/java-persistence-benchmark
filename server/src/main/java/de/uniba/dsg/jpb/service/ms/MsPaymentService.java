@@ -10,7 +10,6 @@ import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.jpb.service.PaymentService;
 import java.time.LocalDateTime;
-import one.microstream.persistence.types.Storer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -77,7 +76,7 @@ public class MsPaymentService extends PaymentService {
 
           try {
             // Persist the changes
-            storageManager.storeAll(customer, warehouse, district);
+            storageManager.storeAll(customer.getPayments(), customer, warehouse, district);
           } catch (RuntimeException e) {
             // Reset warehouse and district balances
             warehouse.setYearToDateBalance(warehouseYearToDateBalance);
@@ -94,6 +93,7 @@ public class MsPaymentService extends PaymentService {
 
           PaymentResponse res = new PaymentResponse(req);
           res.setPaymentId(payment.getId());
+          res.setCustomerId(customer.getId());
           res.setCustomerCredit(customer.getCredit());
           res.setCustomerCreditLimit(customer.getCreditLimit());
           res.setCustomerDiscount(customer.getDiscount());

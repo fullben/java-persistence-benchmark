@@ -7,3 +7,4 @@ build
 
 # Ignore default MicroStream storage directory
 storage
+test-storage

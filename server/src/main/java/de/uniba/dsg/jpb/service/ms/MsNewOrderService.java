@@ -45,6 +45,10 @@ public class MsNewOrderService extends NewOrderService {
           WarehouseData warehouse =
               Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
           DistrictData district = Find.districtById(req.getDistrictId(), warehouse);
+          if (!district.getId().equals(req.getDistrictId())
+              || !district.getWarehouse().getId().equals(req.getWarehouseId())) {
+            throw new IllegalArgumentException();
+          }
           CustomerData customer = Find.customerById(req.getCustomerId(), district);
 
           // Get all supplying warehouses and products to ensure no invalid ids have been provided

@@ -51,7 +51,7 @@ public class JpaPaymentService extends PaymentService {
       customer =
           customerRepository
               .findByEmail(req.getCustomerEmail())
-              .orElseThrow(IllegalStateException::new);
+              .orElseThrow(IllegalArgumentException::new);
     } else {
       customer = customerRepository.getById(customerId);
     }
@@ -88,6 +88,7 @@ public class JpaPaymentService extends PaymentService {
     payment = paymentRepository.save(payment);
 
     PaymentResponse res = new PaymentResponse(req);
+    res.setCustomerId(customer.getId());
     res.setPaymentId(payment.getId());
     res.setCustomerCredit(customer.getCredit());
     res.setCustomerCreditLimit(customer.getCreditLimit());

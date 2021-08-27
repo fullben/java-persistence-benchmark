@@ -76,6 +76,10 @@ public class MsDeliveryService extends DeliveryService {
             List<Object> toBeStored = new ArrayList<>(editedOrders.size() + editedCustomers.size());
             toBeStored.addAll(editedOrders);
             toBeStored.addAll(
+                editedOrders.stream()
+                    .flatMap(o -> o.getItems().stream())
+                    .collect(Collectors.toList()));
+            toBeStored.addAll(
                 editedCustomers.stream().map(c -> c.customer).collect(Collectors.toList()));
             storageManager.storeAll(toBeStored);
           } catch (RuntimeException e) {

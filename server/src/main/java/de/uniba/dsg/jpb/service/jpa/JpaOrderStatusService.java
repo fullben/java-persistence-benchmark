@@ -42,7 +42,7 @@ public class JpaOrderStatusService extends OrderStatusService {
       customer =
           customerRepository
               .findByEmail(req.getCustomerEmail())
-              .orElseThrow(IllegalStateException::new);
+              .orElseThrow(IllegalArgumentException::new);
       customerId = customer.getId();
     } else {
       customer = customerRepository.getById(customerId);

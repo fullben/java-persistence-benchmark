@@ -196,6 +196,18 @@ public class JpaToMsConverter
     district.setWarehouse(w);
     district.setOrders(orders(d.getOrders(), district, ws, ps, cs));
     district.setCustomers(customers(d.getCustomers(), district));
+    // Set the actual customer, as the orders(...) method only assigns a dummy object
+    district
+        .getOrders()
+        .forEach(
+            o -> {
+              String customerId = o.getCustomer().getId();
+              o.setCustomer(
+                  district.getCustomers().stream()
+                      .filter(c -> c.getId().equals(customerId))
+                      .findAny()
+                      .orElseThrow(IllegalStateException::new));
+            });
     return district;
   }
 
@@ -223,6 +235,7 @@ public class JpaToMsConverter
       customer.setOrders(findOrdersByCustomerId(c.getId(), d.getOrders()));
       customer.getOrders().forEach(o -> o.setCustomer(customer));
       customer.setDistrict(d);
+      customers.add(customer);
     }
     return customers;
   }
