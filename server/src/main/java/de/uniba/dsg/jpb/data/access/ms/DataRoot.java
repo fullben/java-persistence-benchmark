@@ -14,6 +14,12 @@ import java.util.stream.Collectors;
 import one.microstream.reference.Lazy;
 import one.microstream.reference.Referencing;
 
+/**
+ * The root for the object graph which represents the MicroStream data model. Instances of this
+ * class are used to persist and manage the data with MicroStream.
+ *
+ * @author Benedikt Full
+ */
 public class DataRoot {
 
   private final Map<String, ProductData> idToProduct;

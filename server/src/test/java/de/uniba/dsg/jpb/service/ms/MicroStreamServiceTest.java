@@ -25,10 +25,7 @@ public abstract class MicroStreamServiceTest {
   }
 
   public DataManager dataManager() {
-    EmbeddedStorageManager storageManager = storageFoundation().start();
-    DataManager dataManager = new DataManager((DataRoot) storageManager.root());
-    dataManager.setStorageManager(storageManager);
-    return dataManager;
+    return new DataManager(storageFoundation().start());
   }
 
   public void populateStorage(JpaDataGenerator generator) {

@@ -52,9 +52,7 @@ public class MsConfiguration {
   }
 
   @Bean
-  public DataManager dataManager(DataRoot root, EmbeddedStorageManager storageManager) {
-    DataManager dataManager = new DataManager(root);
-    dataManager.setStorageManager(storageManager);
-    return dataManager;
+  public DataManager dataManager(EmbeddedStorageManager storageManager) {
+    return new DataManager(storageManager);
   }
 }
