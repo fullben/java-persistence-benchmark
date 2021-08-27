@@ -79,8 +79,8 @@ public class DataManager implements AutoCloseable {
     verifyNotClosed();
     ReadLock readLock = lock.readLock();
     readLock.lock();
-    verifyNotClosed();
     try {
+      verifyNotClosed();
       return validateReturnValue(operation.apply(getOrLoadRoot()));
     } finally {
       readLock.unlock();
@@ -98,8 +98,8 @@ public class DataManager implements AutoCloseable {
     verifyNotClosed();
     ReadLock readLock = lock.readLock();
     readLock.lock();
-    verifyNotClosed();
     try {
+      verifyNotClosed();
       operation.accept(getOrLoadRoot());
     } finally {
       readLock.unlock();
@@ -120,8 +120,8 @@ public class DataManager implements AutoCloseable {
     verifyNotClosedAndInitialized();
     WriteLock writeLock = lock.writeLock();
     writeLock.lock();
-    verifyNotClosedAndInitialized();
     try {
+      verifyNotClosedAndInitialized();
       return validateReturnValue(operation.apply(getOrLoadRoot(), storageManager));
     } finally {
       writeLock.unlock();
@@ -140,8 +140,8 @@ public class DataManager implements AutoCloseable {
     verifyNotClosedAndInitialized();
     WriteLock writeLock = lock.writeLock();
     writeLock.lock();
-    verifyNotClosedAndInitialized();
     try {
+      verifyNotClosedAndInitialized();
       operation.accept(getOrLoadRoot(), storageManager);
     } finally {
       writeLock.unlock();
