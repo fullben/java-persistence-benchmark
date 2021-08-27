@@ -3,6 +3,7 @@ package de.uniba.dsg.jpb.data.model.jpa;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -19,6 +20,7 @@ public class OrderEntity extends BaseEntity {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private CustomerEntity customer;
 
+  @Column(name = "entrydate")
   private LocalDateTime entryDate;
 
   @ManyToOne(fetch = FetchType.EAGER)
