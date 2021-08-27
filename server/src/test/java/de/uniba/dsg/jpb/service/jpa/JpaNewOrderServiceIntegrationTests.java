@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.service.jpa;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import de.uniba.dsg.jpb.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
@@ -47,6 +48,7 @@ public class JpaNewOrderServiceIntegrationTests {
   private String customerLastName;
   private String customerCredit;
   private double customerDiscount;
+  private long totalOrderCount;
   private int itemCount;
   private double preTaxTotal;
 
@@ -68,6 +70,7 @@ public class JpaNewOrderServiceIntegrationTests {
     customerLastName = customer.getLastName();
     customerCredit = customer.getCredit();
     customerDiscount = customer.getDiscount();
+    totalOrderCount = orderRepository.count();
 
     List<ProductEntity> products = productRepository.findAll();
     List<String> productIds =
@@ -115,6 +118,14 @@ public class JpaNewOrderServiceIntegrationTests {
   }
 
   @Test
+  public void processingPersistsNewOrder() {
+    NewOrderResponse res = newOrderService.process(request);
+
+    assertEquals(totalOrderCount + 1, orderRepository.count());
+    assertNotNull(orderRepository.findById(res.getOrderId()).get());
+  }
+
+  @Test
   public void processingReturnsExpectedValues() {
     NewOrderResponse res = newOrderService.process(request);
 
@@ -130,7 +141,10 @@ public class JpaNewOrderServiceIntegrationTests {
     assertEquals(warehouseSalesTax, res.getWarehouseSalesTax());
     assertEquals(districtSalesTax, res.getDistrictSalesTax());
     double total =
-        preTaxTotal * (1 - customerDiscount) * (1 + warehouseSalesTax + districtSalesTax);
+        Math.floor(
+                ((preTaxTotal * (1 - customerDiscount) * (1 + warehouseSalesTax + districtSalesTax))
+                    * 100))
+            / 100;
     assertEquals(total, res.getTotalAmount());
   }
 

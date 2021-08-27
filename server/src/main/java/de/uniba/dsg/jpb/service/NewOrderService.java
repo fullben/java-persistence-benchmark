@@ -67,7 +67,10 @@ public abstract class NewOrderService
         || districtSalesTax < 0) {
       throw new IllegalArgumentException();
     }
-    return sumPrice * (1 - customerDiscount) * (1 + warehouseSalesTax + districtSalesTax);
+    return Math.floor(
+            ((sumPrice * (1 - customerDiscount) * (1 + warehouseSalesTax + districtSalesTax))
+                * 100))
+        / 100;
   }
 
   protected int determineNewStockQuantity(int stockQuantity, int orderItemQuantity) {

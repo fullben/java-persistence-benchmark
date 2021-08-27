@@ -87,6 +87,14 @@ public final class Find {
         .orElseThrow(DataNotFoundException::new);
   }
 
+  public static OrderData orderById(String id, DistrictData district) {
+    requireNonNull(district);
+    return district.getOrders().parallelStream()
+        .filter(o -> o.getId().equals(id))
+        .findAny()
+        .orElseThrow(DataNotFoundException::new);
+  }
+
   public static Optional<OrderData> mostRecentOrderOfCustomer(String id, DistrictData district) {
     requireNonNull(district);
     return district.getOrders().parallelStream()
