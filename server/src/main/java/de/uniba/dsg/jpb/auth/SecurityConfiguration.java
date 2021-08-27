@@ -14,6 +14,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Configures the security of this server. While the API provided by implementations of the {@link
+ * de.uniba.dsg.jpb.api.ResourcesController ResourcesController} is publicly available, access to
+ * the API provided by implementations of the {@link de.uniba.dsg.jpb.api.TransactionsController
+ * TransactionsController} is restricted to users which can authenticate themselves with basic
+ * authentication.
+ *
+ * @author Benedikt Full
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

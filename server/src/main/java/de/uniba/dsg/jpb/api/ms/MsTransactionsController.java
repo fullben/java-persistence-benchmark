@@ -26,6 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This controller provides access to the services of the server when launched in MS persistence
+ * mode.
+ *
+ * @author Benedikt Full
+ */
 @RestController
 @RequestMapping("api")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")

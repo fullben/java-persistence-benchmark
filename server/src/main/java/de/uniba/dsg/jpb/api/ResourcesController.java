@@ -11,6 +11,12 @@ import de.uniba.dsg.jpb.data.transfer.representations.WarehouseRepresentation;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * Implementations of this controller provide read-only access to many of the resources maintained
+ * by this server.
+ *
+ * @author Benedikt Full
+ */
 public interface ResourcesController {
 
   Iterable<ProductRepresentation> getProducts();

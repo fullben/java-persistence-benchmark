@@ -9,6 +9,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Provides access to the user details of employees when the server is launched in MS persistence
+ * mode.
+ *
+ * @author Benedikt Full
+ */
 @Service
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {

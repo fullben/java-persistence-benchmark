@@ -6,6 +6,14 @@ import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This service implements the new order business transaction.
+ *
+ * <p>As part of this transaction, a new order is created and persisted based on the values provided
+ * in the given request object.
+ *
+ * @author Benedikt Full
+ */
 public abstract class NewOrderService
     implements TransactionService<NewOrderRequest, NewOrderResponse> {
 

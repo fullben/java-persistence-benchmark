@@ -3,6 +3,15 @@ package de.uniba.dsg.jpb.service;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 
+/**
+ * This service implements the payment business transaction.
+ *
+ * <p>In this transaction, the customer pays a certain amount (as specified in the given request),
+ * which results in updating the corresponding values on the persisted representations of the
+ * customer, their district, and warehouse.
+ *
+ * @author Benedikt Full
+ */
 public abstract class PaymentService
     implements TransactionService<PaymentRequest, PaymentResponse> {
 

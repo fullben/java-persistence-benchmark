@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+/**
+ * Configures all beans which are required for MicroStream-based persistence.
+ *
+ * @author Benedikt Full
+ */
 @Configuration
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsConfiguration {

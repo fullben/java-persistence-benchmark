@@ -10,8 +10,13 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * Configuration for the API documentation of the server.
+ *
+ * @author Benedikt Full
+ */
 @Configuration
-@ConfigurationProperties(prefix = "swagger")
+@ConfigurationProperties(prefix = "springfox")
 @EnableSwagger2
 public class SpringFoxConfiguration {
 

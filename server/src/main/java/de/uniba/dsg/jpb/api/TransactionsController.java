@@ -11,6 +11,12 @@ import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelResponse;
 
+/**
+ * Implementations of this controller allow clients to interact with the services of this server.
+ * These services are the implementations of the business transactions.
+ *
+ * @author Benedikt Full
+ */
 public interface TransactionsController {
 
   NewOrderResponse doNewOrderTransaction(NewOrderRequest req);

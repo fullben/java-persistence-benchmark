@@ -4,6 +4,11 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Represents the user details of an employee.
+ *
+ * @author Benedikt Full
+ */
 public class EmployeeUserDetails implements UserDetails {
 
   private final String username;

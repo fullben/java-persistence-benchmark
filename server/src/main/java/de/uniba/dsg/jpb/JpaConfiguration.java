@@ -18,6 +18,11 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * Configures all beans which are required for JPA-based persistence.
+ *
+ * @author Benedikt Full
+ */
 @Configuration
 @EnableJpaRepositories(basePackages = "de.uniba.dsg.jpb.data.access.jpa")
 @EnableTransactionManagement

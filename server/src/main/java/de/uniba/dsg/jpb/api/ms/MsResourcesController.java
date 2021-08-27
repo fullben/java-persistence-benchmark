@@ -28,6 +28,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This controller provides read-only access to many of the resources managed by the server when
+ * launched in MS persistence mode.
+ *
+ * @author Benedikt Full
+ */
 @RestController
 @RequestMapping("api")
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
