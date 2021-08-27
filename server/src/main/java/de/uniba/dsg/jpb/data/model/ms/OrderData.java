@@ -7,7 +7,6 @@ import one.microstream.reference.Lazy;
 
 public class OrderData extends BaseData {
 
-  private Long id;
   private DistrictData district;
   private CustomerData customer;
   private LocalDateTime entryDate;
