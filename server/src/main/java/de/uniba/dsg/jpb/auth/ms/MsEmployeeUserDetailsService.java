@@ -3,7 +3,6 @@ package de.uniba.dsg.jpb.auth.ms;
 import de.uniba.dsg.jpb.auth.EmployeeUserDetails;
 import de.uniba.dsg.jpb.auth.EmployeeUserDetailsService;
 import de.uniba.dsg.jpb.data.access.ms.DataManager;
-import de.uniba.dsg.jpb.data.access.ms.DataNotFoundException;
 import de.uniba.dsg.jpb.data.model.ms.EmployeeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,12 +25,11 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
     EmployeeUserDetails userDetails =
         dataManager.read(
             (root) -> {
-              try {
-                EmployeeData employee = root.findEmployeeByUsername(username);
-                return createWithDefaultRole(employee.getUsername(), employee.getPassword());
-              } catch (DataNotFoundException e) {
+              EmployeeData employee = root.findEmployeeByUsername(username);
+              if (employee == null) {
                 return null;
               }
+              return createWithDefaultRole(employee.getUsername(), employee.getPassword());
             });
     if (userDetails == null) {
       throw new UsernameNotFoundException("Unable to find user with name " + username);
