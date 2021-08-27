@@ -37,11 +37,11 @@ public class JpaNewOrderService extends NewOrderService {
 
   @Autowired
   public JpaNewOrderService(
-      ProductRepository itemRepository,
+      ProductRepository productRepository,
       StockRepository stockRepository,
       OrderRepository orderRepository,
       CustomerRepository customerRepository) {
-    this.productRepository = itemRepository;
+    this.productRepository = productRepository;
     this.stockRepository = stockRepository;
     this.orderRepository = orderRepository;
     this.customerRepository = customerRepository;
