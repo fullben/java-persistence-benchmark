@@ -2,6 +2,11 @@ package de.uniba.dsg.jpb.util;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A very basic stopwatch implementation based on {@link System#nanoTime()}.
+ *
+ * @author Benedikt Full
+ */
 public class Stopwatch {
 
   private long start;

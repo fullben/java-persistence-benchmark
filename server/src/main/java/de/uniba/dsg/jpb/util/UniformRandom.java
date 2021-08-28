@@ -5,6 +5,11 @@ import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.Random;
 
+/**
+ * Generator for creating random numbers in specific ranges and with specific precision.
+ *
+ * @author Benedikt Full
+ */
 public class UniformRandom {
 
   private final double min;
