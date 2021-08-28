@@ -32,7 +32,7 @@ public class JpaOrderStatusService extends OrderStatusService {
     this.orderRepository = orderRepository;
   }
 
-  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Transactional(isolation = Isolation.SERIALIZABLE, readOnly = true)
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
     // Fetch customer (either by id or email)

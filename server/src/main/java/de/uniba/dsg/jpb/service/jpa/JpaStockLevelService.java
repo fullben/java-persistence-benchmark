@@ -27,7 +27,7 @@ public class JpaStockLevelService extends StockLevelService {
     this.stockRepository = stockRepository;
   }
 
-  @Transactional(isolation = Isolation.READ_COMMITTED)
+  @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
   @Override
   public StockLevelResponse process(StockLevelRequest req) {
     // Find the most 20 recent orders for the district
