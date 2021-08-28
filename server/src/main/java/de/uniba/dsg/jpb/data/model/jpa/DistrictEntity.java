@@ -11,6 +11,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * A district is one of ten areas supplied by a specific {@link WarehouseEntity Warehouse}. Each
+ * district is administered by a single {@link EmployeeEntity Employee} and has 3000 {@link
+ * CustomerEntity Customers}.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "districts")
 public class DistrictEntity extends BaseEntity {

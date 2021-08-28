@@ -1,5 +1,10 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * A United States address.
+ *
+ * @author Benedikt Full
+ */
 public class AddressData {
 
   private String street1;

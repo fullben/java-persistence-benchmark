@@ -6,6 +6,12 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Defines {@link ProductEntity Product}, quantity, supplying {@link WarehouseEntity Warehouse} and
+ * other properties of an individual {@link OrderEntity Order} item.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "orderitems")
 public class OrderItemEntity extends BaseEntity {

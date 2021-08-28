@@ -7,6 +7,12 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+/**
+ * An employee of the wholesale supplier. Employees are the user group meant to perform the business
+ * transactions, i.e. create new orders, or add new payments.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "employees")
 public class EmployeeEntity extends PersonEntity {

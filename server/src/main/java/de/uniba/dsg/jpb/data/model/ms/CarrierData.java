@@ -1,5 +1,11 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * A carrier is responsible for fulfilling {@link OrderData Orders} by delivering the ordered items
+ * to the {@link CustomerData Customer}.
+ *
+ * @author Benedikt Full
+ */
 public class CarrierData extends BaseData {
 
   private String name;

@@ -5,6 +5,12 @@ import java.util.UUID;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+/**
+ * The base class for all JPA entities. It defines the identifier for the object, which is a UUID.
+ * Furthermore, object equality and hashcode are defined as functions of the identity.
+ *
+ * @author Benedikt Full
+ */
 @MappedSuperclass
 public abstract class BaseEntity {
 

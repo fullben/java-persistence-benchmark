@@ -4,6 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
 
+/**
+ * Base class for all entities that represent an actual human person.
+ *
+ * @author Benedikt Full
+ */
 @MappedSuperclass
 public abstract class PersonEntity extends BaseEntity {
 

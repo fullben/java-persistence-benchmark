@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
+/**
+ * A district is one of ten areas supplied by a specific {@link WarehouseData Warehouse}. Each
+ * district is administered by a single {@link EmployeeData Employee} and has 3000 {@link
+ * CustomerData Customers}.
+ *
+ * @author Benedikt Full
+ */
 public class DistrictData extends BaseData {
 
   private WarehouseData warehouse;

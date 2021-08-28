@@ -2,6 +2,11 @@ package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
 
+/**
+ * A payment made by a {@link CustomerData Customer}.
+ *
+ * @author Benedikt Full
+ */
 public class PaymentData extends BaseData {
 
   private CustomerData customer;

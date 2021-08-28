@@ -2,6 +2,11 @@ package de.uniba.dsg.jpb.data.model.jpa;
 
 import javax.persistence.Embeddable;
 
+/**
+ * A United States address.
+ *
+ * @author Benedikt Full
+ */
 @Embeddable
 public class AddressEmbeddable {
 

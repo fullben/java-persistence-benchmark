@@ -1,12 +1,13 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import java.util.Objects;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * A product of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "products")
 public class ProductEntity extends BaseEntity {

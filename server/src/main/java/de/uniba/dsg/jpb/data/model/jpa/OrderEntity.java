@@ -10,6 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An order issued by a {@link CustomerEntity Customer} for a certain amount of {@link ProductEntity
+ * Products}.
+ *
+ * @see OrderItemEntity
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "orders")
 public class OrderEntity extends BaseEntity {

@@ -9,6 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * A warehouse of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "warehouses")
 public class WarehouseEntity extends BaseEntity {

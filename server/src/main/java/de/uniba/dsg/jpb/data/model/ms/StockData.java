@@ -1,5 +1,11 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * The available amount of a specific {@link ProductData Product} at some {@link WarehouseData
+ * Warehouse}.
+ *
+ * @author Benedikt Full
+ */
 public class StockData extends BaseData {
 
   private ProductData product;

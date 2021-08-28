@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
+/**
+ * A warehouse of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class WarehouseData extends BaseData {
 
   private String name;

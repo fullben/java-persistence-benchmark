@@ -12,6 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * A customer of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "customers")
 public class CustomerEntity extends PersonEntity {

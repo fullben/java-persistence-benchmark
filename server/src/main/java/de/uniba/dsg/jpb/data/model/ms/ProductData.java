@@ -1,5 +1,10 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * A product of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class ProductData extends BaseData {
 
   private String imagePath;

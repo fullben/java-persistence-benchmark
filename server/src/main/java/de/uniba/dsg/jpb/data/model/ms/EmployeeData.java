@@ -1,5 +1,11 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * An employee of the wholesale supplier. Employees are the user group meant to perform the business
+ * transactions, i.e. create new orders, or add new payments.
+ *
+ * @author Benedikt Full
+ */
 public class EmployeeData extends PersonData {
 
   private DistrictData district;

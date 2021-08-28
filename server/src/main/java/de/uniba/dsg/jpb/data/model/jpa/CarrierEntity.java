@@ -5,6 +5,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * A carrier is responsible for fulfilling {@link OrderEntity Orders} by delivering the ordered
+ * items to the {@link CustomerEntity Customer}.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "carriers")
 public class CarrierEntity extends BaseEntity {

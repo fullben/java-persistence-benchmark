@@ -2,6 +2,12 @@ package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
 
+/**
+ * Defines {@link ProductData Product}, quantity, supplying {@link WarehouseData Warehouse} and
+ * other properties of an individual {@link OrderData Order} item.
+ *
+ * @author Benedikt Full
+ */
 public class OrderItemData extends BaseData {
 
   private OrderData order;

@@ -7,6 +7,11 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * A payment made by a {@link CustomerEntity Customer}.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "payments")
 public class PaymentEntity extends BaseEntity {

@@ -6,6 +6,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * The available amount of a specific {@link ProductEntity Product} at some {@link WarehouseEntity
+ * Warehouse}.
+ *
+ * @author Benedikt Full
+ */
 @Entity
 @Table(name = "stocks")
 public class StockEntity extends BaseEntity {

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
+/**
+ * A customer of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class CustomerData extends PersonData {
 
   private DistrictData district;

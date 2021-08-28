@@ -1,5 +1,10 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+/**
+ * Base class for all data classes that represent an actual human person.
+ *
+ * @author Benedikt Full
+ */
 public abstract class PersonData extends BaseData {
 
   private String firstName;

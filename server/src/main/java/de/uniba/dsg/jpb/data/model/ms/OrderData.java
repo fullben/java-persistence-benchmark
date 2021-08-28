@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import one.microstream.reference.Lazy;
 
+/**
+ * An order issued by a {@link CustomerData Customer} for a certain amount of {@link ProductData
+ * Products}.
+ *
+ * @see OrderItemData
+ * @author Benedikt Full
+ */
 public class OrderData extends BaseData {
 
   private DistrictData district;
