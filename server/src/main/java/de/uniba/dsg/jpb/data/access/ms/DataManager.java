@@ -28,23 +28,24 @@ import one.microstream.storage.embedded.types.EmbeddedStorageManager;
  * MicroStream has no generic facilities for providing a thread-safe, transaction-protected data
  * access.
  *
- * <p>This manager facilitates this by the means of providing methods for read-only and modifying
- * access to the MicroStream-managed data, internally protected by a {@link ReentrantReadWriteLock}.
+ * <p>This manager facilitates this by the means of providing methods for both read-only and
+ * modifying access to the MicroStream-managed data, internally protected by a {@link
+ * ReentrantReadWriteLock}.
  *
  * <p>At the same time it must be noted that the manager can only make consistency guarantees as
  * long as users of the manager honor its implicit contract:
  *
  * <ul>
- *   <li>Don't pass model objects out of the methods of the manager; neither as return value nor by
+ *   <li>Never pass model objects out of the methods of the manager; neither as return value nor by
  *       assigning them to outside variables.
- *   <li>Don't make any changes to model objects while using the read-only methods of the manager.
+ *   <li>Never make any changes to model objects while using the read methods of the manager.
  * </ul>
  *
  * Furthermore, the manager provides no automatic error handling. Rollbacks must be implemented by
- * the caller. Runtime exceptions that occur in any of the methods of the manager have the potential
- * to leave the object graph in an undesirable state. Callers should thus only perform operations on
- * the object graph once they have performed all necessary validation to reduce the likelihood of
- * unexpected exceptions.
+ * the caller. Runtime exceptions that occur in any of the data access methods of the manager have
+ * the potential to leave the object graph in an undesirable state. Callers should thus only perform
+ * operations on the object graph once they have performed all necessary validation to reduce the
+ * likelihood of unexpected exceptions.
  *
  * @author Benedikt Full
  */
@@ -156,8 +157,16 @@ public class DataManager implements AutoCloseable {
    * @param storageManager the new storage manager of the instance, may be {@code null}
    */
   public void setStorageManager(EmbeddedStorageManager storageManager) {
-    this.storageManager = storageManager;
-    root = null;
+    verifyNotClosed();
+    WriteLock writeLock = lock.writeLock();
+    writeLock.lock();
+    try {
+      verifyNotClosed();
+      this.storageManager = storageManager;
+      root = null;
+    } finally {
+      writeLock.unlock();
+    }
   }
 
   /**
@@ -169,11 +178,20 @@ public class DataManager implements AutoCloseable {
     if (closed) {
       return;
     }
-    if (storageManager != null) {
-      storageManager.close();
+    WriteLock writeLock = lock.writeLock();
+    writeLock.lock();
+    try {
+      if (closed) {
+        return;
+      }
+      if (storageManager != null) {
+        storageManager.close();
+      }
+      root = null;
+      closed = true;
+    } finally {
+      writeLock.unlock();
     }
-    root = null;
-    closed = true;
   }
 
   private void verifyNotClosedAndInitialized() {
