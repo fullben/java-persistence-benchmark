@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -25,7 +24,7 @@ public class EmployeeEntity extends PersonEntity {
   @Column(unique = true)
   private String username;
 
-  @JsonIgnore private String password;
+  private String password;
 
   public DistrictEntity getDistrict() {
     return district;

@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -27,11 +26,9 @@ public class CustomerEntity extends PersonEntity {
   private LocalDateTime since;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<PaymentEntity> payments;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<OrderEntity> orders;
 
   private String credit;

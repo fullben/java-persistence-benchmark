@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -22,11 +21,9 @@ public class WarehouseEntity extends BaseEntity {
   @Embedded private AddressEmbeddable address;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<DistrictEntity> districts;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<StockEntity> stocks;
 
   private double salesTax;

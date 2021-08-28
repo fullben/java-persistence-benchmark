@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.model.jpa;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
@@ -27,11 +26,9 @@ public class DistrictEntity extends BaseEntity {
   private WarehouseEntity warehouse;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "district", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<CustomerEntity> customers;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "district", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<OrderEntity> orders;
 
   private String name;
