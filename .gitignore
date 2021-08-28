@@ -8,3 +8,8 @@ build
 # Ignore default MicroStream storage directory
 storage
 test-storage
+
+# Ignore JMeter generated data
+report
+jmeter.log
+results.jtl
