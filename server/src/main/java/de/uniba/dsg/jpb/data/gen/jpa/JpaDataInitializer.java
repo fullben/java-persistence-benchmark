@@ -10,6 +10,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * If the server is launched in JPA persistence mode, this initializer generates a data model based
+ * on the associated configuration properties and writes it to the configured JPA-based persistence
+ * solution.
+ *
+ * @author Benedikt Full
+ */
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaDataInitializer extends DataInitializer {
@@ -25,7 +32,7 @@ public class JpaDataInitializer extends DataInitializer {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     JpaDataGenerator jpaDataGenerator = createJpaDataGenerator();
     LOG.info("Beginning model data generation");
     Stopwatch stopwatch = new Stopwatch(true);

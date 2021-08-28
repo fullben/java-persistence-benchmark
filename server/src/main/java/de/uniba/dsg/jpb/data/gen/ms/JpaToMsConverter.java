@@ -28,6 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Converts a JPA data model to a MicroStream data model. Converting an existing model ensures that
+ * both models are alike and at the same time eliminates the need for duplicate model generation
+ * code.
+ *
+ * @see JpaDataGenerator
+ * @author Benedikt Full
+ */
 public class JpaToMsConverter
     implements DataProvider<WarehouseData, EmployeeData, ProductData, CarrierData> {
 

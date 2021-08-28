@@ -14,6 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * Can be used to write a wholesale supplier data model to a JPA-based persistence solution.
+ *
+ * @author Benedikt Full
+ */
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaDataWriter
