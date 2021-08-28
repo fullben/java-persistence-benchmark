@@ -120,7 +120,7 @@ public final class Find {
   public static List<StockData> stocksByProductIdsAndQuantityThreshold(
       Collection<String> productIds, int quantityThreshold, Collection<StockData> stocks) {
     requireNonNull(productIds);
-    if (quantityThreshold < 0) {
+    if (quantityThreshold < 1) {
       throw new IllegalArgumentException();
     }
     requireNonNull(stocks);
