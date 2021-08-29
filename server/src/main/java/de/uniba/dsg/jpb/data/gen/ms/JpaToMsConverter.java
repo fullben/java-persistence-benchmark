@@ -198,6 +198,7 @@ public class JpaToMsConverter
       List<CarrierData> cs) {
     DistrictData district = new DistrictData();
     district.setId(d.getId());
+    district.setName(d.getName());
     district.setAddress(address(d.getAddress()));
     district.setSalesTax(d.getSalesTax());
     district.setYearToDateBalance(d.getYearToDateBalance());
