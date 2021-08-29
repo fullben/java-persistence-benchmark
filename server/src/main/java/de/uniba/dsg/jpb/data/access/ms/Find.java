@@ -49,7 +49,7 @@ public final class Find {
 
   public static CarrierData carrierById(String id, Collection<CarrierData> carriers) {
     requireNonNull(carriers);
-    return carriers.parallelStream()
+    return carriers.stream()
         .filter(c -> c.getId().equals(id))
         .findAny()
         .orElseThrow(DataNotFoundException::new);
@@ -111,7 +111,7 @@ public final class Find {
 
   public static List<OrderData> twentyMostRecentOrdersOfDistrict(DistrictData district) {
     requireNonNull(district);
-    return district.getOrders().stream()
+    return district.getOrders().parallelStream()
         .sorted(Comparator.comparing(OrderData::getEntryDate))
         .limit(20)
         .collect(Collectors.toList());

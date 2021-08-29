@@ -25,6 +25,7 @@ import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,6 @@ public class JpaToMsConverter
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
     employees = convertEmployees(employeeEntities, warehouses);
-    // clearIds();
   }
 
   @Override
@@ -151,7 +151,7 @@ public class JpaToMsConverter
       warehouse.setYearToDateBalance(w.getYearToDateBalance());
       warehouse.setSalesTax(w.getSalesTax());
       warehouse.setStocks(
-          w.getStocks().stream()
+          w.getStocks().parallelStream()
               .map(s -> stock(s, warehouse, findProductById(s.getProduct().getId(), products)))
               .collect(Collectors.toList()));
       warehouses.add(warehouse);
@@ -254,59 +254,66 @@ public class JpaToMsConverter
       List<WarehouseData> ws,
       List<ProductData> ps,
       List<CarrierData> cs) {
-    List<OrderData> orders = new ArrayList<>(os.size());
-    for (OrderEntity o : os) {
-      OrderData order = new OrderData();
-      order.setId(o.getId());
-      order.setItemCount(o.getItemCount());
-      order.setEntryDate(o.getEntryDate());
-      order.setFulfilled(o.isFulfilled());
-      order.setCarrier(o.getCarrier() == null ? null : findCarrierById(o.getCarrier().getId(), cs));
-      order.setAllLocal(o.isAllLocal());
-      order.setDistrict(d);
-      // Setting the actual customer must be handled by the caller!!!
-      CustomerData customerDummy = new CustomerData();
-      customerDummy.setId(o.getCustomer().getId());
-      order.setCustomer(customerDummy);
-      order.setItems(orderItems(o.getItems(), order, ws, ps));
-      orders.add(order);
-    }
-    return orders;
+    return os.parallelStream()
+        .map(
+            o -> {
+              OrderData order = new OrderData();
+              order.setId(o.getId());
+              order.setItemCount(o.getItemCount());
+              order.setEntryDate(o.getEntryDate());
+              order.setFulfilled(o.isFulfilled());
+              order.setCarrier(
+                  o.getCarrier() == null ? null : findCarrierById(o.getCarrier().getId(), cs));
+              order.setAllLocal(o.isAllLocal());
+              order.setDistrict(d);
+              // Setting the actual customer must be handled by the caller!!!
+              CustomerData customerDummy = new CustomerData();
+              customerDummy.setId(o.getCustomer().getId());
+              order.setCustomer(customerDummy);
+              order.setItems(orderItems(o.getItems(), order, ws, ps));
+              return order;
+            })
+        .sorted(Comparator.comparing(OrderData::getEntryDate))
+        .collect(Collectors.toList());
   }
 
   private static List<OrderItemData> orderItems(
       List<OrderItemEntity> ois, OrderData o, List<WarehouseData> ws, List<ProductData> ps) {
-    List<OrderItemData> orderItems = new ArrayList<>(ois.size());
-    for (OrderItemEntity oi : ois) {
-      OrderItemData orderItem = new OrderItemData();
-      orderItem.setId(oi.getId());
-      orderItem.setOrder(o);
-      orderItem.setProduct(findProductById(oi.getProduct().getId(), ps));
-      orderItem.setSupplyingWarehouse(findWarehouseById(oi.getSupplyingWarehouse().getId(), ws));
-      orderItem.setAmount(oi.getAmount());
-      orderItem.setQuantity(oi.getQuantity());
-      orderItem.setNumber(oi.getNumber());
-      orderItem.setDistInfo(oi.getDistInfo());
-      orderItem.setDeliveryDate(oi.getDeliveryDate());
-      orderItems.add(orderItem);
-    }
-    return orderItems;
+    return ois.stream()
+        .map(
+            item -> {
+              OrderItemData orderItem = new OrderItemData();
+              orderItem.setId(item.getId());
+              orderItem.setOrder(o);
+              orderItem.setProduct(findProductById(item.getProduct().getId(), ps));
+              orderItem.setSupplyingWarehouse(
+                  findWarehouseById(item.getSupplyingWarehouse().getId(), ws));
+              orderItem.setAmount(item.getAmount());
+              orderItem.setQuantity(item.getQuantity());
+              orderItem.setNumber(item.getNumber());
+              orderItem.setDistInfo(item.getDistInfo());
+              orderItem.setDeliveryDate(item.getDeliveryDate());
+              return orderItem;
+            })
+        .collect(Collectors.toList());
   }
 
   private static List<PaymentData> payments(
       List<PaymentEntity> ps, CustomerData c, DistrictData d) {
-    List<PaymentData> payments = new ArrayList<>(ps.size());
-    for (PaymentEntity p : ps) {
-      PaymentData payment = new PaymentData();
-      payment.setId(p.getId());
-      payment.setAmount(p.getAmount());
-      payment.setDate(p.getDate());
-      payment.setData(p.getData());
-      payment.setCustomer(c);
-      payment.setDistrict(d);
-      payments.add(payment);
-    }
-    return payments;
+    return ps.parallelStream()
+        .map(
+            p -> {
+              PaymentData payment = new PaymentData();
+              payment.setId(p.getId());
+              payment.setAmount(p.getAmount());
+              payment.setDate(p.getDate());
+              payment.setData(p.getData());
+              payment.setCustomer(c);
+              payment.setDistrict(d);
+              return payment;
+            })
+        .sorted(Comparator.comparing(PaymentData::getDate))
+        .collect(Collectors.toList());
   }
 
   private static StockData stock(StockEntity s, WarehouseData w, ProductData p) {
