@@ -38,20 +38,18 @@ public class MsDataInitializer extends DataInitializer {
     Stopwatch stopwatch = new Stopwatch(true);
     jpaDataGenerator.generate();
     stopwatch.stop();
-    LOG.info("Model data generation took {} seconds", stopwatch.getDurationSeconds());
+    LOG.info("Model data generation took {}", stopwatch.getDuration());
     stopwatch.start();
     JpaToMsConverter converter = new JpaToMsConverter(jpaDataGenerator);
     converter.convert();
     stopwatch.stop();
     LOG.info(
-        "Successfully converted model data to MicroStream data, took {} milliseconds",
-        stopwatch.getDurationMillis());
+        "Successfully converted model data to MicroStream data, took {}", stopwatch.getDuration());
     stopwatch.start();
     databaseWriter.writeAll(converter);
     databaseWriter.close();
     stopwatch.stop();
     LOG.info(
-        "Successfully wrote model data to MicroStream storage, took {} seconds",
-        stopwatch.getDurationSeconds());
+        "Successfully wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
   }
 }

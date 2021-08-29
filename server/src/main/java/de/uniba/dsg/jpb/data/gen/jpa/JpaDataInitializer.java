@@ -38,12 +38,10 @@ public class JpaDataInitializer extends DataInitializer {
     Stopwatch stopwatch = new Stopwatch(true);
     jpaDataGenerator.generate();
     stopwatch.stop();
-    LOG.info("Model data generation took {} seconds", stopwatch.getDurationSeconds());
+    LOG.info("Model data generation took {}", stopwatch.getDuration());
     stopwatch.start();
     databaseWriter.writeAll(jpaDataGenerator);
     stopwatch.stop();
-    LOG.info(
-        "Successfully wrote model data to database, took {} seconds",
-        stopwatch.getDurationSeconds());
+    LOG.info("Successfully wrote model data to database, took {}", stopwatch.getDuration());
   }
 }
