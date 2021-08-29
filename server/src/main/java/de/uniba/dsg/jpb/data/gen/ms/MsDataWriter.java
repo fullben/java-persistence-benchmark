@@ -7,6 +7,8 @@ import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.EmployeeData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
+import one.microstream.storage.embedded.types.EmbeddedStorageManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +31,9 @@ public class MsDataWriter
   private DataRoot dataRoot;
   private boolean closed;
 
-  public MsDataWriter(DataRoot dataRoot) {
-    this.dataRoot = dataRoot;
+  @Autowired
+  public MsDataWriter(EmbeddedStorageManager storageManager) {
+    this.dataRoot = (DataRoot) storageManager.root();
     closed = false;
   }
 

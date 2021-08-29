@@ -29,6 +29,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaConfiguration {
 
+  private static final Map<String, String> PROPERTY_KEYS =
+      Map.of(
+          "jpb.jpa.hibernate.jdbc.time_zone",
+          "spring.jpa.properties.hibernate.jdbc.time_zone",
+          "jpb.jpa.hibernate.ddl-auto",
+          "hibernate.ddl-auto",
+          "jpb.jpa.hibernate.dialect",
+          "hibernate.dialect");
   private final Environment environment;
 
   @Autowired
@@ -59,13 +67,9 @@ public class JpaConfiguration {
     factory.setJpaVendorAdapter(vendorAdapter);
     factory.setPackagesToScan("de.uniba.dsg.jpb.data.model.jpa");
     factory.setDataSource(dataSource());
-    final String ddlAutoKey = "jpb.jpa.hibernate.ddl-auto";
-    final String dialectKey = "jpb.jpa.hibernate.dialect";
-    final String timeZoneKey = "jpb.jpa.hibernate.jdbc.time_zone";
-    Map<String, Object> props = new HashMap<>();
-    props.put(ddlAutoKey, environment.getRequiredProperty(ddlAutoKey));
-    props.put(dialectKey, environment.getRequiredProperty(dialectKey));
-    props.put(timeZoneKey, environment.getRequiredProperty(timeZoneKey));
+    Map<String, Object> props = new HashMap<>(PROPERTY_KEYS.size());
+    PROPERTY_KEYS.forEach(
+        (jpbKey, springKey) -> props.put(springKey, environment.getRequiredProperty(jpbKey)));
     factory.setJpaPropertyMap(props);
     factory.afterPropertiesSet();
 

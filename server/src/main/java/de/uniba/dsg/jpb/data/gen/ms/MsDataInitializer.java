@@ -6,7 +6,7 @@ import de.uniba.dsg.jpb.util.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @author Benedikt Full
  */
 @Component
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
+@ConditionalOnExpression("'${jpb.persistence.mode}' == 'ms' and '${jpb.model.initialize}'")
 public class MsDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(MsDataInitializer.class);
