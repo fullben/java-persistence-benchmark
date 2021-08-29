@@ -60,6 +60,10 @@ public class MsPaymentServiceIntegrationTests extends MicroStreamServiceTest {
           customerDiscount = customer.getDiscount();
 
           paymentCount = customer.getPayments().size();
+          if (paymentCount == 0) {
+            // Customer is required to have at least one payment prior to test
+            throw new IllegalStateException();
+          }
 
           request = new PaymentRequest();
           request.setWarehouseId(warehouse.getId());
