@@ -26,5 +26,5 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
       value =
           "SELECT * FROM orders WHERE district_id = :districtId ORDER BY entrydate DESC LIMIT 20",
       nativeQuery = true)
-  List<OrderEntity> find20MostRecentOrdersOfDistrict(String districtId);
+  List<OrderEntity> findTwentyMostRecentOrdersOfDistrict(String districtId);
 }

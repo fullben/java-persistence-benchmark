@@ -32,7 +32,7 @@ public class JpaStockLevelService extends StockLevelService {
   public StockLevelResponse process(StockLevelRequest req) {
     // Find the most 20 recent orders for the district
     List<OrderEntity> orders =
-        orderRepository.find20MostRecentOrdersOfDistrict(req.getDistrictId());
+        orderRepository.findTwentyMostRecentOrdersOfDistrict(req.getDistrictId());
 
     // Find the corresponding stock objects and count the ones below the given threshold
     List<String> productIds =
