@@ -2,7 +2,6 @@ package de.uniba.dsg.jpb;
 
 import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.data.access.ms.FieldEvaluator;
 import de.uniba.dsg.jpb.util.Stopwatch;
 import one.microstream.afs.nio.types.NioFileSystem;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
@@ -80,10 +79,7 @@ public class MsConfiguration {
                             Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1)))
                     .createConfiguration());
 
-    EmbeddedStorageManager storageManager =
-        foundation
-            .onConnectionFoundation(f -> f.setReferenceFieldEagerEvaluator(new FieldEvaluator()))
-            .createEmbeddedStorageManager();
+    EmbeddedStorageManager storageManager = foundation.createEmbeddedStorageManager();
 
     Stopwatch stopwatch = new Stopwatch(true);
     storageManager.start();

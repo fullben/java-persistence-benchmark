@@ -2,7 +2,6 @@ package de.uniba.dsg.jpb.service.ms;
 
 import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.access.ms.DataRoot;
-import de.uniba.dsg.jpb.data.access.ms.FieldEvaluator;
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.data.gen.ms.JpaToMsConverter;
 import one.microstream.storage.embedded.configuration.types.EmbeddedStorageConfiguration;
@@ -15,8 +14,7 @@ public abstract class MicroStreamServiceTest {
     return EmbeddedStorageConfiguration.Builder()
         .setStorageDirectory("test-storage")
         .setChannelCount(Integer.highestOneBit(Runtime.getRuntime().availableProcessors() - 1))
-        .createEmbeddedStorageFoundation()
-        .onConnectionFoundation(f -> f.setReferenceFieldEagerEvaluator(new FieldEvaluator()));
+        .createEmbeddedStorageFoundation();
   }
 
   public DataManager closeGivenCreateNewDataManager(DataManager old) {
