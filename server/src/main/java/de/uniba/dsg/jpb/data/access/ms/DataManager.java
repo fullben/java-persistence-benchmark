@@ -10,6 +10,7 @@ import de.uniba.dsg.jpb.data.model.ms.PersonData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.util.Stopwatch;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
@@ -18,6 +19,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The {@code DataManager} serves as both access provider to and guard of the MicroStream data
@@ -51,6 +54,7 @@ import one.microstream.storage.embedded.types.EmbeddedStorageManager;
  */
 public class DataManager implements AutoCloseable {
 
+  private static final transient Logger LOG = LogManager.getLogger(DataManager.class);
   private final transient ReentrantReadWriteLock lock;
   private transient EmbeddedStorageManager storageManager;
   private transient boolean closed;
@@ -77,6 +81,7 @@ public class DataManager implements AutoCloseable {
    * @see #read(Consumer)
    */
   public <T> T read(Function<DataRoot, T> operation) {
+    Stopwatch stopwatch = new Stopwatch(true);
     verifyNotClosed();
     ReadLock readLock = lock.readLock();
     readLock.lock();
@@ -85,6 +90,8 @@ public class DataManager implements AutoCloseable {
       return validateReturnValue(operation.apply(getOrLoadRoot()));
     } finally {
       readLock.unlock();
+      stopwatch.stop();
+      LOG.debug("Read took {}", stopwatch.getDuration());
     }
   }
 
@@ -96,6 +103,7 @@ public class DataManager implements AutoCloseable {
    * @see #read(Function)
    */
   public void read(Consumer<DataRoot> operation) {
+    Stopwatch stopwatch = new Stopwatch(true);
     verifyNotClosed();
     ReadLock readLock = lock.readLock();
     readLock.lock();
@@ -104,6 +112,8 @@ public class DataManager implements AutoCloseable {
       operation.accept(getOrLoadRoot());
     } finally {
       readLock.unlock();
+      stopwatch.stop();
+      LOG.debug("Read took {}", stopwatch.getDuration());
     }
   }
 
@@ -118,6 +128,7 @@ public class DataManager implements AutoCloseable {
    * @see #write(BiConsumer)
    */
   public <T> T write(BiFunction<DataRoot, EmbeddedStorageManager, T> operation) {
+    Stopwatch stopwatch = new Stopwatch(true);
     verifyNotClosedAndInitialized();
     WriteLock writeLock = lock.writeLock();
     writeLock.lock();
@@ -126,6 +137,8 @@ public class DataManager implements AutoCloseable {
       return validateReturnValue(operation.apply(getOrLoadRoot(), storageManager));
     } finally {
       writeLock.unlock();
+      stopwatch.stop();
+      LOG.debug("Write took {}", stopwatch.getDuration());
     }
   }
 
@@ -138,6 +151,7 @@ public class DataManager implements AutoCloseable {
    * @see #write(BiFunction)
    */
   public void write(BiConsumer<DataRoot, EmbeddedStorageManager> operation) {
+    Stopwatch stopwatch = new Stopwatch(true);
     verifyNotClosedAndInitialized();
     WriteLock writeLock = lock.writeLock();
     writeLock.lock();
@@ -146,6 +160,8 @@ public class DataManager implements AutoCloseable {
       operation.accept(getOrLoadRoot(), storageManager);
     } finally {
       writeLock.unlock();
+      stopwatch.stop();
+      LOG.debug("Write took {}", stopwatch.getDuration());
     }
   }
 
