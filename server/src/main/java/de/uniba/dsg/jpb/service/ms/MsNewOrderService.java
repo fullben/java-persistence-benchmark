@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import one.microstream.persistence.types.Storer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -118,9 +117,8 @@ public class MsNewOrderService extends NewOrderService {
 
           try {
             // Persist the changes
-            Storer storer = storageManager.createEagerStorer();
-            storer.storeAll(order, district.getOrders(), customer.getOrders(), changedStocks);
-            storer.commit();
+            storageManager.storeAll(
+                order, district.getOrders(), customer.getOrders(), changedStocks);
           } catch (RuntimeException e) {
             // Detach order object from graph
             district.getOrders().remove(order);
