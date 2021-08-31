@@ -45,7 +45,7 @@ public class MsResourcesController implements ResourcesController {
   public Iterable<ProductRepresentation> getProducts() {
     return dataManager.read(
         (root) -> {
-          return root.findAllProducts().parallelStream()
+          return root.parallelStreamProducts()
               .map(p -> modelMapper.map(p, ProductRepresentation.class))
               .collect(Collectors.toList());
         });

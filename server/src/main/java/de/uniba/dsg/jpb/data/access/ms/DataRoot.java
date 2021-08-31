@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import one.microstream.reference.Lazy;
 import one.microstream.reference.Referencing;
 
@@ -59,6 +60,10 @@ public class DataRoot {
 
   public List<ProductData> findAllProducts() {
     return new ArrayList<>(idToProduct.values());
+  }
+
+  public Stream<ProductData> parallelStreamProducts() {
+    return idToProduct.values().parallelStream();
   }
 
   public CarrierData findCarrierById(String id) {
