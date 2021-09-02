@@ -1,16 +1,13 @@
 package de.uniba.dsg.jpb.data.gen;
 
 /**
- * Implementers of this interface are capable of writing the objects provided by a {@link
- * DataProvider} to persistent storage.
+ * Implementers of this interface are capable of writing the objects provided by a data provider to
+ * persistent storage.
  *
- * @param <W> the type used to represent warehouses
- * @param <E> the type used to represent employees
- * @param <P> the type used to represent products
- * @param <C> the type used to represent carriers
+ * @param <P> the type of the data provider
  * @author Benedikt Full
  */
-public interface DataWriter<W, E, P, C> {
+public interface DataWriter<P> {
 
-  void writeAll(DataProvider<W, E, P, C> dataProvider);
+  void writeAll(P provider);
 }

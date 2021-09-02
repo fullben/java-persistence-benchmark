@@ -2,8 +2,8 @@ package de.uniba.dsg.jpb.auth.ms;
 
 import de.uniba.dsg.jpb.auth.EmployeeUserDetails;
 import de.uniba.dsg.jpb.auth.EmployeeUserDetailsService;
-import de.uniba.dsg.jpb.data.access.ms.DataManager;
 import de.uniba.dsg.jpb.data.model.ms.EmployeeData;
+import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,27 +19,22 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
 
-  private final DataManager dataManager;
+  private final JacisStore<String, EmployeeData> employeeStore;
 
   @Autowired
-  public MsEmployeeUserDetailsService(DataManager dataManager) {
-    this.dataManager = dataManager;
+  public MsEmployeeUserDetailsService(JacisStore<String, EmployeeData> employeeStore) {
+    this.employeeStore = employeeStore;
   }
 
   @Override
   public EmployeeUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    EmployeeUserDetails userDetails =
-        dataManager.read(
-            (root) -> {
-              EmployeeData employee = root.findEmployeeByUsername(username);
-              if (employee == null) {
-                return null;
-              }
-              return createWithDefaultRole(employee.getUsername(), employee.getPassword());
-            });
-    if (userDetails == null) {
-      throw new UsernameNotFoundException("Unable to find user with name " + username);
-    }
-    return userDetails;
+    EmployeeData employee =
+        employeeStore
+            .streamReadOnly()
+            .filter(e -> e.getUsername().equals(username))
+            .findAny()
+            .orElseThrow(
+                () -> new UsernameNotFoundException("Unable to find user with name " + username));
+    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
   }
 }

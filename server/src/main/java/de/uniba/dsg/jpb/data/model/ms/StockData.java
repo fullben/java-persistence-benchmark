@@ -1,16 +1,18 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
+
 /**
  * The available amount of a specific {@link ProductData Product} at some {@link WarehouseData
  * Warehouse}.
  *
  * @author Benedikt Full
  */
-public class StockData extends BaseData {
+public class StockData extends BaseData implements JacisCloneable<StockData> {
 
-  private ProductData product;
+  private String productId;
   private int quantity;
-  private WarehouseData warehouse;
+  private String warehouseId;
   private double yearToDateBalance;
   private int orderCount;
   private int remoteCount;
@@ -26,36 +28,13 @@ public class StockData extends BaseData {
   private String dist09;
   private String dist10;
 
-  public StockData() {}
-
-  public StockData(StockData stock) {
-    super();
-    setId(stock.getId());
-    product = stock.product;
-    quantity = stock.quantity;
-    warehouse = stock.warehouse;
-    yearToDateBalance = stock.yearToDateBalance;
-    orderCount = stock.orderCount;
-    remoteCount = stock.remoteCount;
-    data = stock.data;
-    dist01 = stock.dist01;
-    dist02 = stock.dist02;
-    dist03 = stock.dist03;
-    dist04 = stock.dist04;
-    dist05 = stock.dist05;
-    dist06 = stock.dist06;
-    dist07 = stock.dist07;
-    dist08 = stock.dist08;
-    dist09 = stock.dist09;
-    dist10 = stock.dist10;
+  public String getProductId() {
+    return productId;
   }
 
-  public ProductData getProduct() {
-    return product;
-  }
-
-  public void setProduct(ProductData product) {
-    this.product = product;
+  public void setProductId(String productId) {
+    checkWritable();
+    this.productId = productId;
   }
 
   public int getQuantity() {
@@ -63,15 +42,17 @@ public class StockData extends BaseData {
   }
 
   public void setQuantity(int quantity) {
+    checkWritable();
     this.quantity = quantity;
   }
 
-  public WarehouseData getWarehouse() {
-    return warehouse;
+  public String getWarehouseId() {
+    return warehouseId;
   }
 
-  public void setWarehouse(WarehouseData warehouse) {
-    this.warehouse = warehouse;
+  public void setWarehouseId(String warehouseId) {
+    checkWritable();
+    this.warehouseId = warehouseId;
   }
 
   public double getYearToDateBalance() {
@@ -79,6 +60,7 @@ public class StockData extends BaseData {
   }
 
   public void setYearToDateBalance(double yearToDateBalance) {
+    checkWritable();
     this.yearToDateBalance = yearToDateBalance;
   }
 
@@ -87,6 +69,7 @@ public class StockData extends BaseData {
   }
 
   public void setOrderCount(int orderCount) {
+    checkWritable();
     this.orderCount = orderCount;
   }
 
@@ -95,6 +78,7 @@ public class StockData extends BaseData {
   }
 
   public void setRemoteCount(int remoteCount) {
+    checkWritable();
     this.remoteCount = remoteCount;
   }
 
@@ -103,6 +87,7 @@ public class StockData extends BaseData {
   }
 
   public void setData(String data) {
+    checkWritable();
     this.data = data;
   }
 
@@ -111,6 +96,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist01(String dist01) {
+    checkWritable();
     this.dist01 = dist01;
   }
 
@@ -119,6 +105,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist02(String dist02) {
+    checkWritable();
     this.dist02 = dist02;
   }
 
@@ -127,6 +114,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist03(String dist03) {
+    checkWritable();
     this.dist03 = dist03;
   }
 
@@ -135,6 +123,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist04(String dist04) {
+    checkWritable();
     this.dist04 = dist04;
   }
 
@@ -143,6 +132,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist05(String dist05) {
+    checkWritable();
     this.dist05 = dist05;
   }
 
@@ -151,6 +141,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist06(String dist06) {
+    checkWritable();
     this.dist06 = dist06;
   }
 
@@ -159,6 +150,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist07(String dist07) {
+    checkWritable();
     this.dist07 = dist07;
   }
 
@@ -167,6 +159,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist08(String dist08) {
+    checkWritable();
     this.dist08 = dist08;
   }
 
@@ -175,6 +168,7 @@ public class StockData extends BaseData {
   }
 
   public void setDist09(String dist09) {
+    checkWritable();
     this.dist09 = dist09;
   }
 
@@ -183,6 +177,12 @@ public class StockData extends BaseData {
   }
 
   public void setDist10(String dist10) {
+    checkWritable();
     this.dist10 = dist10;
+  }
+
+  @Override
+  public StockData clone() {
+    return (StockData) super.clone();
   }
 }

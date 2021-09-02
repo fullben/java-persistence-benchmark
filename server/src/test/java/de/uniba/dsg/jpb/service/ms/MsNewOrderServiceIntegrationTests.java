@@ -1,15 +1,15 @@
 package de.uniba.dsg.jpb.service.ms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import de.uniba.dsg.jpb.data.access.ms.DataManager;
-import de.uniba.dsg.jpb.data.access.ms.Find;
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
+import de.uniba.dsg.jpb.data.gen.ms.MsDataWriter;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
+import de.uniba.dsg.jpb.data.model.ms.OrderItemData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
+import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
 import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.NewOrderRequestItem;
@@ -18,14 +18,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import org.jacis.container.JacisContainer;
+import org.jacis.store.JacisStore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
 
-  private DataManager dataManager;
+  @Autowired private JacisContainer container;
+  @Autowired private JacisStore<String, ProductData> productStore;
+  @Autowired private JacisStore<String, WarehouseData> warehouseStore;
+  @Autowired private JacisStore<String, StockData> stockStore;
+  @Autowired private JacisStore<String, DistrictData> districtStore;
+  @Autowired private JacisStore<String, CustomerData> customerStore;
+  @Autowired private JacisStore<String, OrderData> orderStore;
+  @Autowired private JacisStore<String, OrderItemData> orderItemStore;
+  @Autowired private MsDataWriter dataWriter;
   private MsNewOrderService newOrderService;
   private NewOrderRequest request;
   private String warehouseId;
@@ -38,92 +49,94 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
   private String customerCredit;
   private double customerDiscount;
   private int customerOrderCount;
-  private int itemCount;
   private double preTaxTotal;
 
   @BeforeEach
   public void setUp() {
-    populateStorage(new JpaDataGenerator(2, 1, 10, 10, 1_000, new BCryptPasswordEncoder()));
-    dataManager = dataManager();
+    populateStorage(
+        new JpaDataGenerator(2, 1, 10, 10, 1_000, new BCryptPasswordEncoder()), dataWriter);
     request = new NewOrderRequest();
 
-    dataManager.read(
-        (root) -> {
-          List<WarehouseData> warehouses = root.findAllWarehouses();
-          WarehouseData warehouse = warehouses.get(0);
-          warehouseId = warehouse.getId();
-          warehouseSalesTax = warehouse.getSalesTax();
+    List<WarehouseData> warehouses = warehouseStore.getAllReadOnly();
+    WarehouseData warehouse = warehouses.get(0);
+    warehouseId = warehouse.getId();
+    warehouseSalesTax = warehouse.getSalesTax();
 
-          DistrictData district = warehouse.getDistricts().get(0);
-          districtId = district.getId();
-          districtSalesTax = district.getSalesTax();
-          districtOrderCount = district.getOrders().size();
+    DistrictData district =
+        districtStore.getAllReadOnly(d -> d.getWarehouseId().equals(warehouseId)).get(0);
+    districtId = district.getId();
+    districtSalesTax = district.getSalesTax();
+    districtOrderCount =
+        (int) orderStore.streamReadOnly(o -> o.getDistrictId().equals(districtId)).count();
 
-          CustomerData customer = district.getCustomers().get(0);
-          customerId = customer.getId();
-          customerLastName = customer.getLastName();
-          customerCredit = customer.getCredit();
-          customerDiscount = customer.getDiscount();
-          customerOrderCount = customer.getOrders().size();
+    CustomerData customer =
+        customerStore
+            .streamReadOnly(c -> c.getDistrictId().equals(districtId))
+            .collect(Collectors.toList())
+            .get(0);
+    customerId = customer.getId();
+    customerLastName = customer.getLastName();
+    customerCredit = customer.getCredit();
+    customerDiscount = customer.getDiscount();
+    customerOrderCount =
+        (int) orderStore.streamReadOnly(o -> o.getCustomerId().equals(customerId)).count();
 
-          List<ProductData> products = root.findAllProducts();
-          List<String> productIds =
-              products.stream().map(ProductData::getId).collect(Collectors.toList());
-          List<String> warehouseIds =
-              warehouses.stream().map(WarehouseData::getId).collect(Collectors.toList());
+    List<ProductData> products = productStore.getAllReadOnly();
+    List<String> productIds =
+        products.stream().map(ProductData::getId).collect(Collectors.toList());
+    List<String> warehouseIds =
+        warehouses.stream().map(WarehouseData::getId).collect(Collectors.toList());
 
-          request = new NewOrderRequest();
-          request.setWarehouseId(warehouse.getId());
-          request.setDistrictId(district.getId());
-          request.setCustomerId(customer.getId());
-          List<NewOrderRequestItem> items = new ArrayList<>();
-          itemCount = ThreadLocalRandom.current().nextInt(5, 16);
-          for (int i = 0; i < itemCount; i++) {
-            NewOrderRequestItem item = new NewOrderRequestItem();
-            item.setProductId(
-                productIds.get(ThreadLocalRandom.current().nextInt(productIds.size())));
-            item.setQuantity(ThreadLocalRandom.current().nextInt(10, 21));
-            item.setSupplyingWarehouseId(
-                warehouseIds.get(ThreadLocalRandom.current().nextInt(warehouseIds.size())));
-            items.add(item);
-          }
-          request.setItems(items);
+    request = new NewOrderRequest();
+    request.setWarehouseId(warehouse.getId());
+    request.setDistrictId(district.getId());
+    request.setCustomerId(customer.getId());
+    List<NewOrderRequestItem> items = new ArrayList<>();
+    int itemCount = ThreadLocalRandom.current().nextInt(5, 16);
+    for (int i = 0; i < itemCount; i++) {
+      NewOrderRequestItem item = new NewOrderRequestItem();
+      item.setProductId(productIds.get(ThreadLocalRandom.current().nextInt(productIds.size())));
+      item.setQuantity(ThreadLocalRandom.current().nextInt(10, 21));
+      item.setSupplyingWarehouseId(
+          warehouseIds.get(ThreadLocalRandom.current().nextInt(warehouseIds.size())));
+      items.add(item);
+    }
+    request.setItems(items);
 
-          preTaxTotal =
-              request.getItems().stream()
-                  .mapToDouble(
-                      i ->
-                          products.stream()
-                                  .filter(prod -> prod.getId().equals(i.getProductId()))
-                                  .findAny()
-                                  .orElseThrow(IllegalStateException::new)
-                                  .getPrice()
-                              * i.getQuantity())
-                  .sum();
-        });
-    dataManager = closeGivenCreateNewDataManager(dataManager);
+    preTaxTotal =
+        request.getItems().stream()
+            .mapToDouble(
+                i ->
+                    products.stream()
+                            .filter(prod -> prod.getId().equals(i.getProductId()))
+                            .findAny()
+                            .orElseThrow(IllegalStateException::new)
+                            .getPrice()
+                        * i.getQuantity())
+            .sum();
 
-    newOrderService = new MsNewOrderService(dataManager);
+    newOrderService =
+        new MsNewOrderService(
+            container,
+            warehouseStore,
+            districtStore,
+            stockStore,
+            customerStore,
+            orderStore,
+            orderItemStore,
+            productStore);
   }
 
   @Test
   public void processingPersistsNewOrder() {
-    NewOrderResponse res = newOrderService.process(request);
+    newOrderService.process(request);
 
-    dataManager = closeGivenCreateNewDataManager(dataManager);
-    dataManager.read(
-        (root) -> {
-          WarehouseData warehouse = Find.warehouseById(warehouseId, root.findAllWarehouses());
-          DistrictData district = Find.districtById(districtId, warehouse);
-          assertEquals(districtOrderCount + 1, district.getOrders().size());
-          CustomerData customer = Find.customerById(customerId, district);
-          assertEquals(customerOrderCount + 1, customer.getOrders().size());
-          assertNotNull(
-              customer.getOrders().stream()
-                  .filter(o -> o.getId().equals(res.getOrderId()))
-                  .findAny()
-                  .orElse(null));
-        });
+    assertEquals(
+        districtOrderCount + 1,
+        orderStore.streamReadOnly(o -> o.getDistrictId().equals(districtId)).count());
+    assertEquals(
+        customerOrderCount + 1,
+        orderStore.streamReadOnly(o -> o.getCustomerId().equals(customerId)).count());
   }
 
   @Test
@@ -134,17 +147,8 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
     assertEquals(districtId, res.getDistrictId());
     assertEquals(customerId, res.getCustomerId());
     assertEquals(request.getItems().size(), res.getOrderItems().size());
-    dataManager = closeGivenCreateNewDataManager(dataManager);
-    dataManager.read(
-        (root) -> {
-          OrderData order =
-              Find.orderById(
-                  res.getOrderId(),
-                  Find.districtById(
-                      districtId, Find.warehouseById(warehouseId, root.findAllWarehouses())));
-
-          assertEquals(order.getEntryDate(), res.getOrderTimestamp());
-        });
+    OrderData order = orderStore.getReadOnly(res.getOrderId());
+    assertEquals(order.getEntryDate(), res.getOrderTimestamp());
     assertEquals(customerLastName, res.getCustomerLastName());
     assertEquals(customerCredit, res.getCustomerCredit());
     assertEquals(customerDiscount, res.getCustomerDiscount());
@@ -161,7 +165,6 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
 
   @AfterEach
   public void tearDown() {
-    dataManager.close();
-    clearStorage();
+    container.clearAllStores();
   }
 }

@@ -1,6 +1,5 @@
 package de.uniba.dsg.jpb.data.gen.ms;
 
-import de.uniba.dsg.jpb.data.gen.DataProvider;
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
@@ -37,8 +36,7 @@ import java.util.stream.Collectors;
  * @see JpaDataGenerator
  * @author Benedikt Full
  */
-public class JpaToMsConverter
-    implements DataProvider<WarehouseData, EmployeeData, ProductData, CarrierData> {
+public class JpaToMsConverter {
 
   private final List<ProductEntity> productEntities;
   private final List<CarrierEntity> carrierEntities;
@@ -47,7 +45,13 @@ public class JpaToMsConverter
   private List<ProductData> products;
   private List<CarrierData> carriers;
   private List<WarehouseData> warehouses;
+  private List<StockData> stocks;
+  private List<DistrictData> districts;
   private List<EmployeeData> employees;
+  private List<CustomerData> customers;
+  private List<OrderData> orders;
+  private List<OrderItemData> orderItems;
+  private List<PaymentData> payments;
 
   public JpaToMsConverter(JpaDataGenerator dataGenerator) {
     if (dataGenerator.getWarehouses() == null) {
@@ -58,59 +62,67 @@ public class JpaToMsConverter
     warehouseEntities = dataGenerator.getWarehouses();
     employeeEntities = dataGenerator.getEmployees();
     products = null;
-    warehouses = null;
-    employees = null;
     carriers = null;
+    warehouses = null;
+    stocks = null;
+    districts = null;
+    employees = null;
+    customers = null;
+    orders = null;
+    payments = null;
   }
 
   public void convert() {
     products = convertProducts(productEntities);
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
+    stocks = convertStocks(warehouseEntities);
+    districts = convertDistricts(warehouseEntities);
     employees = convertEmployees(employeeEntities, warehouses);
+    customers = convertCustomers(warehouseEntities);
+    orders = convertOrders(warehouseEntities);
+    orderItems = convertOrderItems(warehouseEntities);
+    payments = convertPayments(warehouseEntities);
   }
 
-  @Override
   public List<ProductData> getProducts() {
     return products;
   }
 
-  @Override
   public List<CarrierData> getCarriers() {
     return carriers;
   }
 
-  @Override
   public List<WarehouseData> getWarehouses() {
     return warehouses;
   }
 
-  @Override
+  public List<StockData> getStocks() {
+    return stocks;
+  }
+
+  public List<DistrictData> getDistricts() {
+    return districts;
+  }
+
   public List<EmployeeData> getEmployees() {
     return employees;
   }
 
-  private void clearIds() {
-    if (products == null || carriers == null || warehouses == null || employees == null) {
-      throw new IllegalStateException();
-    }
-    products.forEach(p -> p.setId(null));
-    carriers.forEach(c -> c.setId(null));
-    for (WarehouseData warehouse : warehouses) {
-      warehouse.setId(null);
-      for (DistrictData district : warehouse.getDistricts()) {
-        district.setId(null);
-        for (CustomerData customer : district.getCustomers()) {
-          customer.setId(null);
-          customer.getPayments().forEach(p -> p.setId(null));
-        }
-        for (OrderData order : district.getOrders()) {
-          order.setId(null);
-          order.getItems().forEach(i -> i.setId(null));
-        }
-      }
-    }
-    employees.forEach(e -> e.setId(null));
+  public List<CustomerData> getCustomers() {
+    return customers;
+  }
+
+  public List<OrderData> getOrders() {
+    return orders;
+  }
+
+  public List<OrderItemData> getOrderItems() {
+    return orderItems;
+  }
+
+  public List<PaymentData> getPayments() {
+    return payments;
   }
 
   private List<ProductData> convertProducts(List<ProductEntity> ps) {
@@ -118,8 +130,8 @@ public class JpaToMsConverter
     for (ProductEntity p : ps) {
       ProductData product = new ProductData();
       product.setId(p.getId());
-      product.setName(p.getName());
       product.setImagePath(p.getImagePath());
+      product.setName(p.getName());
       product.setPrice(p.getPrice());
       product.setData(p.getData());
       products.add(product);
@@ -148,25 +160,51 @@ public class JpaToMsConverter
       warehouse.setId(w.getId());
       warehouse.setName(w.getName());
       warehouse.setAddress(address(w.getAddress()));
-      warehouse.setYearToDateBalance(w.getYearToDateBalance());
       warehouse.setSalesTax(w.getSalesTax());
-      warehouse.setStocks(
-          w.getStocks().parallelStream()
-              .map(s -> stock(s, warehouse, findProductById(s.getProduct().getId(), products)))
-              .collect(Collectors.toList()));
+      warehouse.setYearToDateBalance(w.getYearToDateBalance());
       warehouses.add(warehouse);
     }
-    // Create districts and all related components, which require references to all warehouses
-    for (WarehouseData w : warehouses) {
-      WarehouseEntity entity = findWarehouseEntityById(w.getId(), ws);
-      List<DistrictData> districts =
-          entity.getDistricts().stream()
-              .map(d -> district(d, w, warehouses, products, carriers))
-              .collect(Collectors.toList());
-      districts.forEach(d -> d.setWarehouse(w));
-      w.setDistricts(districts);
-    }
     return warehouses;
+  }
+
+  private List<StockData> convertStocks(List<WarehouseEntity> ws) {
+    return ws.stream()
+        .flatMap(w -> w.getStocks().stream())
+        .map(JpaToMsConverter::stock)
+        .collect(Collectors.toList());
+  }
+
+  private static StockData stock(StockEntity s) {
+    StockData stock = new StockData();
+    stock.setId(s.getId());
+    stock.setWarehouseId(s.getWarehouse().getId());
+    stock.setProductId(s.getProduct().getId());
+    stock.setData(s.getData());
+    stock.setQuantity(s.getQuantity());
+    stock.setDist01(s.getDist01());
+    stock.setDist02(s.getDist02());
+    stock.setDist03(s.getDist03());
+    stock.setDist04(s.getDist04());
+    stock.setDist05(s.getDist05());
+    stock.setDist06(s.getDist06());
+    stock.setDist07(s.getDist07());
+    stock.setDist08(s.getDist08());
+    stock.setDist09(s.getDist09());
+    stock.setDist10(s.getDist10());
+    stock.setOrderCount(s.getOrderCount());
+    stock.setRemoteCount(s.getRemoteCount());
+    stock.setOrderCount(s.getOrderCount());
+    return stock;
+  }
+
+  private List<DistrictData> convertDistricts(List<WarehouseEntity> ws) {
+    List<DistrictData> districts = new ArrayList<>();
+    for (WarehouseEntity w : ws) {
+      for (DistrictEntity d : w.getDistricts()) {
+        districts.add(district(d, w));
+      }
+    }
+    return districts;
   }
 
   private List<EmployeeData> convertEmployees(
@@ -184,43 +222,24 @@ public class JpaToMsConverter
       employee.setUsername(e.getUsername());
       employee.setPassword(e.getPassword());
       employee.setTitle(e.getTitle());
-      employee.setDistrict(findDistrictById(e.getDistrict().getId(), warehouses));
+      employee.setDistrictId(e.getDistrict().getId());
+      employee.setDistrictWarehouseId(e.getDistrict().getWarehouse().getId());
       employees.add(employee);
     }
     return employees;
   }
 
-  private DistrictData district(
-      DistrictEntity d,
-      WarehouseData w,
-      List<WarehouseData> ws,
-      List<ProductData> ps,
-      List<CarrierData> cs) {
-    DistrictData district = new DistrictData();
-    district.setId(d.getId());
-    district.setName(d.getName());
-    district.setAddress(address(d.getAddress()));
-    district.setSalesTax(d.getSalesTax());
-    district.setYearToDateBalance(d.getYearToDateBalance());
-    district.setWarehouse(w);
-    district.setOrders(orders(d.getOrders(), district, ws, ps, cs));
-    district.setCustomers(customers(d.getCustomers(), district));
-    // Set the actual customer, as the orders(...) method only assigns a dummy object
-    district
-        .getOrders()
-        .forEach(
-            o -> {
-              String customerId = o.getCustomer().getId();
-              o.setCustomer(
-                  district.getCustomers().stream()
-                      .filter(c -> c.getId().equals(customerId))
-                      .findAny()
-                      .orElseThrow(IllegalStateException::new));
-            });
-    return district;
+  private List<CustomerData> convertCustomers(List<WarehouseEntity> ws) {
+    List<CustomerEntity> cs = new ArrayList<>();
+    for (WarehouseEntity w : ws) {
+      for (DistrictEntity d : w.getDistricts()) {
+        cs.addAll(d.getCustomers());
+      }
+    }
+    return customers(cs);
   }
 
-  private static List<CustomerData> customers(List<CustomerEntity> cs, DistrictData d) {
+  private static List<CustomerData> customers(List<CustomerEntity> cs) {
     List<CustomerData> customers = new ArrayList<>(cs.size());
     for (CustomerEntity c : cs) {
       CustomerData customer = new CustomerData();
@@ -240,21 +259,23 @@ public class JpaToMsConverter
       customer.setYearToDatePayment(c.getYearToDatePayment());
       customer.setPaymentCount(c.getPaymentCount());
       customer.setDeliveryCount(c.getDeliveryCount());
-      customer.setPayments(payments(c.getPayments(), customer, d));
-      customer.setOrders(findOrdersByCustomerId(c.getId(), d.getOrders()));
-      customer.getOrders().forEach(o -> o.setCustomer(customer));
-      customer.setDistrict(d);
+      customer.setDistrictId(c.getDistrict().getId());
       customers.add(customer);
     }
     return customers;
   }
 
-  private static List<OrderData> orders(
-      List<OrderEntity> os,
-      DistrictData d,
-      List<WarehouseData> ws,
-      List<ProductData> ps,
-      List<CarrierData> cs) {
+  private List<OrderData> convertOrders(List<WarehouseEntity> ws) {
+    List<OrderEntity> os = new ArrayList<>();
+    for (WarehouseEntity w : ws) {
+      for (DistrictEntity d : w.getDistricts()) {
+        os.addAll(d.getOrders());
+      }
+    }
+    return orders(os);
+  }
+
+  private static List<OrderData> orders(List<OrderEntity> os) {
     return os.parallelStream()
         .map(
             o -> {
@@ -263,32 +284,37 @@ public class JpaToMsConverter
               order.setItemCount(o.getItemCount());
               order.setEntryDate(o.getEntryDate());
               order.setFulfilled(o.isFulfilled());
-              order.setCarrier(
-                  o.getCarrier() == null ? null : findCarrierById(o.getCarrier().getId(), cs));
+              order.setCarrierId(o.getCarrier() == null ? null : o.getCarrier().getId());
               order.setAllLocal(o.isAllLocal());
-              order.setDistrict(d);
-              // Setting the actual customer must be handled by the caller!!!
-              CustomerData customerDummy = new CustomerData();
-              customerDummy.setId(o.getCustomer().getId());
-              order.setCustomer(customerDummy);
-              order.setItems(orderItems(o.getItems(), order, ws, ps));
+              order.setDistrictId(o.getDistrict().getId());
+              order.setCustomerId(o.getCustomer().getId());
               return order;
             })
         .sorted(Comparator.comparing(OrderData::getEntryDate))
         .collect(Collectors.toList());
   }
 
-  private static List<OrderItemData> orderItems(
-      List<OrderItemEntity> ois, OrderData o, List<WarehouseData> ws, List<ProductData> ps) {
+  private List<OrderItemData> convertOrderItems(List<WarehouseEntity> ws) {
+    List<OrderItemEntity> ois = new ArrayList<>();
+    for (WarehouseEntity w : ws) {
+      for (DistrictEntity d : w.getDistricts()) {
+        for (OrderEntity o : d.getOrders()) {
+          ois.addAll(o.getItems());
+        }
+      }
+    }
+    return orderItems(ois);
+  }
+
+  private static List<OrderItemData> orderItems(List<OrderItemEntity> ois) {
     return ois.stream()
         .map(
             item -> {
               OrderItemData orderItem = new OrderItemData();
               orderItem.setId(item.getId());
-              orderItem.setOrder(o);
-              orderItem.setProduct(findProductById(item.getProduct().getId(), ps));
-              orderItem.setSupplyingWarehouse(
-                  findWarehouseById(item.getSupplyingWarehouse().getId(), ws));
+              orderItem.setOrderId(item.getOrder().getId());
+              orderItem.setProductId(item.getProduct().getId());
+              orderItem.setSupplyingWarehouseId(item.getSupplyingWarehouse().getId());
               orderItem.setAmount(item.getAmount());
               orderItem.setQuantity(item.getQuantity());
               orderItem.setNumber(item.getNumber());
@@ -299,8 +325,21 @@ public class JpaToMsConverter
         .collect(Collectors.toList());
   }
 
-  private static List<PaymentData> payments(
-      List<PaymentEntity> ps, CustomerData c, DistrictData d) {
+  private List<PaymentData> convertPayments(List<WarehouseEntity> ws) {
+    List<PaymentEntity> ps =
+        ws.parallelStream()
+            .flatMap(
+                w ->
+                    w.getDistricts().parallelStream()
+                        .flatMap(
+                            d ->
+                                d.getCustomers().parallelStream()
+                                    .flatMap(c -> c.getPayments().stream())))
+            .collect(Collectors.toList());
+    return payments(ps);
+  }
+
+  private static List<PaymentData> payments(List<PaymentEntity> ps) {
     return ps.parallelStream()
         .map(
             p -> {
@@ -309,93 +348,27 @@ public class JpaToMsConverter
               payment.setAmount(p.getAmount());
               payment.setDate(p.getDate());
               payment.setData(p.getData());
-              payment.setCustomer(c);
-              payment.setDistrict(d);
+              payment.setCustomerId(p.getCustomer().getId());
+              payment.setDistrictId(p.getDistrict().getId());
               return payment;
             })
         .sorted(Comparator.comparing(PaymentData::getDate))
         .collect(Collectors.toList());
   }
 
-  private static StockData stock(StockEntity s, WarehouseData w, ProductData p) {
-    StockData stock = new StockData();
-    stock.setId(s.getId());
-    stock.setWarehouse(w);
-    stock.setProduct(p);
-    stock.setData(s.getData());
-    stock.setQuantity(s.getQuantity());
-    stock.setDist01(s.getDist01());
-    stock.setDist02(s.getDist02());
-    stock.setDist03(s.getDist03());
-    stock.setDist04(s.getDist04());
-    stock.setDist05(s.getDist05());
-    stock.setDist06(s.getDist06());
-    stock.setDist07(s.getDist07());
-    stock.setDist08(s.getDist08());
-    stock.setDist09(s.getDist09());
-    stock.setDist10(s.getDist10());
-    stock.setOrderCount(s.getOrderCount());
-    stock.setRemoteCount(s.getRemoteCount());
-    stock.setOrderCount(s.getOrderCount());
-    return stock;
+  private DistrictData district(DistrictEntity d, WarehouseEntity w) {
+    DistrictData district = new DistrictData();
+    district.setId(d.getId());
+    district.setWarehouseId(d.getWarehouse().getId());
+    district.setName(d.getName());
+    district.setAddress(address(d.getAddress()));
+    district.setSalesTax(d.getSalesTax());
+    district.setYearToDateBalance(d.getYearToDateBalance());
+    return district;
   }
 
   private static AddressData address(AddressEmbeddable a) {
-    AddressData address = new AddressData();
-    address.setStreet1(a.getStreet1());
-    address.setStreet2(a.getStreet2());
-    address.setCity(a.getCity());
-    address.setZipCode(a.getZipCode());
-    address.setState(a.getState());
-    return address;
-  }
-
-  private static List<OrderData> findOrdersByCustomerId(String id, List<OrderData> orders) {
-    return orders.stream()
-        .filter(o -> o.getCustomer().getId().equals(id))
-        .collect(Collectors.toList());
-  }
-
-  private static WarehouseEntity findWarehouseEntityById(String id, List<WarehouseEntity> ws) {
-    return ws.stream()
-        .filter(w -> w.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
-  private static ProductData findProductById(String id, List<ProductData> products) {
-    return products.stream()
-        .filter(p -> p.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
-  private static WarehouseData findWarehouseById(String id, List<WarehouseData> warehouses) {
-    return warehouses.stream()
-        .filter(w -> w.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
-  private static CustomerData findCustomerById(String id, List<CustomerData> customers) {
-    return customers.stream()
-        .filter(c -> c.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
-  private static CarrierData findCarrierById(String id, List<CarrierData> carriers) {
-    return carriers.stream()
-        .filter(c -> c.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
-  }
-
-  private static DistrictData findDistrictById(String id, List<WarehouseData> warehouses) {
-    return warehouses.stream()
-        .flatMap(w -> w.getDistricts().stream())
-        .filter(d -> d.getId().equals(id))
-        .findAny()
-        .orElseThrow(IllegalArgumentException::new);
+    return new AddressData(
+        a.getStreet1(), a.getStreet2(), a.getZipCode(), a.getCity(), a.getState());
   }
 }

@@ -4,12 +4,7 @@ import de.uniba.dsg.jpb.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.WarehouseRepository;
-import de.uniba.dsg.jpb.data.gen.DataProvider;
 import de.uniba.dsg.jpb.data.gen.DataWriter;
-import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
-import de.uniba.dsg.jpb.data.model.jpa.EmployeeEntity;
-import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
-import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -21,8 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
-public class JpaDataWriter
-    implements DataWriter<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
+public class JpaDataWriter implements DataWriter<JpaDataGenerator> {
 
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
@@ -42,11 +36,10 @@ public class JpaDataWriter
   }
 
   @Override
-  public void writeAll(
-      DataProvider<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> dataProvider) {
-    productRepository.saveAll(dataProvider.getProducts());
-    carrierRepository.saveAll(dataProvider.getCarriers());
-    warehouseRepository.saveAll(dataProvider.getWarehouses());
-    employeeRepository.saveAll(dataProvider.getEmployees());
+  public void writeAll(JpaDataGenerator generator) {
+    productRepository.saveAll(generator.getProducts());
+    carrierRepository.saveAll(generator.getCarriers());
+    warehouseRepository.saveAll(generator.getWarehouses());
+    employeeRepository.saveAll(generator.getEmployees());
   }
 }

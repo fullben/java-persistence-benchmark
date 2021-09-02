@@ -1,8 +1,6 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import java.util.ArrayList;
-import java.util.List;
-import one.microstream.reference.Lazy;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * A district is one of ten areas supplied by a specific {@link WarehouseData Warehouse}. Each
@@ -11,44 +9,21 @@ import one.microstream.reference.Lazy;
  *
  * @author Benedikt Full
  */
-public class DistrictData extends BaseData {
+public class DistrictData extends BaseData implements JacisCloneable<DistrictData> {
 
-  private WarehouseData warehouse;
-  private Lazy<List<CustomerData>> customers;
-  private Lazy<List<OrderData>> orders;
+  private String warehouseId;
   private String name;
   private AddressData address;
   private double salesTax;
   private double yearToDateBalance;
 
-  public DistrictData() {
-    super();
-    customers = Lazy.Reference(new ArrayList<>());
-    orders = Lazy.Reference(new ArrayList<>());
+  public String getWarehouseId() {
+    return warehouseId;
   }
 
-  public WarehouseData getWarehouse() {
-    return warehouse;
-  }
-
-  public void setWarehouse(WarehouseData warehouse) {
-    this.warehouse = warehouse;
-  }
-
-  public List<CustomerData> getCustomers() {
-    return Lazy.get(customers);
-  }
-
-  public void setCustomers(List<CustomerData> customers) {
-    this.customers = Lazy.Reference(customers);
-  }
-
-  public List<OrderData> getOrders() {
-    return Lazy.get(orders);
-  }
-
-  public void setOrders(List<OrderData> orders) {
-    this.orders = Lazy.Reference(orders);
+  public void setWarehouseId(String warehouseId) {
+    checkWritable();
+    this.warehouseId = warehouseId;
   }
 
   public String getName() {
@@ -56,6 +31,7 @@ public class DistrictData extends BaseData {
   }
 
   public void setName(String name) {
+    checkWritable();
     this.name = name;
   }
 
@@ -64,6 +40,7 @@ public class DistrictData extends BaseData {
   }
 
   public void setAddress(AddressData address) {
+    checkWritable();
     this.address = address;
   }
 
@@ -72,6 +49,7 @@ public class DistrictData extends BaseData {
   }
 
   public void setSalesTax(double salesTax) {
+    checkWritable();
     this.salesTax = salesTax;
   }
 
@@ -80,6 +58,12 @@ public class DistrictData extends BaseData {
   }
 
   public void setYearToDateBalance(double yearToDateBalance) {
+    checkWritable();
     this.yearToDateBalance = yearToDateBalance;
+  }
+
+  @Override
+  public DistrictData clone() {
+    return (DistrictData) super.clone();
   }
 }

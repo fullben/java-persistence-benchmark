@@ -3,7 +3,6 @@ package de.uniba.dsg.jpb.data.gen.jpa;
 import static java.util.Objects.requireNonNull;
 
 import com.github.javafaker.Faker;
-import de.uniba.dsg.jpb.data.gen.DataProvider;
 import de.uniba.dsg.jpb.data.model.jpa.AddressEmbeddable;
 import de.uniba.dsg.jpb.data.model.jpa.CarrierEntity;
 import de.uniba.dsg.jpb.data.model.jpa.CustomerEntity;
@@ -52,8 +51,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author Benedikt Full
  */
-public class JpaDataGenerator
-    implements DataProvider<WarehouseEntity, EmployeeEntity, ProductEntity, CarrierEntity> {
+public class JpaDataGenerator {
 
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
@@ -172,22 +170,18 @@ public class JpaDataGenerator
     this(warehouseCount, true, passwordEncoder);
   }
 
-  @Override
   public List<WarehouseEntity> getWarehouses() {
     return warehouses;
   }
 
-  @Override
   public List<EmployeeEntity> getEmployees() {
     return employees;
   }
 
-  @Override
   public List<ProductEntity> getProducts() {
     return products;
   }
 
-  @Override
   public List<CarrierEntity> getCarriers() {
     return carriers;
   }

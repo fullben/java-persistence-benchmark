@@ -11,12 +11,11 @@ import de.uniba.dsg.jpb.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.jpb.service.ms.MsDeliveryService;
 import de.uniba.dsg.jpb.service.ms.MsNewOrderService;
 import de.uniba.dsg.jpb.service.ms.MsOrderStatusService;
 import de.uniba.dsg.jpb.service.ms.MsPaymentService;
 import de.uniba.dsg.jpb.service.ms.MsStockLevelService;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.uniba.dsg.jpb.service.ms.MsDeliveryService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,9 +35,7 @@ public class MsTransactionsController implements TransactionsController {
   private final MsDeliveryService deliveryService;
   private final MsStockLevelService stockLevelService;
 
-  @Autowired
-  public MsTransactionsController(
-      MsNewOrderService newOrderService,
+  public MsTransactionsController(MsNewOrderService newOrderService,
       MsPaymentService paymentService,
       MsOrderStatusService orderStatusService,
       MsDeliveryService deliveryService,

@@ -1,21 +1,18 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import one.microstream.reference.Lazy;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * A customer of the wholesale supplier.
  *
  * @author Benedikt Full
  */
-public class CustomerData extends PersonData {
+public class CustomerData extends PersonData implements JacisCloneable<CustomerData> {
 
-  private DistrictData district;
+  private String warehouseId;
+  private String districtId;
   private LocalDateTime since;
-  private Lazy<List<PaymentData>> payments;
-  private Lazy<List<OrderData>> orders;
   private String credit;
   private double creditLimit;
   private double discount;
@@ -25,18 +22,22 @@ public class CustomerData extends PersonData {
   private int deliveryCount;
   private String data;
 
-  public CustomerData() {
-    super();
-    payments = Lazy.Reference(new ArrayList<>());
-    orders = Lazy.Reference(new ArrayList<>());
+  public String getWarehouseId() {
+    return warehouseId;
   }
 
-  public DistrictData getDistrict() {
-    return district;
+  public void setWarehouseId(String warehouseId) {
+    checkWritable();
+    this.warehouseId = warehouseId;
   }
 
-  public void setDistrict(DistrictData district) {
-    this.district = district;
+  public String getDistrictId() {
+    return districtId;
+  }
+
+  public void setDistrictId(String districtId) {
+    checkWritable();
+    this.districtId = districtId;
   }
 
   public LocalDateTime getSince() {
@@ -44,23 +45,8 @@ public class CustomerData extends PersonData {
   }
 
   public void setSince(LocalDateTime since) {
+    checkWritable();
     this.since = since;
-  }
-
-  public List<PaymentData> getPayments() {
-    return Lazy.get(payments);
-  }
-
-  public void setPayments(List<PaymentData> payments) {
-    this.payments = Lazy.Reference(payments);
-  }
-
-  public List<OrderData> getOrders() {
-    return Lazy.get(orders);
-  }
-
-  public void setOrders(List<OrderData> orders) {
-    this.orders = Lazy.Reference(orders);
   }
 
   public String getCredit() {
@@ -68,6 +54,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setCredit(String credit) {
+    checkWritable();
     this.credit = credit;
   }
 
@@ -76,6 +63,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setCreditLimit(double creditLimit) {
+    checkWritable();
     this.creditLimit = creditLimit;
   }
 
@@ -84,6 +72,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setDiscount(double discount) {
+    checkWritable();
     this.discount = discount;
   }
 
@@ -92,6 +81,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setBalance(double balance) {
+    checkWritable();
     this.balance = balance;
   }
 
@@ -100,6 +90,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setYearToDatePayment(double yearToDatePayment) {
+    checkWritable();
     this.yearToDatePayment = yearToDatePayment;
   }
 
@@ -108,6 +99,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setPaymentCount(int paymentCount) {
+    checkWritable();
     this.paymentCount = paymentCount;
   }
 
@@ -116,6 +108,7 @@ public class CustomerData extends PersonData {
   }
 
   public void setDeliveryCount(int deliveryCount) {
+    checkWritable();
     this.deliveryCount = deliveryCount;
   }
 
@@ -124,6 +117,12 @@ public class CustomerData extends PersonData {
   }
 
   public void setData(String data) {
+    checkWritable();
     this.data = data;
+  }
+
+  @Override
+  public CustomerData clone() {
+    return (CustomerData) super.clone();
   }
 }

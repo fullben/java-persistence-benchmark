@@ -10,23 +10,35 @@ sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.modelmapper:modelmapper:2.4.4'
-    implementation 'io.springfox:springfox-swagger2:2.7.0'
-    implementation 'io.springfox:springfox-swagger-ui:2.7.0'
-    implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
-    implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
+    // JPA persistence
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.postgresql:postgresql:42.2.23'
     implementation 'com.h2database:h2:1.4.197'
+    // MicroStream persistence
+    implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
+    implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
+    implementation name: 'jacis-2.0.7-SNAPSHOT'
+    implementation name: 'jacis-2.0.7-SNAPSHOT-javadoc'
+    implementation name: 'jacis-2.0.7-SNAPSHOT-sources'
+    // Automatic mapping between model classes
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+    // API documentation and web interface
+    implementation 'io.springfox:springfox-swagger2:2.7.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.7.0'
+    // Fake data generator
     implementation 'com.github.javafaker:javafaker:1.0.2'
+    // Test stuff
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'

@@ -1,5 +1,6 @@
-package de.uniba.dsg.jpb;
+package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.gen.ms.MsDataWriter;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -10,73 +11,26 @@ import de.uniba.dsg.jpb.data.model.ms.PaymentData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
-import de.uniba.dsg.jpb.util.Stopwatch;
 import one.microstream.afs.nio.types.NioFileSystem;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 import one.microstream.storage.types.Storage;
 import one.microstream.storage.types.StorageChannelCountProvider;
 import one.microstream.storage.types.StorageConfiguration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jacis.container.JacisContainer;
 import org.jacis.container.JacisObjectTypeSpec;
 import org.jacis.extension.persistence.microstream.MicrostreamPersistenceAdapter;
 import org.jacis.extension.persistence.microstream.MicrostreamStorage;
 import org.jacis.plugin.objectadapter.cloning.JacisCloningObjectAdapter;
 import org.jacis.store.JacisStore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 
-/**
- * Configures all beans which are required for MicroStream-based persistence.
- *
- * <p>This includes many beans relevant for data access, for which the <a
- * href="https://github.com/JanWiemer/jacis">JACIS framework</a> is being used. This is due to the
- * fact that MicroStream itself is only a storage engine, which provides no support for
- * transactions.
- *
- * @author Benedikt Full
- */
-@Configuration
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
-public class MsConfiguration {
-
-  private static final Logger LOG = LogManager.getLogger(MsConfiguration.class);
-  private static final String STARTUP_BEHAVIOR_KEY = "jpb.ms.storage.startup";
-  private static final String STARTUP_BEHAVIOR_LOAD = "load";
-  private static final String STARTUP_BEHAVIOR_CLEAR = "clear";
-
-  private final Environment environment;
-
-  @Autowired
-  public MsConfiguration(Environment environment) {
-    this.environment = environment;
-  }
+@TestConfiguration
+public class MicroStreamTestConfiguration {
 
   @Bean
   public EmbeddedStorageManager embeddedStorageManager() {
-    String clearStorageValue = environment.getProperty(STARTUP_BEHAVIOR_KEY);
-    boolean clearStorage;
-    if (clearStorageValue == null || clearStorageValue.isBlank()) {
-      clearStorage = false;
-    } else {
-      if (clearStorageValue.equals(STARTUP_BEHAVIOR_LOAD)) {
-        clearStorage = false;
-      } else if (clearStorageValue.equals(STARTUP_BEHAVIOR_CLEAR)) {
-        clearStorage = true;
-      } else {
-        throw new IllegalArgumentException(
-            "Invalid value for property " + STARTUP_BEHAVIOR_KEY + ": " + clearStorageValue);
-      }
-    }
-
     NioFileSystem fileSystem = NioFileSystem.New();
     EmbeddedStorageFoundation<?> foundation =
         EmbeddedStorageFoundation.New()
@@ -89,9 +43,7 @@ public class MsConfiguration {
                         Storage.EntityCacheEvaluator(86_400_000, 1_000_000_000))
                     .setStorageFileProvider(
                         Storage.FileProviderBuilder(fileSystem)
-                            .setDirectory(
-                                fileSystem.ensureDirectoryPath(
-                                    environment.getRequiredProperty("jpb.ms.storage.dir")))
+                            .setDirectory(fileSystem.ensureDirectoryPath("test-storage"))
                             .createFileProvider())
                     .setChannelCountProvider(
                         StorageChannelCountProvider.New(
@@ -100,16 +52,9 @@ public class MsConfiguration {
 
     EmbeddedStorageManager storageManager = foundation.createEmbeddedStorageManager();
 
-    Stopwatch stopwatch = new Stopwatch(true);
     storageManager.start();
-    stopwatch.stop();
-    LOG.info("Started MicroStream storage manager, took {}", stopwatch.getDuration());
-
-    if (clearStorage) {
-      storageManager.setRoot(null);
-      storageManager.storeRoot();
-      LOG.info("Cleared MicroStream persistent storage");
-    }
+    storageManager.setRoot(null);
+    storageManager.storeRoot();
 
     return storageManager;
   }
@@ -220,5 +165,30 @@ public class MsConfiguration {
             String.class, EmployeeData.class, new JacisCloningObjectAdapter<>());
     employeeTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(employeeTypeSpec).getStore();
+  }
+
+  @Bean
+  public MsDataWriter dataWriter(
+      JacisContainer container,
+      JacisStore<String, CarrierData> carrierStore,
+      JacisStore<String, ProductData> productStore,
+      JacisStore<String, WarehouseData> warehouseStore,
+      JacisStore<String, DistrictData> districtStore,
+      JacisStore<String, EmployeeData> employeeStore,
+      JacisStore<String, StockData> stockStore,
+      JacisStore<String, CustomerData> customerStore,
+      JacisStore<String, OrderData> orderStore,
+      JacisStore<String, OrderItemData> orderItemStore) {
+    return new MsDataWriter(
+        container,
+        carrierStore,
+        productStore,
+        warehouseStore,
+        districtStore,
+        employeeStore,
+        stockStore,
+        customerStore,
+        orderStore,
+        orderItemStore);
   }
 }

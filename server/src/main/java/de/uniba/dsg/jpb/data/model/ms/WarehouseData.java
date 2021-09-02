@@ -1,33 +1,25 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
-import java.util.ArrayList;
-import java.util.List;
-import one.microstream.reference.Lazy;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * A warehouse of the wholesale supplier.
  *
  * @author Benedikt Full
  */
-public class WarehouseData extends BaseData {
+public class WarehouseData extends BaseData implements JacisCloneable<WarehouseData> {
 
   private String name;
   private AddressData address;
-  private Lazy<List<DistrictData>> districts;
-  private Lazy<List<StockData>> stocks;
   private double salesTax;
   private double yearToDateBalance;
-
-  public WarehouseData() {
-    districts = Lazy.Reference(new ArrayList<>());
-    stocks = Lazy.Reference(new ArrayList<>());
-  }
 
   public String getName() {
     return name;
   }
 
   public void setName(String name) {
+    checkWritable();
     this.name = name;
   }
 
@@ -36,23 +28,8 @@ public class WarehouseData extends BaseData {
   }
 
   public void setAddress(AddressData address) {
+    checkWritable();
     this.address = address;
-  }
-
-  public List<DistrictData> getDistricts() {
-    return Lazy.get(districts);
-  }
-
-  public void setDistricts(List<DistrictData> districts) {
-    this.districts = Lazy.Reference(districts);
-  }
-
-  public List<StockData> getStocks() {
-    return Lazy.get(stocks);
-  }
-
-  public void setStocks(List<StockData> stocks) {
-    this.stocks = Lazy.Reference(stocks);
   }
 
   public double getSalesTax() {
@@ -60,6 +37,7 @@ public class WarehouseData extends BaseData {
   }
 
   public void setSalesTax(double salesTax) {
+    checkWritable();
     this.salesTax = salesTax;
   }
 
@@ -68,6 +46,12 @@ public class WarehouseData extends BaseData {
   }
 
   public void setYearToDateBalance(double yearToDateBalance) {
+    checkWritable();
     this.yearToDateBalance = yearToDateBalance;
+  }
+
+  @Override
+  public WarehouseData clone() {
+    return (WarehouseData) super.clone();
   }
 }

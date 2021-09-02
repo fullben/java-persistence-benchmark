@@ -19,6 +19,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setFirstName(String firstName) {
+    checkWritable();
     this.firstName = firstName;
   }
 
@@ -27,6 +28,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setMiddleName(String middleName) {
+    checkWritable();
     this.middleName = middleName;
   }
 
@@ -35,6 +37,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setLastName(String lastName) {
+    checkWritable();
     this.lastName = lastName;
   }
 
@@ -43,6 +46,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setAddress(AddressData address) {
+    checkWritable();
     this.address = address;
   }
 
@@ -51,6 +55,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setPhoneNumber(String phoneNumber) {
+    checkWritable();
     this.phoneNumber = phoneNumber;
   }
 
@@ -59,6 +64,7 @@ public abstract class PersonData extends BaseData {
   }
 
   public void setEmail(String email) {
+    checkWritable();
     this.email = email;
   }
 }

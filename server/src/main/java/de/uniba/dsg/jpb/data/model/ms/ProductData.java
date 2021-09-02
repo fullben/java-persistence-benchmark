@@ -1,11 +1,13 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
+
 /**
  * A product of the wholesale supplier.
  *
  * @author Benedikt Full
  */
-public class ProductData extends BaseData {
+public class ProductData extends BaseData implements JacisCloneable<ProductData> {
 
   private String imagePath;
   private String name;
@@ -17,6 +19,7 @@ public class ProductData extends BaseData {
   }
 
   public void setImagePath(String imagePath) {
+    checkWritable();
     this.imagePath = imagePath;
   }
 
@@ -25,6 +28,7 @@ public class ProductData extends BaseData {
   }
 
   public void setName(String name) {
+    checkWritable();
     this.name = name;
   }
 
@@ -33,6 +37,7 @@ public class ProductData extends BaseData {
   }
 
   public void setPrice(double price) {
+    checkWritable();
     this.price = price;
   }
 
@@ -41,6 +46,12 @@ public class ProductData extends BaseData {
   }
 
   public void setData(String data) {
+    checkWritable();
     this.data = data;
+  }
+
+  @Override
+  public ProductData clone() {
+    return (ProductData) super.clone();
   }
 }

@@ -1,26 +1,37 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * A payment made by a {@link CustomerData Customer}.
  *
  * @author Benedikt Full
  */
-public class PaymentData extends BaseData {
+public class PaymentData extends BaseData implements JacisCloneable<PaymentData> {
 
-  private CustomerData customer;
+  private String customerId;
+  private String districtId;
   private LocalDateTime date;
-  private DistrictData district;
   private double amount;
   private String data;
 
-  public CustomerData getCustomer() {
-    return customer;
+  public String getCustomerId() {
+    return customerId;
   }
 
-  public void setCustomer(CustomerData customer) {
-    this.customer = customer;
+  public void setCustomerId(String customerId) {
+    checkWritable();
+    this.customerId = customerId;
+  }
+
+  public String getDistrictId() {
+    return districtId;
+  }
+
+  public void setDistrictId(String districtId) {
+    checkWritable();
+    this.districtId = districtId;
   }
 
   public LocalDateTime getDate() {
@@ -28,15 +39,8 @@ public class PaymentData extends BaseData {
   }
 
   public void setDate(LocalDateTime date) {
+    checkWritable();
     this.date = date;
-  }
-
-  public DistrictData getDistrict() {
-    return district;
-  }
-
-  public void setDistrict(DistrictData district) {
-    this.district = district;
   }
 
   public double getAmount() {
@@ -44,6 +48,7 @@ public class PaymentData extends BaseData {
   }
 
   public void setAmount(double amount) {
+    checkWritable();
     this.amount = amount;
   }
 
@@ -52,6 +57,12 @@ public class PaymentData extends BaseData {
   }
 
   public void setData(String data) {
+    checkWritable();
     this.data = data;
+  }
+
+  @Override
+  public PaymentData clone() {
+    return (PaymentData) super.clone();
   }
 }

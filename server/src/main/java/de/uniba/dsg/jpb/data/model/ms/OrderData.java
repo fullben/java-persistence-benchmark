@@ -1,9 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import one.microstream.reference.Lazy;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * An order issued by a {@link CustomerData Customer} for a certain amount of {@link ProductData
@@ -12,36 +10,41 @@ import one.microstream.reference.Lazy;
  * @see OrderItemData
  * @author Benedikt Full
  */
-public class OrderData extends BaseData {
+public class OrderData extends BaseData implements JacisCloneable<OrderData> {
 
-  private DistrictData district;
-  private CustomerData customer;
+  private String districtId;
+  private String customerId;
+  private String carrierId;
   private LocalDateTime entryDate;
-  private CarrierData carrier;
-  private Lazy<List<OrderItemData>> items;
   private int itemCount;
   private boolean allLocal;
   private boolean fulfilled;
 
-  public OrderData() {
-    super();
-    items = Lazy.Reference(new ArrayList<>());
+  public String getDistrictId() {
+    return districtId;
   }
 
-  public DistrictData getDistrict() {
-    return district;
+  public void setDistrictId(String districtId) {
+    checkWritable();
+    this.districtId = districtId;
   }
 
-  public void setDistrict(DistrictData district) {
-    this.district = district;
+  public String getCustomerId() {
+    return customerId;
   }
 
-  public CustomerData getCustomer() {
-    return customer;
+  public void setCustomerId(String customerId) {
+    checkWritable();
+    this.customerId = customerId;
   }
 
-  public void setCustomer(CustomerData customer) {
-    this.customer = customer;
+  public String getCarrierId() {
+    return carrierId;
+  }
+
+  public void setCarrierId(String carrierId) {
+    checkWritable();
+    this.carrierId = carrierId;
   }
 
   public LocalDateTime getEntryDate() {
@@ -49,23 +52,8 @@ public class OrderData extends BaseData {
   }
 
   public void setEntryDate(LocalDateTime entryDate) {
+    checkWritable();
     this.entryDate = entryDate;
-  }
-
-  public CarrierData getCarrier() {
-    return carrier;
-  }
-
-  public void setCarrier(CarrierData carrier) {
-    this.carrier = carrier;
-  }
-
-  public List<OrderItemData> getItems() {
-    return Lazy.get(items);
-  }
-
-  public void setItems(List<OrderItemData> items) {
-    this.items = Lazy.Reference(items);
   }
 
   public int getItemCount() {
@@ -73,6 +61,7 @@ public class OrderData extends BaseData {
   }
 
   public void setItemCount(int itemCount) {
+    checkWritable();
     this.itemCount = itemCount;
   }
 
@@ -81,6 +70,7 @@ public class OrderData extends BaseData {
   }
 
   public void setAllLocal(boolean allLocal) {
+    checkWritable();
     this.allLocal = allLocal;
   }
 
@@ -89,6 +79,12 @@ public class OrderData extends BaseData {
   }
 
   public void setFulfilled(boolean fulfilled) {
+    checkWritable();
     this.fulfilled = fulfilled;
+  }
+
+  @Override
+  public OrderData clone() {
+    return (OrderData) super.clone();
   }
 }

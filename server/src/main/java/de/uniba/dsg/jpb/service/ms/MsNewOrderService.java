@@ -1,8 +1,5 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.DataManager;
-import de.uniba.dsg.jpb.data.access.ms.DataNotFoundException;
-import de.uniba.dsg.jpb.data.access.ms.Find;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
@@ -17,12 +14,12 @@ import de.uniba.dsg.jpb.data.transfer.messages.NewOrderResponseItem;
 import de.uniba.dsg.jpb.service.NewOrderService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
+import org.jacis.container.JacisContainer;
+import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
+import org.jacis.store.JacisStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -30,135 +27,152 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsNewOrderService extends NewOrderService {
 
-  private final DataManager dataManager;
+  private final JacisContainer container;
+  private final JacisStore<String, WarehouseData> warehouseStore;
+  private final JacisStore<String, DistrictData> districtStore;
+  private final JacisStore<String, StockData> stockStore;
+  private final JacisStore<String, CustomerData> customerStore;
+  private final JacisStore<String, OrderData> orderStore;
+  private final JacisStore<String, OrderItemData> orderItemStore;
+  private final JacisStore<String, ProductData> productStore;
 
-  public MsNewOrderService(DataManager dataManager) {
-    this.dataManager = dataManager;
+  @Autowired
+  public MsNewOrderService(
+      JacisContainer container,
+      JacisStore<String, WarehouseData> warehouseStore,
+      JacisStore<String, DistrictData> districtStore,
+      JacisStore<String, StockData> stockStore,
+      JacisStore<String, CustomerData> customerStore,
+      JacisStore<String, OrderData> orderStore,
+      JacisStore<String, OrderItemData> orderItemStore,
+      JacisStore<String, ProductData> productStore) {
+    this.container = container;
+    this.warehouseStore = warehouseStore;
+    this.districtStore = districtStore;
+    this.stockStore = stockStore;
+    this.customerStore = customerStore;
+    this.orderStore = orderStore;
+    this.orderItemStore = orderItemStore;
+    this.productStore = productStore;
   }
 
   @Override
   public NewOrderResponse process(NewOrderRequest req) {
-    return dataManager.write(
-        (root, storageManager) -> {
-          // Get warehouse, district and customer
-          WarehouseData warehouse =
-              Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
-          DistrictData district = Find.districtById(req.getDistrictId(), warehouse);
-          if (!district.getId().equals(req.getDistrictId())
-              || !district.getWarehouse().getId().equals(req.getWarehouseId())) {
-            throw new IllegalArgumentException();
-          }
-          CustomerData customer = Find.customerById(req.getCustomerId(), district);
+    JacisLocalTransaction transaction = container.beginLocalTransaction("New order");
 
-          // Get all supplying warehouses and products to ensure no invalid ids have been provided
-          List<WarehouseData> supplyingWarehouses = new ArrayList<>();
-          List<WarehouseData> allWarehouses = root.findAllWarehouses();
-          List<ProductData> orderItemProducts = new ArrayList<>();
-          List<ProductData> allProducts = root.findAllProducts();
-          req.getItems()
-              .forEach(
-                  i -> {
-                    supplyingWarehouses.add(
-                        Find.warehouseById(i.getSupplyingWarehouseId(), allWarehouses));
-                    orderItemProducts.add(Find.productById(i.getProductId(), allProducts));
-                  });
+    // Get warehouse, district and customer
+    WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
+    DistrictData district = districtStore.getReadOnly(req.getDistrictId());
+    if (!district.getId().equals(req.getDistrictId())
+        || !district.getWarehouseId().equals(req.getWarehouseId())) {
+      throw new IllegalArgumentException();
+    }
+    CustomerData customer = customerStore.get(req.getCustomerId());
 
-          // Create a new order
-          OrderData order = new OrderData();
-          order.setCustomer(customer);
-          order.setDistrict(district);
-          order.setCarrier(null);
-          order.setEntryDate(LocalDateTime.now());
-          order.setItemCount(req.getItems().size());
-          order.setAllLocal(
-              req.getItems().stream()
-                  .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
-          district.getOrders().add(order);
-          customer.getOrders().add(order);
-          // Process individual order items
-          List<OrderItemData> orderItems = toOrderItems(req.getItems(), order);
-          List<NewOrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
-          double orderItemSum = 0;
-          // Cache old stock state
-          Map<String, StockData> originalStocks = new HashMap<>();
-          Set<StockData> changedStocks = new HashSet<>();
-          for (int i = 0; i < orderItems.size(); i++) {
-            OrderItemData orderItem = orderItems.get(i);
-            ProductData product = orderItemProducts.get(i);
-            orderItem.setProduct(product);
-            orderItem.setSupplyingWarehouse(supplyingWarehouses.get(i));
-            StockData stock =
-                warehouse.getStocks().parallelStream()
-                    .filter(s -> s.getProduct().getId().equals(product.getId()))
-                    .findAny()
-                    .orElseThrow(DataNotFoundException::new);
-            changedStocks.add(stock);
-            if (!originalStocks.containsKey(stock.getId())) {
-              originalStocks.put(stock.getId(), new StockData(stock));
-            }
-            NewOrderResponseItem responseLine = newOrderResponseLine(orderItem);
-            responseLines.add(responseLine);
-            int stockQuantity = stock.getQuantity();
-            int orderItemQuantity = orderItem.getQuantity();
-            stock.setQuantity(determineNewStockQuantity(stockQuantity, orderItemQuantity));
-            stock.setYearToDateBalance(stock.getYearToDateBalance() + orderItemQuantity);
-            stock.setOrderCount(stock.getOrderCount() + 1);
-            responseLine.setStockQuantity(stock.getQuantity());
-            responseLine.setItemName(product.getName());
-            responseLine.setItemPrice(product.getPrice());
-            responseLine.setAmount(product.getPrice() * orderItemQuantity);
-            responseLine.setBrandGeneric(determineBrandGeneric(product.getData(), stock.getData()));
-            orderItem.setAmount(product.getPrice() * orderItemQuantity);
-            orderItem.setDeliveryDate(null);
-            orderItem.setNumber(i + 1);
-            orderItem.setDistInfo(getRandomDistrictInfo(stock));
-            orderItemSum += orderItem.getAmount();
-          }
+    // Get all supplying warehouses and products to ensure no invalid ids have been provided
+    List<String> supplyingWarehouseIds =
+        req.getItems().stream()
+            .map(NewOrderRequestItem::getSupplyingWarehouseId)
+            .collect(Collectors.toList());
+    List<String> productIds =
+        req.getItems().stream().map(NewOrderRequestItem::getProductId).collect(Collectors.toList());
 
-          try {
-            // Persist the changes
-            storageManager.storeAll(
-                order, district.getOrders(), customer.getOrders(), changedStocks);
-          } catch (RuntimeException e) {
-            // Detach order object from graph
-            district.getOrders().remove(order);
-            customer.getOrders().remove(order);
-            // Reset stocks
-            for (StockData originalStock : originalStocks.values()) {
-              StockData updatedStock =
-                  warehouse.getStocks().parallelStream()
-                      .filter(s -> s.getId().equals(originalStock.getId()))
-                      .findAny()
-                      .orElseThrow(DataNotFoundException::new);
-              updatedStock.setQuantity(originalStock.getQuantity());
-              updatedStock.setYearToDateBalance(originalStock.getYearToDateBalance());
-              updatedStock.setOrderCount(originalStock.getOrderCount());
-            }
-            throw e;
-          }
+    List<WarehouseData> supplyingWarehouses =
+        supplyingWarehouseIds.stream()
+            .map(warehouseStore::getReadOnly)
+            .collect(Collectors.toList());
+    List<ProductData> orderItemProducts =
+        productIds.stream().map(productStore::getReadOnly).collect(Collectors.toList());
 
-          // Prepare the response object
-          NewOrderResponse res =
-              newOrderResponse(
-                  req,
-                  order.getId(),
-                  order.getEntryDate(),
-                  warehouse.getSalesTax(),
-                  district.getSalesTax(),
-                  customer.getCredit(),
-                  customer.getDiscount(),
-                  customer.getLastName());
-          res.setOrderId(order.getId());
-          res.setOrderTimestamp(order.getEntryDate());
-          res.setTotalAmount(
-              calcOrderTotal(
-                  orderItemSum,
-                  customer.getDiscount(),
-                  warehouse.getSalesTax(),
-                  district.getSalesTax()));
-          res.setOrderItems(responseLines);
-          return res;
-        });
+    // Get all relevant stocks
+    List<StockData> stocks =
+        stockStore.stream(
+                s ->
+                    productIds.contains(s.getProductId())
+                        && supplyingWarehouseIds.contains(s.getWarehouseId()))
+            .collect(Collectors.toList());
+
+    // Create a new order
+    OrderData order = new OrderData();
+    order.setDistrictId(district.getId());
+    order.setCustomerId(customer.getId());
+    order.setEntryDate(LocalDateTime.now());
+    order.setItemCount(req.getItems().size());
+    orderStore.update(order.getId(), order);
+
+    List<NewOrderResponseItem> responseLines = new ArrayList<>(req.getItems().size());
+    double orderItemSum = 0;
+    for (int i = 0; i < req.getItems().size(); i++) {
+      NewOrderRequestItem reqItem = req.getItems().get(i);
+      WarehouseData supplyingWarehouse =
+          supplyingWarehouses.stream()
+              .filter(w -> w.getId().equals(reqItem.getSupplyingWarehouseId()))
+              .findAny()
+              .orElseThrow(IllegalStateException::new);
+      ProductData product =
+          orderItemProducts.stream()
+              .filter(p -> p.getId().equals(reqItem.getProductId()))
+              .findAny()
+              .orElseThrow(IllegalStateException::new);
+      StockData stock =
+          stocks.stream()
+              .filter(
+                  s ->
+                      s.getWarehouseId().equals(supplyingWarehouse.getId())
+                          && s.getProductId().equals(product.getId()))
+              .findAny()
+              .orElseThrow(IllegalStateException::new);
+
+      OrderItemData orderItem = new OrderItemData();
+      orderItem.setOrderId(order.getId());
+      orderItem.setNumber(i + 1);
+      orderItem.setProductId(reqItem.getProductId());
+      orderItem.setSupplyingWarehouseId(reqItem.getSupplyingWarehouseId());
+      orderItem.setDeliveryDate(null);
+      orderItem.setQuantity(reqItem.getQuantity());
+      orderItem.setAmount(orderItemProducts.get(i).getPrice() * reqItem.getQuantity());
+      orderItem.setDistInfo(getRandomDistrictInfo(stock));
+
+      orderItemStore.update(orderItem.getId(), orderItem);
+
+      NewOrderResponseItem responseLine = newOrderResponseLine(orderItem);
+      responseLines.add(responseLine);
+      int stockQuantity = stock.getQuantity();
+      int orderItemQuantity = orderItem.getQuantity();
+      stock.setQuantity(determineNewStockQuantity(stockQuantity, orderItemQuantity));
+      stock.setYearToDateBalance(stock.getYearToDateBalance() + orderItemQuantity);
+      stock.setOrderCount(stock.getOrderCount() + 1);
+      stockStore.update(stock.getId(), stock);
+      responseLine.setStockQuantity(stock.getQuantity());
+      responseLine.setItemName(product.getName());
+      responseLine.setItemPrice(product.getPrice());
+      responseLine.setAmount(product.getPrice() * orderItemQuantity);
+      responseLine.setBrandGeneric(determineBrandGeneric(product.getData(), stock.getData()));
+
+      orderItemSum += orderItem.getAmount();
+    }
+
+    // Prepare the response object
+    NewOrderResponse res =
+        newOrderResponse(
+            req,
+            order.getId(),
+            order.getEntryDate(),
+            warehouse.getSalesTax(),
+            district.getSalesTax(),
+            customer.getCredit(),
+            customer.getDiscount(),
+            customer.getLastName());
+    res.setOrderId(order.getId());
+    res.setOrderTimestamp(order.getEntryDate());
+    res.setTotalAmount(
+        calcOrderTotal(
+            orderItemSum, customer.getDiscount(), warehouse.getSalesTax(), district.getSalesTax()));
+    res.setOrderItems(responseLines);
+
+    transaction.commit();
+
+    return res;
   }
 
   private String getRandomDistrictInfo(StockData stock) {
@@ -178,32 +192,13 @@ public class MsNewOrderService extends NewOrderService {
 
   private static NewOrderResponseItem newOrderResponseLine(OrderItemData item) {
     NewOrderResponseItem requestLine = new NewOrderResponseItem();
-    requestLine.setSupplyingWarehouseId(item.getSupplyingWarehouse().getId());
-    requestLine.setItemId(item.getProduct().getId());
+    requestLine.setSupplyingWarehouseId(item.getSupplyingWarehouseId());
+    requestLine.setItemId(item.getProductId());
     requestLine.setItemPrice(0);
     requestLine.setAmount(item.getAmount());
     requestLine.setQuantity(item.getQuantity());
     requestLine.setStockQuantity(0);
     requestLine.setBrandGeneric(null);
     return requestLine;
-  }
-
-  private static List<OrderItemData> toOrderItems(
-      List<NewOrderRequestItem> lines, OrderData order) {
-    return lines.stream()
-        .map(
-            l -> {
-              OrderItemData orderItem = new OrderItemData();
-              ProductData product = new ProductData();
-              product.setId(l.getProductId());
-              WarehouseData warehouse = new WarehouseData();
-              warehouse.setId(l.getSupplyingWarehouseId());
-              orderItem.setProduct(product);
-              orderItem.setSupplyingWarehouse(warehouse);
-              orderItem.setQuantity(l.getQuantity());
-              orderItem.setOrder(order);
-              return orderItem;
-            })
-        .collect(Collectors.toList());
   }
 }

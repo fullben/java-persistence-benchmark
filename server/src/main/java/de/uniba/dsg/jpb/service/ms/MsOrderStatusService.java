@@ -1,9 +1,5 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.DataManager;
-import de.uniba.dsg.jpb.data.access.ms.DataNotFoundException;
-import de.uniba.dsg.jpb.data.access.ms.Find;
-import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
@@ -14,7 +10,10 @@ import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.OrderStatusResponse;
 import de.uniba.dsg.jpb.service.OrderStatusService;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import org.jacis.store.JacisStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -22,48 +21,81 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsOrderStatusService extends OrderStatusService {
 
-  private final DataManager dataManager;
+  private final JacisStore<String, WarehouseData> warehouseStore;
+  private final JacisStore<String, DistrictData> districtStore;
+  private final JacisStore<String, CustomerData> customerStore;
+  private final JacisStore<String, OrderData> orderStore;
+  private final JacisStore<String, OrderItemData> orderItemStore;
 
-  public MsOrderStatusService(DataManager dataManager) {
-    this.dataManager = dataManager;
+  @Autowired
+  public MsOrderStatusService(
+      JacisStore<String, WarehouseData> warehouseStore,
+      JacisStore<String, DistrictData> districtStore,
+      JacisStore<String, CustomerData> customerStore,
+      JacisStore<String, OrderData> orderStore,
+      JacisStore<String, OrderItemData> orderItemStore) {
+    this.warehouseStore = warehouseStore;
+    this.districtStore = districtStore;
+    this.customerStore = customerStore;
+    this.orderStore = orderStore;
+    this.orderItemStore = orderItemStore;
   }
 
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
-    return dataManager.read(
-        (root) -> {
-          // Fetch warehouse, district, and customer (either by id or email)
-          WarehouseData warehouse =
-              Find.warehouseById(req.getWarehouseId(), root.findAllWarehouses());
-          DistrictData district = Find.districtById(req.getDistrictId(), warehouse);
-          String customerId = req.getCustomerId();
-          CustomerData customer;
-          if (customerId == null) {
-            customer = Find.customerByEmail(req.getCustomerEmail(), district);
-          } else {
-            customer = Find.customerById(customerId, district);
-          }
+    // Fetch warehouse, district, and customer (either by id or email)
+    WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
+    DistrictData district = districtStore.getReadOnly(req.getDistrictId());
+    String customerId = req.getCustomerId();
+    CustomerData customer;
+    if (customerId == null) {
+      customer =
+          customerStore
+              .streamReadOnly()
+              .parallel()
+              .filter(c -> c.getEmail().equals(req.getCustomerEmail()))
+              .findAny()
+              .orElseThrow(
+                  () ->
+                      new IllegalStateException(
+                          "Failed to find customer with email " + req.getCustomerEmail()));
+    } else {
+      customer =
+          customerStore
+              .streamReadOnly()
+              .parallel()
+              .filter(c -> c.getId().equals(customerId))
+              .findAny()
+              .orElseThrow(
+                  () -> new IllegalStateException("Failed to find customer with id " + customerId));
+    }
 
-          // Find the most recent order of the customer and parse the delivery dates (and some other
-          // info)
-          OrderData order =
-              Find.mostRecentOrderOfCustomer(customer.getId(), district)
-                  .orElseThrow(DataNotFoundException::new);
-          return toOrderStatusResponse(
-              req, order, customer, toOrderItemStatusResponse(order.getItems()));
-        });
+    // Find the most recent order of the customer and parse the delivery dates (and some other
+    // info)
+    OrderData order =
+        orderStore
+            .streamReadOnly()
+            .parallel()
+            .filter(o -> o.getCustomerId().equals(customer.getId()))
+            .max(Comparator.comparing(OrderData::getEntryDate))
+            .orElseThrow(IllegalStateException::new);
+
+    List<OrderItemData> orderItems =
+        orderItemStore.getAllReadOnly(i -> i.getOrderId().equals(order.getId()));
+
+    return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(orderItems));
   }
 
   private static List<OrderItemStatusResponse> toOrderItemStatusResponse(
       List<OrderItemData> orderItems) {
     List<OrderItemStatusResponse> responses = new ArrayList<>(orderItems.size());
-    for (OrderItemData entity : orderItems) {
+    for (OrderItemData item : orderItems) {
       OrderItemStatusResponse res = new OrderItemStatusResponse();
-      res.setSupplyingWarehouseId(entity.getSupplyingWarehouse().getId());
-      res.setProductId(entity.getProduct().getId());
-      res.setQuantity(entity.getQuantity());
-      res.setAmount(entity.getAmount());
-      res.setDeliveryDate(entity.getDeliveryDate());
+      res.setSupplyingWarehouseId(item.getSupplyingWarehouseId());
+      res.setProductId(item.getProductId());
+      res.setQuantity(item.getQuantity());
+      res.setAmount(item.getAmount());
+      res.setDeliveryDate(item.getDeliveryDate());
       responses.add(res);
     }
     return responses;
@@ -84,8 +116,7 @@ public class MsOrderStatusService extends OrderStatusService {
     res.setCustomerBalance(customer.getBalance());
     res.setOrderId(order.getId());
     res.setOrderEntryDate(order.getEntryDate());
-    CarrierData carrier = order.getCarrier();
-    res.setOrderCarrierId(carrier != null ? carrier.getId() : null);
+    res.setOrderCarrierId(order.getCarrierId());
     res.setItemStatus(itemStatusResponses);
     return res;
   }

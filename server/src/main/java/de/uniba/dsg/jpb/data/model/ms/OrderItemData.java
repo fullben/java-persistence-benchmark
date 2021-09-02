@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.data.model.ms;
 
 import java.time.LocalDateTime;
+import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
  * Defines {@link ProductData Product}, quantity, supplying {@link WarehouseData Warehouse} and
@@ -8,23 +9,24 @@ import java.time.LocalDateTime;
  *
  * @author Benedikt Full
  */
-public class OrderItemData extends BaseData {
+public class OrderItemData extends BaseData implements JacisCloneable<OrderItemData> {
 
-  private OrderData order;
+  private String orderId;
   private int number;
-  private ProductData product;
-  private WarehouseData supplyingWarehouse;
+  private String productId;
+  private String supplyingWarehouseId;
   private LocalDateTime deliveryDate;
   private int quantity;
   private double amount;
   private String distInfo;
 
-  public OrderData getOrder() {
-    return order;
+  public String getOrderId() {
+    return orderId;
   }
 
-  public void setOrder(OrderData order) {
-    this.order = order;
+  public void setOrderId(String orderId) {
+    checkWritable();
+    this.orderId = orderId;
   }
 
   public int getNumber() {
@@ -32,23 +34,26 @@ public class OrderItemData extends BaseData {
   }
 
   public void setNumber(int number) {
+    checkWritable();
     this.number = number;
   }
 
-  public ProductData getProduct() {
-    return product;
+  public String getProductId() {
+    return productId;
   }
 
-  public void setProduct(ProductData product) {
-    this.product = product;
+  public void setProductId(String productId) {
+    checkWritable();
+    this.productId = productId;
   }
 
-  public WarehouseData getSupplyingWarehouse() {
-    return supplyingWarehouse;
+  public String getSupplyingWarehouseId() {
+    return supplyingWarehouseId;
   }
 
-  public void setSupplyingWarehouse(WarehouseData supplyingWarehouse) {
-    this.supplyingWarehouse = supplyingWarehouse;
+  public void setSupplyingWarehouseId(String supplyingWarehouseId) {
+    checkWritable();
+    this.supplyingWarehouseId = supplyingWarehouseId;
   }
 
   public LocalDateTime getDeliveryDate() {
@@ -56,6 +61,7 @@ public class OrderItemData extends BaseData {
   }
 
   public void setDeliveryDate(LocalDateTime deliveryDate) {
+    checkWritable();
     this.deliveryDate = deliveryDate;
   }
 
@@ -64,6 +70,7 @@ public class OrderItemData extends BaseData {
   }
 
   public void setQuantity(int quantity) {
+    checkWritable();
     this.quantity = quantity;
   }
 
@@ -72,6 +79,7 @@ public class OrderItemData extends BaseData {
   }
 
   public void setAmount(double amount) {
+    checkWritable();
     this.amount = amount;
   }
 
@@ -80,6 +88,12 @@ public class OrderItemData extends BaseData {
   }
 
   public void setDistInfo(String distInfo) {
+    checkWritable();
     this.distInfo = distInfo;
+  }
+
+  @Override
+  public OrderItemData clone() {
+    return (OrderItemData) super.clone();
   }
 }
