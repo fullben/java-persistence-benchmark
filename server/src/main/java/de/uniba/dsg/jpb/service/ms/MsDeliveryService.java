@@ -11,6 +11,7 @@ import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.jpb.service.DeliveryService;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,24 +62,27 @@ public class MsDeliveryService extends DeliveryService {
           List<DistrictData> districts =
               districtStore
                   .streamReadOnly(d -> d.getWarehouseId().equals(warehouse.getId()))
+                  .parallel()
                   .collect(Collectors.toList());
           CarrierData carrier = carrierStore.getReadOnly(req.getCarrierId());
 
-          // Attempt to deliver order from each district
+          // Find an order for each district (the oldest unfulfilled order)
+          List<OrderData> orders = new ArrayList<>();
           for (DistrictData district : districts) {
+            orderStore.stream(o -> o.getDistrictId().equals(district.getId()) && !o.isFulfilled())
+                .min(Comparator.comparing(OrderData::getEntryDate))
+                .ifPresent(orders::add);
+          }
+          // Get the order items of all orders
+          List<String> orderIds =
+              orders.stream().map(OrderData::getId).collect(Collectors.toList());
+          List<OrderItemData> allOrderItems =
+              orderItemStore.stream(i -> orderIds.contains(i.getOrderId()))
+                  .collect(Collectors.toList());
+
+          // Actually deliver the orders
+          for (OrderData order : orders) {
             double amountSum = 0;
-            // Find oldest new/unfulfilled order
-
-            OrderData order =
-                orderStore.stream(
-                        o -> o.getDistrictId().equals(district.getId()) && !o.isFulfilled())
-                    .min(Comparator.comparing(OrderData::getEntryDate))
-                    .orElse(null);
-            if (order == null) {
-              // No unfulfilled orders for this district, do nothing
-              continue;
-            }
-
             // Update fulfillment status and carrier of order
             order.setCarrierId(carrier.getId());
             order.setFulfilled(true);
@@ -86,29 +90,23 @@ public class MsDeliveryService extends DeliveryService {
 
             // For each order item, set delivery date to now and sum amount
             List<OrderItemData> orderItems =
-                orderItemStore.stream(i -> i.getOrderId().equals(order.getId()))
+                allOrderItems.stream()
+                    .filter(i -> i.getOrderId().equals(order.getId()))
+                    .peek(i -> i.setDeliveryDate(LocalDateTime.now()))
                     .collect(Collectors.toList());
             if (orderItems.isEmpty()) {
               throw new IllegalStateException("Order has no items");
             }
-            for (OrderItemData orderItem : orderItems) {
-              orderItem.setDeliveryDate(LocalDateTime.now());
-              amountSum += orderItem.getAmount();
-              orderItemStore.update(orderItem.getId(), orderItem);
-            }
+            amountSum += orderItems.stream().mapToDouble(OrderItemData::getAmount).sum();
 
             // Update customer balance and delivery count
-            CustomerData customer =
-                customerStore.stream(c -> c.getId().equals(order.getCustomerId()))
-                    .findAny()
-                    .orElseThrow(
-                        () -> {
-                          return new IllegalStateException();
-                        });
+            CustomerData customer = customerStore.get(order.getCustomerId());
             customer.setBalance(customer.getBalance() + amountSum);
             customer.setDeliveryCount(customer.getDeliveryCount() + 1);
             customerStore.update(customer.getId(), customer);
           }
+          orderItemStore.update(allOrderItems, OrderItemData::getId);
+
           return new DeliveryResponse(req);
         });
   }

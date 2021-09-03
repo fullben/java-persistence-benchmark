@@ -46,21 +46,21 @@ public class MsStockLevelService extends StockLevelService {
     WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
     DistrictData district = districtStore.getReadOnly(req.getDistrictId());
     // Find the most 20 recent orders for the district
-    List<OrderData> orders =
+    List<String> orderIds =
         orderStore
             .streamReadOnly(o -> o.getDistrictId().equals(district.getId()))
+            .parallel()
             .sorted(Comparator.comparing(OrderData::getEntryDate))
             .limit(20)
+            .map(OrderData::getId)
             .collect(Collectors.toList());
 
     // Find the corresponding stock objects and count the ones below the given threshold
     List<String> productIds =
-        orders.stream()
-            .flatMap(
-                o ->
-                    orderItemStore
-                        .streamReadOnly(i -> i.getOrderId().equals(o.getId()))
-                        .map(OrderItemData::getProductId))
+        orderItemStore
+            .streamReadOnly(i -> orderIds.contains(i.getOrderId()))
+            .parallel()
+            .map(OrderItemData::getProductId)
             .distinct()
             .collect(Collectors.toList());
     int lowStockCount =
