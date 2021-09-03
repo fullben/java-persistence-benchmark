@@ -68,7 +68,9 @@ public class MsResourcesController implements ResourcesController {
 
   @Override
   public Iterable<ProductRepresentation> getProducts() {
-    return productStore.getAllReadOnly().parallelStream()
+    return productStore
+        .streamReadOnly()
+        .parallel()
         .map(p -> modelMapper.map(p, ProductRepresentation.class))
         .collect(Collectors.toList());
   }
@@ -96,15 +98,13 @@ public class MsResourcesController implements ResourcesController {
     if (!warehouseStore.containsKey(warehouseId)) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    return districtStore.computeAtomic(
-        () -> {
-          List<DistrictRepresentation> districts =
-              districtStore
-                  .streamReadOnly(d -> d.getWarehouseId().equals(warehouseId))
-                  .map(d -> modelMapper.map(d, DistrictRepresentation.class))
-                  .collect(Collectors.toList());
-          return ResponseEntity.ok(districts);
-        });
+    List<DistrictRepresentation> districts =
+        districtStore
+            .streamReadOnly(d -> d.getWarehouseId().equals(warehouseId))
+            .parallel()
+            .map(d -> modelMapper.map(d, DistrictRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(districts);
   }
 
   @Override
@@ -112,15 +112,13 @@ public class MsResourcesController implements ResourcesController {
     if (!warehouseStore.containsKey(warehouseId)) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    return stockStore.computeAtomic(
-        () -> {
-          List<StockRepresentation> stocks =
-              stockStore
-                  .streamReadOnly(s -> s.getWarehouseId().equals(warehouseId))
-                  .map(s -> modelMapper.map(s, StockRepresentation.class))
-                  .collect(Collectors.toList());
-          return ResponseEntity.ok(stocks);
-        });
+    List<StockRepresentation> stocks =
+        stockStore
+            .streamReadOnly(s -> s.getWarehouseId().equals(warehouseId))
+            .parallel()
+            .map(s -> modelMapper.map(s, StockRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(stocks);
   }
 
   @Override
@@ -149,6 +147,7 @@ public class MsResourcesController implements ResourcesController {
     List<OrderRepresentation> orders =
         orderStore
             .streamReadOnly(o -> o.getDistrictId().equals(districtId))
+            .parallel()
             .map(o -> modelMapper.map(o, OrderRepresentation.class))
             .collect(Collectors.toList());
     return ResponseEntity.ok(orders);
