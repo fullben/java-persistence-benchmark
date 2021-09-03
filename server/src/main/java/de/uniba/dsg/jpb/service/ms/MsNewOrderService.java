@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.access.ms.Transaction;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
@@ -57,7 +58,9 @@ public class MsNewOrderService extends NewOrderService {
 
   @Override
   public NewOrderResponse process(NewOrderRequest req) {
-    return container.withLocalTx(
+    Transaction tx = new Transaction(container);
+    tx.setMaxTries(5);
+    return tx.commit(
         () -> {
           // Get warehouse, district and customer
           WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());

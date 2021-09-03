@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.access.ms.Transaction;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -51,7 +52,9 @@ public class MsDeliveryService extends DeliveryService {
 
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
-    return container.withLocalTx(
+    Transaction tx = new Transaction(container);
+    tx.setMaxTries(5);
+    return tx.commit(
         () -> {
           // Find warehouse and carrier to be employed for delivery
           WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());

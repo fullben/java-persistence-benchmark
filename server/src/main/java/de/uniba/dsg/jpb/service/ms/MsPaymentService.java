@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.access.ms.Transaction;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.PaymentData;
@@ -40,7 +41,9 @@ public class MsPaymentService extends PaymentService {
 
   @Override
   public PaymentResponse process(PaymentRequest req) {
-    return container.withLocalTx(
+    Transaction tx = new Transaction(container);
+    tx.setMaxTries(5);
+    return tx.commit(
         () -> {
           // Find customer (either by id or email)
           String customerId = req.getCustomerId();
