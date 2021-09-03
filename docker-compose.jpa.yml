@@ -8,12 +8,20 @@ services:
       - "8080:8080"
     environment:
       JPB_PERSISTENCE_MODE: "jpa"
+      JPB_MODEL_INITIALIZE: "true"
+      JPB_MODEL_WAREHOUSE-COUNT: "10"
+      JPB_MODEL_FULL-SCALE: "true"
       JPB_JPA_DATASOURCE_URL: "jdbc:postgresql://db:5432/wholesale_supplier"
+      JPB_JPA_DATASOURCE_DRIVER-CLASS-NAME: "org.postgresql.Driver"
       JPB_JPA_DATASOURCE_USERNAME: "postgres"
       JPB_JPA_DATASOURCE_PASSWORD: "password"
   db:
     image: "postgres:13.4"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "password"
       POSTGRES_DB: "wholesale_supplier"
+volumes:
+  postgres_data:

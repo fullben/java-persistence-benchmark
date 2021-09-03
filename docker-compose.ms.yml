@@ -6,3 +6,12 @@ services:
       - "8080:8080"
     environment:
       JPB_PERSISTENCE_MODE: "ms"
+      JPB_MODEL_INITIALIZE: "true"
+      JPB_MODEL_WAREHOUSE-COUNT: "10"
+      JPB_MODEL_FULL-SCALE: "true"
+      JPB_MS_STORAGE_DIR: "storage"
+      JPB_MS_STORAGE_STARTUP: "clear"
+    volumes:
+      - microstream_storage:/home/app/${JPB_MS_STORAGE_DIR}
+volumes:
+  microstream_storage:
