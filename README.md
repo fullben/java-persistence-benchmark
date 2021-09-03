@@ -44,7 +44,7 @@ For a local development setup, the following software is required:
 * A Java IDE (e.g. [IntelliJ IDEA](https://www.jetbrains.com/idea/))
 * [JMeter](https://jmeter.apache.org/) (tested with version 5.4.1)
 
-Make sure that the `spring.profiles.active` property in the `application.yml` file is set to `dev`.
+Make sure that the `spring.profiles.active` property in the `application.properties` file is set to `dev`.
 
 Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
 
