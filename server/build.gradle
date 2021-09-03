@@ -10,8 +10,12 @@ sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
-    flatDir {
-        dirs 'libs'
+    maven {
+        credentials {
+            username "JanWiemer"
+            password "3a2355ceaed919fb4ff19f8ea14f98424c7aba8a"
+        }
+        url "https://maven.pkg.github.com/janwiemer/jacis"
     }
 }
 
@@ -28,9 +32,7 @@ dependencies {
     // MicroStream persistence
     implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
     implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
-    implementation name: 'jacis-2.0.7-SNAPSHOT'
-    implementation name: 'jacis-2.0.7-SNAPSHOT-javadoc'
-    implementation name: 'jacis-2.0.7-SNAPSHOT-sources'
+    implementation 'org.jacis:jacis:2.0.7'
     // Automatic mapping between model classes
     implementation 'org.modelmapper:modelmapper:2.4.4'
     // API documentation and web interface

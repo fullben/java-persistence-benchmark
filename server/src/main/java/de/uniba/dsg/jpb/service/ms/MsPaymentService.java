@@ -9,7 +9,6 @@ import de.uniba.dsg.jpb.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.jpb.service.PaymentService;
 import java.time.LocalDateTime;
 import org.jacis.container.JacisContainer;
-import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,78 +40,73 @@ public class MsPaymentService extends PaymentService {
 
   @Override
   public PaymentResponse process(PaymentRequest req) {
-    JacisLocalTransaction transaction = container.beginLocalTransaction("Payment");
+    return container.withLocalTx(
+        () -> {
+          // Find warehouse, district, and customer (either by id or email)
+          WarehouseData warehouse = warehouseStore.get(req.getWarehouseId());
+          DistrictData district = districtStore.get(req.getDistrictId());
+          String customerId = req.getCustomerId();
+          CustomerData customer;
+          if (customerId == null) {
+            customer =
+                customerStore.stream(c -> c.getEmail().equals(req.getCustomerEmail()))
+                    .findAny()
+                    .orElseThrow(
+                        () ->
+                            new IllegalStateException(
+                                "Failed to find customer with email " + req.getCustomerEmail()));
+          } else {
+            customer =
+                customerStore.stream(c -> c.getId().equals(customerId))
+                    .findAny()
+                    .orElseThrow(
+                        () ->
+                            new IllegalStateException(
+                                "Failed to find customer with id " + customerId));
+          }
 
-    // Find warehouse, district, and customer (either by id or email)
-    WarehouseData warehouse = warehouseStore.get(req.getWarehouseId());
-    DistrictData district = districtStore.get(req.getDistrictId());
-    String customerId = req.getCustomerId();
-    CustomerData customer;
-    if (customerId == null) {
-      customer =
-          customerStore.stream(c -> c.getEmail().equals(req.getCustomerEmail()))
-              .findAny()
-              .orElseThrow(
-                  () -> {
-                    transaction.rollback();
-                    return new IllegalStateException(
-                        "Failed to find customer with email " + req.getCustomerEmail());
-                  });
-    } else {
-      customer =
-          customerStore.stream(c -> c.getId().equals(customerId))
-              .findAny()
-              .orElseThrow(
-                  () -> {
-                    transaction.rollback();
-                    return new IllegalStateException(
-                        "Failed to find customer with id " + customerId);
-                  });
-    }
+          // Update warehouse and district year to data balance
+          warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
+          warehouseStore.update(warehouse.getId(), warehouse);
+          district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
+          districtStore.update(district.getId(), district);
 
-    // Update warehouse and district year to data balance
-    warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
-    warehouseStore.update(warehouse.getId(), warehouse);
-    district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
-    districtStore.update(district.getId(), district);
+          // Update customer balance, year to data payment, and payment count
+          final double customerBalance = customer.getBalance();
+          final double customerYearToDatePayment = customer.getYearToDatePayment();
+          customer.setBalance(customerBalance - req.getAmount());
+          customer.setYearToDatePayment(customerYearToDatePayment + req.getAmount());
+          customer.setPaymentCount(customer.getPaymentCount() + 1);
+          customerStore.update(customer.getId(), customer);
+          // Update customer data if the customer has bad credit
+          final String customerData = customer.getData();
+          if (customerHasBadCredit(customer.getCredit())) {
+            customer.setData(
+                buildNewCustomerData(
+                    customer.getId(),
+                    customer.getDistrictId(),
+                    customer.getWarehouseId(),
+                    req.getAmount(),
+                    customerData));
+          }
 
-    // Update customer balance, year to data payment, and payment count
-    final double customerBalance = customer.getBalance();
-    final double customerYearToDatePayment = customer.getYearToDatePayment();
-    customer.setBalance(customerBalance - req.getAmount());
-    customer.setYearToDatePayment(customerYearToDatePayment + req.getAmount());
-    customer.setPaymentCount(customer.getPaymentCount() + 1);
-    customerStore.update(customer.getId(), customer);
-    // Update customer data if the customer has bad credit
-    final String customerData = customer.getData();
-    if (customerHasBadCredit(customer.getCredit())) {
-      customer.setData(
-          buildNewCustomerData(
-              customer.getId(),
-              customer.getDistrictId(),
-              customer.getWarehouseId(),
-              req.getAmount(),
-              customerData));
-    }
+          // Create a new entry for this payment
+          PaymentData payment = new PaymentData();
+          payment.setCustomerId(customer.getId());
+          payment.setDistrictId(district.getId());
+          payment.setDate(LocalDateTime.now());
+          payment.setAmount(req.getAmount());
+          payment.setData(buildPaymentData(warehouse.getName(), district.getName()));
+          paymentStore.update(payment.getId(), payment);
 
-    // Create a new entry for this payment
-    PaymentData payment = new PaymentData();
-    payment.setCustomerId(customer.getId());
-    payment.setDistrictId(district.getId());
-    payment.setDate(LocalDateTime.now());
-    payment.setAmount(req.getAmount());
-    payment.setData(buildPaymentData(warehouse.getName(), district.getName()));
-    paymentStore.update(payment.getId(), payment);
-
-    transaction.commit();
-
-    PaymentResponse res = new PaymentResponse(req);
-    res.setPaymentId(payment.getId());
-    res.setCustomerId(customer.getId());
-    res.setCustomerCredit(customer.getCredit());
-    res.setCustomerCreditLimit(customer.getCreditLimit());
-    res.setCustomerDiscount(customer.getDiscount());
-    res.setCustomerBalance(customer.getBalance());
-    return res;
+          PaymentResponse res = new PaymentResponse(req);
+          res.setPaymentId(payment.getId());
+          res.setCustomerId(customer.getId());
+          res.setCustomerCredit(customer.getCredit());
+          res.setCustomerCreditLimit(customer.getCreditLimit());
+          res.setCustomerDiscount(customer.getDiscount());
+          res.setCustomerBalance(customer.getBalance());
+          return res;
+        });
   }
 }

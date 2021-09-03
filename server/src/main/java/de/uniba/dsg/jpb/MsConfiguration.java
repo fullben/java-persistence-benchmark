@@ -23,7 +23,6 @@ import org.jacis.container.JacisContainer;
 import org.jacis.container.JacisObjectTypeSpec;
 import org.jacis.extension.persistence.microstream.MicrostreamPersistenceAdapter;
 import org.jacis.extension.persistence.microstream.MicrostreamStorage;
-import org.jacis.plugin.objectadapter.cloning.JacisCloningObjectAdapter;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -128,8 +127,7 @@ public class MsConfiguration {
   public JacisStore<String, CarrierData> carrierStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, CarrierData, CarrierData> carrierTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, CarrierData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, CarrierData.class);
     carrierTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(carrierTypeSpec).getStore();
   }
@@ -138,8 +136,7 @@ public class MsConfiguration {
   public JacisStore<String, ProductData> productStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, ProductData, ProductData> productTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, ProductData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, ProductData.class);
     productTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(productTypeSpec).getStore();
   }
@@ -148,8 +145,7 @@ public class MsConfiguration {
   public JacisStore<String, WarehouseData> warehouseStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, WarehouseData, WarehouseData> warehouseTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, WarehouseData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, WarehouseData.class);
     warehouseTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(warehouseTypeSpec).getStore();
   }
@@ -158,7 +154,7 @@ public class MsConfiguration {
   public JacisStore<String, StockData> stockStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, StockData, StockData> stockTypeSpec =
-        new JacisObjectTypeSpec<>(String.class, StockData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, StockData.class);
     stockTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(stockTypeSpec).getStore();
   }
@@ -167,8 +163,7 @@ public class MsConfiguration {
   public JacisStore<String, DistrictData> districtStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, DistrictData, DistrictData> districtTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, DistrictData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, DistrictData.class);
     districtTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(districtTypeSpec).getStore();
   }
@@ -177,8 +172,7 @@ public class MsConfiguration {
   public JacisStore<String, CustomerData> customerStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, CustomerData, CustomerData> customerTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, CustomerData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, CustomerData.class);
     customerTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(customerTypeSpec).getStore();
   }
@@ -187,7 +181,7 @@ public class MsConfiguration {
   public JacisStore<String, OrderData> orderStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, OrderData, OrderData> orderTypeSpec =
-        new JacisObjectTypeSpec<>(String.class, OrderData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, OrderData.class);
     orderTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(orderTypeSpec).getStore();
   }
@@ -196,8 +190,7 @@ public class MsConfiguration {
   public JacisStore<String, OrderItemData> orderItemStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, OrderItemData, OrderItemData> orderItemTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, OrderItemData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, OrderItemData.class);
     orderItemTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(orderItemTypeSpec).getStore();
   }
@@ -206,8 +199,7 @@ public class MsConfiguration {
   public JacisStore<String, PaymentData> paymentStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, PaymentData, PaymentData> paymentTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, PaymentData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, PaymentData.class);
     paymentTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(paymentTypeSpec).getStore();
   }
@@ -216,8 +208,7 @@ public class MsConfiguration {
   public JacisStore<String, EmployeeData> employeeStore(
       JacisContainer container, MicrostreamStorage storage) {
     JacisObjectTypeSpec<String, EmployeeData, EmployeeData> employeeTypeSpec =
-        new JacisObjectTypeSpec<>(
-            String.class, EmployeeData.class, new JacisCloningObjectAdapter<>());
+        new JacisObjectTypeSpec<>(String.class, EmployeeData.class);
     employeeTypeSpec.setPersistenceAdapter(new MicrostreamPersistenceAdapter<>(storage));
     return container.createStore(employeeTypeSpec).getStore();
   }

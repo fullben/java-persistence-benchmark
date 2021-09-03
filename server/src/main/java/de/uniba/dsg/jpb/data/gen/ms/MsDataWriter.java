@@ -65,15 +65,15 @@ public class MsDataWriter implements DataWriter<JpaToMsConverter> {
   public void writeAll(JpaToMsConverter converter) {
     container.withLocalTx(
         () -> {
-          converter.getCarriers().forEach(c -> carrierStore.update(c.getId(), c));
-          converter.getProducts().forEach(p -> productStore.update(p.getId(), p));
-          converter.getWarehouses().forEach(w -> warehouseStore.update(w.getId(), w));
-          converter.getStocks().forEach(s -> stockStore.update(s.getId(), s));
-          converter.getDistricts().forEach(d -> districtStore.update(d.getId(), d));
-          converter.getEmployees().forEach(e -> employeeStore.update(e.getId(), e));
-          converter.getCustomers().forEach(c -> customerStore.update(c.getId(), c));
-          converter.getOrders().forEach(o -> orderStore.update(o.getId(), o));
-          converter.getOrderItems().forEach(i -> orderItemStore.update(i.getId(), i));
+          carrierStore.update(converter.getCarriers(), CarrierData::getId);
+          productStore.update(converter.getProducts(), ProductData::getId);
+          warehouseStore.update(converter.getWarehouses(), WarehouseData::getId);
+          stockStore.update(converter.getStocks(), StockData::getId);
+          districtStore.update(converter.getDistricts(), DistrictData::getId);
+          employeeStore.update(converter.getEmployees(), EmployeeData::getId);
+          customerStore.update(converter.getCustomers(), CustomerData::getId);
+          orderStore.update(converter.getOrders(), OrderData::getId);
+          orderItemStore.update(converter.getOrderItems(), OrderItemData::getId);
         });
   }
 }
