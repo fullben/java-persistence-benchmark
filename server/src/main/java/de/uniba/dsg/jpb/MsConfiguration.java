@@ -48,9 +48,6 @@ import org.springframework.core.env.Environment;
 public class MsConfiguration {
 
   private static final Logger LOG = LogManager.getLogger(MsConfiguration.class);
-  private static final String STARTUP_BEHAVIOR_KEY = "jpb.ms.storage.startup";
-  private static final String STARTUP_BEHAVIOR_LOAD = "load";
-  private static final String STARTUP_BEHAVIOR_CLEAR = "clear";
 
   private final Environment environment;
 
@@ -61,21 +58,6 @@ public class MsConfiguration {
 
   @Bean
   public EmbeddedStorageManager embeddedStorageManager() {
-    String clearStorageValue = environment.getProperty(STARTUP_BEHAVIOR_KEY);
-    boolean clearStorage;
-    if (clearStorageValue == null || clearStorageValue.isBlank()) {
-      clearStorage = false;
-    } else {
-      if (clearStorageValue.equals(STARTUP_BEHAVIOR_LOAD)) {
-        clearStorage = false;
-      } else if (clearStorageValue.equals(STARTUP_BEHAVIOR_CLEAR)) {
-        clearStorage = true;
-      } else {
-        throw new IllegalArgumentException(
-            "Invalid value for property " + STARTUP_BEHAVIOR_KEY + ": " + clearStorageValue);
-      }
-    }
-
     NioFileSystem fileSystem = NioFileSystem.New();
     EmbeddedStorageFoundation<?> foundation =
         EmbeddedStorageFoundation.New()
@@ -103,12 +85,6 @@ public class MsConfiguration {
     storageManager.start();
     stopwatch.stop();
     LOG.info("Started MicroStream storage manager, took {}", stopwatch.getDuration());
-
-    if (clearStorage) {
-      storageManager.setRoot(null);
-      storageManager.storeRoot();
-      LOG.info("Cleared MicroStream persistent storage");
-    }
 
     return storageManager;
   }
