@@ -42,9 +42,7 @@ public class MsPaymentService extends PaymentService {
   public PaymentResponse process(PaymentRequest req) {
     return container.withLocalTx(
         () -> {
-          // Find warehouse, district, and customer (either by id or email)
-          WarehouseData warehouse = warehouseStore.get(req.getWarehouseId());
-          DistrictData district = districtStore.get(req.getDistrictId());
+          // Find customer (either by id or email)
           String customerId = req.getCustomerId();
           CustomerData customer;
           if (customerId == null) {
@@ -66,8 +64,10 @@ public class MsPaymentService extends PaymentService {
           }
 
           // Update warehouse and district year to data balance
+          WarehouseData warehouse = warehouseStore.get(req.getWarehouseId());
           warehouse.setYearToDateBalance(warehouse.getYearToDateBalance() + req.getAmount());
           warehouseStore.update(warehouse.getId(), warehouse);
+          DistrictData district = districtStore.get(req.getDistrictId());
           district.setYearToDateBalance(district.getYearToDateBalance() + req.getAmount());
           districtStore.update(district.getId(), district);
 
