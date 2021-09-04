@@ -18,7 +18,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, String> {
 
   @Query(
       value =
-          "SELECT * FROM orders WHERE district_id = :districtId AND fulfilled = false ORDER BY entrydate ASC LIMIT 1",
+          "SELECT * FROM orders WHERE fulfilled = false AND district_id = :districtId ORDER BY entrydate ASC LIMIT 1",
       nativeQuery = true)
   Optional<OrderEntity> findOldestUnfulfilledOrderOfDistrict(String districtId);
 
