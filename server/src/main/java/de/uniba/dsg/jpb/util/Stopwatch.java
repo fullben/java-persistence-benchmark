@@ -60,7 +60,11 @@ public class Stopwatch {
     } else {
       long secs = duration.toSecondsPart();
       if (secs > 0) {
-        return toSecondsAndMillisString(duration.toSeconds(), duration.toMillisPart()) + " seconds";
+        int millisPart = duration.toMillisPart();
+        if (millisPart > 0) {
+          return toSecondsAndMillisString(duration.toSeconds(), duration.toMillisPart()) + " seconds";
+        }
+        return duration.toSeconds() + " seconds";
       } else {
         long millis = duration.toMillis();
         if (millis > 0) {

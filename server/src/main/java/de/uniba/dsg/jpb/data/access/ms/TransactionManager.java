@@ -16,14 +16,14 @@ import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
  *
  * @author Benedikt Full
  */
-public class Transaction {
+public class TransactionManager {
 
-  private static final Logger LOG = LogManager.getLogger(Transaction.class);
+  private static final Logger LOG = LogManager.getLogger(TransactionManager.class);
   private JacisContainer container;
   private int maxTries;
   private boolean closed;
 
-  public Transaction(JacisContainer container) {
+  public TransactionManager(JacisContainer container) {
     this.container = container;
     maxTries = 1;
     closed = false;
@@ -54,7 +54,7 @@ public class Transaction {
 
   private <T> T executeAndCommit(Supplier<T> transaction) {
     if (closed) {
-      throw new IllegalStateException("Transaction is closed");
+      throw new IllegalStateException("Transaction manager is closed");
     }
     final int maxTries = this.maxTries;
     int performedTries = 0;

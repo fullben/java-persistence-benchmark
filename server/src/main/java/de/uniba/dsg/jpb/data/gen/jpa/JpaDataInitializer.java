@@ -42,6 +42,6 @@ public class JpaDataInitializer extends DataInitializer {
     stopwatch.start();
     databaseWriter.writeAll(jpaDataGenerator);
     stopwatch.stop();
-    LOG.info("Successfully wrote model data to database, took {}", stopwatch.getDuration());
+    LOG.info("Wrote model data to database, took {}", stopwatch.getDuration());
   }
 }

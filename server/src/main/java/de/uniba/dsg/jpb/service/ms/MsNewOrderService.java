@@ -1,6 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.Transaction;
+import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
 import de.uniba.dsg.jpb.data.model.ms.OrderData;
@@ -58,9 +58,9 @@ public class MsNewOrderService extends NewOrderService {
 
   @Override
   public NewOrderResponse process(NewOrderRequest req) {
-    Transaction tx = new Transaction(container);
-    tx.setMaxTries(5);
-    return tx.commit(
+    TransactionManager transactionManager = new TransactionManager(container);
+    transactionManager.setMaxTries(5);
+    return transactionManager.commit(
         () -> {
           // Get warehouse, district and customer
           WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
@@ -112,12 +112,18 @@ public class MsNewOrderService extends NewOrderService {
                 supplyingWarehouses.stream()
                     .filter(w -> w.getId().equals(reqItem.getSupplyingWarehouseId()))
                     .findAny()
-                    .orElseThrow(IllegalStateException::new);
+                    .orElseThrow(
+                        () ->
+                            new IllegalStateException(
+                                "Failed to find warehouse " + reqItem.getSupplyingWarehouseId()));
             ProductData product =
                 orderItemProducts.stream()
                     .filter(p -> p.getId().equals(reqItem.getProductId()))
                     .findAny()
-                    .orElseThrow(IllegalStateException::new);
+                    .orElseThrow(
+                        () ->
+                            new IllegalStateException(
+                                "Failed to find product " + reqItem.getProductId()));
             StockData stock =
                 stocks.stream()
                     .filter(
@@ -125,7 +131,13 @@ public class MsNewOrderService extends NewOrderService {
                             s.getWarehouseId().equals(supplyingWarehouse.getId())
                                 && s.getProductId().equals(product.getId()))
                     .findAny()
-                    .orElseThrow(IllegalStateException::new);
+                    .orElseThrow(
+                        () ->
+                            new IllegalStateException(
+                                "Failed to find stock for product "
+                                    + product.getId()
+                                    + " of warehouse "
+                                    + supplyingWarehouse.getId()));
 
             OrderItemData orderItem = new OrderItemData();
             orderItem.setOrderId(order.getId());

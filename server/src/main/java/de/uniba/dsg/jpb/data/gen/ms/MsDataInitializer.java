@@ -41,12 +41,10 @@ public class MsDataInitializer extends DataInitializer {
     JpaToMsConverter converter = new JpaToMsConverter(jpaDataGenerator);
     converter.convert();
     stopwatch.stop();
-    LOG.info(
-        "Successfully converted model data to MicroStream data, took {}", stopwatch.getDuration());
+    LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
     stopwatch.start();
     dataWriter.writeAll(converter);
     stopwatch.stop();
-    LOG.info(
-        "Successfully wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
+    LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
   }
 }
