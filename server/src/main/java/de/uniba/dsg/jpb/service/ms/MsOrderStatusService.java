@@ -12,6 +12,7 @@ import de.uniba.dsg.jpb.service.OrderStatusService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -81,7 +82,10 @@ public class MsOrderStatusService extends OrderStatusService {
             .orElseThrow(IllegalStateException::new);
 
     List<OrderItemData> orderItems =
-        orderItemStore.getAllReadOnly(i -> i.getOrderId().equals(order.getId()));
+        orderItemStore
+            .streamReadOnly(i -> i.getOrderId().equals(order.getId()))
+            .parallel()
+            .collect(Collectors.toList());
 
     return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(orderItems));
   }

@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.access.ms.JacisStores;
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
@@ -11,9 +12,9 @@ import de.uniba.dsg.jpb.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.jpb.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.jpb.service.DeliveryService;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
@@ -67,17 +68,25 @@ public class MsDeliveryService extends DeliveryService {
           CarrierData carrier = carrierStore.getReadOnly(req.getCarrierId());
 
           // Find an order for each district (the oldest unfulfilled order)
-          List<OrderData> orders = new ArrayList<>();
-          for (DistrictData district : districts) {
-            orderStore.stream(o -> o.getDistrictId().equals(district.getId()) && !o.isFulfilled())
-                .min(Comparator.comparing(OrderData::getEntryDate))
-                .ifPresent(orders::add);
-          }
-          // Get the order items of all orders
           List<String> orderIds =
-              orders.stream().map(OrderData::getId).collect(Collectors.toList());
+              districts.parallelStream()
+                  .map(
+                      d ->
+                          orderStore
+                              .streamReadOnly(
+                                  o -> o.getDistrictId().equals(d.getId()) && !o.isFulfilled())
+                              .parallel()
+                              .min(Comparator.comparing(OrderData::getEntryDate))
+                              .orElse(null))
+                  .filter(Objects::nonNull)
+                  .map(OrderData::getId)
+                  .collect(Collectors.toList());
+          List<OrderData> orders =
+              orderIds.stream().map(orderStore::get).collect(Collectors.toList());
+
+          // Get the order items of all orders
           List<OrderItemData> allOrderItems =
-              orderItemStore.stream(i -> orderIds.contains(i.getOrderId()))
+              JacisStores.fastStream(orderItemStore, i -> orderIds.contains(i.getOrderId()))
                   .collect(Collectors.toList());
 
           // Actually deliver the orders

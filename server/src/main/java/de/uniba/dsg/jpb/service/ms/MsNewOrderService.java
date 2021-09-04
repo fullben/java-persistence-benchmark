@@ -1,5 +1,6 @@
 package de.uniba.dsg.jpb.service.ms;
 
+import de.uniba.dsg.jpb.data.access.ms.JacisStores;
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -90,7 +91,8 @@ public class MsNewOrderService extends NewOrderService {
 
           // Get all relevant stocks
           List<StockData> stocks =
-              stockStore.stream(
+              JacisStores.fastStream(
+                      stockStore,
                       s ->
                           productIds.contains(s.getProductId())
                               && supplyingWarehouseIds.contains(s.getWarehouseId()))
