@@ -30,8 +30,8 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
   public EmployeeUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     EmployeeData employee =
         employeeStore
-            .streamReadOnly()
-            .filter(e -> e.getUsername().equals(username))
+            .streamReadOnly(e -> e.getUsername().equals(username))
+            .parallel()
             .findAny()
             .orElseThrow(
                 () -> new UsernameNotFoundException("Unable to find user with name " + username));
