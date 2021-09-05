@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .authorizeRequests()
-        .antMatchers("/api/transactions/**")
+        .antMatchers("/api/**")
         .hasRole(Role.TERMINAL_USER.simpleName())
         .and()
         .authorizeRequests()
