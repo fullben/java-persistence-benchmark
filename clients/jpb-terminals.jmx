@@ -366,7 +366,7 @@ vars.put(&quot;orderItems&quot;, orderItems)
 </stringProp>
               </JSR223PreProcessor>
               <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="49586">200</stringProp>
                 </collectionProp>
@@ -460,7 +460,7 @@ vars.put(&quot;paymentRequest&quot;, req)
 </stringProp>
               </JSR223PreProcessor>
               <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="49586">200</stringProp>
                 </collectionProp>
@@ -551,7 +551,7 @@ vars.put(&quot;orderStatusReq&quot;, req)
                 <stringProp name="scriptLanguage">groovy</stringProp>
               </JSR223PreProcessor>
               <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="49586">200</stringProp>
                 </collectionProp>
@@ -635,7 +635,7 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
 </stringProp>
               </JSR223PreProcessor>
               <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="49586">200</stringProp>
                 </collectionProp>
@@ -721,7 +721,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
 </stringProp>
               </JSR223PreProcessor>
               <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="true">
+              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
                 <collectionProp name="Asserion.test_strings">
                   <stringProp name="49586">200</stringProp>
                 </collectionProp>
@@ -776,7 +776,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
           <stringProp name="filename"></stringProp>
         </ResultCollector>
         <hashTree/>
-        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="false">
           <boolProp name="displayJMeterProperties">false</boolProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">false</boolProp>
