@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.uniba.dsg.jpb.data.access.jpa.CarrierRepository;
 import de.uniba.dsg.jpb.data.access.jpa.CustomerRepository;
-import de.uniba.dsg.jpb.data.access.jpa.DistrictRepository;
 import de.uniba.dsg.jpb.data.access.jpa.OrderRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.WarehouseRepository;

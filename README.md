@@ -50,6 +50,8 @@ Use the IDE to launch the Java application locally. By default, the server will 
 
 Once the server has been launched, you may start the JMeter test plan defined in the `clients/*.jmx` file found in this project.
 
+Note that if using MicroStream persistence, you must delete the MicroStream storage folder created during each server run before performing any further runs.
+
 ### Deployment
 
 The server application is meant to be deployed and run as a Docker container. The appropriate container build instructions are defined in the `Dockerfile` file found in the base directory of this repository. Depending on the persistence solution to be evaluated, one of the two provided *docker-compose* files must be utilized:

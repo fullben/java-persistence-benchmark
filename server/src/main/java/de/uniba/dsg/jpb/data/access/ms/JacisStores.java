@@ -20,9 +20,11 @@ public final class JacisStores {
 
   /**
    * Returns a stream of all objects from the given store matching the provided filter. The stream
-   * returned by this method should be the same as if one were to call {@code store.stream(filter)}.
-   * The advantage of using this method is that the performance of it is usually better for stores
-   * with many objects than that of the regular {@code stream(filter)} method.
+   * returned by this method should be the same as if one were to call {@link
+   * JacisStore#stream(Predicate)}. The advantage of using this method is that the performance of it
+   * may be better for stores with many objects than that of the regular {@code stream(Predicate)}
+   * method. Note that apart from store size, the performance of this method is also influenced by
+   * the number of available CPU cores.
    *
    * <p>As parallel streams cannot be used for retrieving writable objects from a store reliably (as
    * this may result in one of the stream executing threads becoming the authorized writer thread),
