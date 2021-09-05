@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.JacisStores;
+import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
+
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -42,8 +43,7 @@ public class MsPaymentService extends PaymentService {
 
   @Override
   public PaymentResponse process(PaymentRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container);
-    transactionManager.setMaxTries(5);
+    TransactionManager transactionManager = new TransactionManager(container).setMaxTries(5);
     return transactionManager.commit(
         () -> {
           // Find customer (either by id or email)
@@ -51,8 +51,7 @@ public class MsPaymentService extends PaymentService {
           CustomerData customer;
           if (customerId == null) {
             customer =
-                JacisStores.fastStream(
-                        customerStore, c -> c.getEmail().equals(req.getCustomerEmail()))
+                fastStream(customerStore, c -> c.getEmail().equals(req.getCustomerEmail()))
                     .findAny()
                     .orElseThrow(
                         () ->
@@ -60,7 +59,7 @@ public class MsPaymentService extends PaymentService {
                                 "Failed to find customer with email " + req.getCustomerEmail()));
           } else {
             customer =
-                JacisStores.fastStream(customerStore, c -> c.getId().equals(customerId))
+                fastStream(customerStore, c -> c.getId().equals(customerId))
                     .findAny()
                     .orElseThrow(
                         () ->

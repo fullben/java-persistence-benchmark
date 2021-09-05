@@ -33,11 +33,12 @@ public class TransactionManager {
     return maxTries;
   }
 
-  public void setMaxTries(int maxTries) {
+  public TransactionManager setMaxTries(int maxTries) {
     if (maxTries < 1) {
       throw new IllegalArgumentException("Max tries must be greater than zero");
     }
     this.maxTries = maxTries;
+    return this;
   }
 
   public <T> T commit(Supplier<T> transaction) {

@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.JacisStores;
+import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
+
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -59,8 +60,7 @@ public class MsNewOrderService extends NewOrderService {
 
   @Override
   public NewOrderResponse process(NewOrderRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container);
-    transactionManager.setMaxTries(5);
+    TransactionManager transactionManager = new TransactionManager(container).setMaxTries(5);
     return transactionManager.commit(
         () -> {
           // Get warehouse, district and customer
@@ -72,7 +72,8 @@ public class MsNewOrderService extends NewOrderService {
           }
           CustomerData customer = customerStore.get(req.getCustomerId());
 
-          // Get all supplying warehouses and products to ensure no invalid ids have been provided
+          // Get all supplying warehouses and products to ensure no invalid ids have been
+          // provided
           List<String> supplyingWarehouseIds =
               req.getItems().stream()
                   .map(NewOrderRequestItem::getSupplyingWarehouseId)
@@ -91,7 +92,7 @@ public class MsNewOrderService extends NewOrderService {
 
           // Get all relevant stocks
           List<StockData> stocks =
-              JacisStores.fastStream(
+              fastStream(
                       stockStore,
                       s ->
                           productIds.contains(s.getProductId())

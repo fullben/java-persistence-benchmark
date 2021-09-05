@@ -1,6 +1,7 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import de.uniba.dsg.jpb.data.access.ms.JacisStores;
+import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
+
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
@@ -54,8 +55,7 @@ public class MsDeliveryService extends DeliveryService {
 
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container);
-    transactionManager.setMaxTries(5);
+    TransactionManager transactionManager = new TransactionManager(container).setMaxTries(5);
     return transactionManager.commit(
         () -> {
           // Find warehouse and carrier to be employed for delivery
@@ -86,7 +86,7 @@ public class MsDeliveryService extends DeliveryService {
 
           // Get the order items of all orders
           List<OrderItemData> allOrderItems =
-              JacisStores.fastStream(orderItemStore, i -> orderIds.contains(i.getOrderId()))
+              fastStream(orderItemStore, i -> orderIds.contains(i.getOrderId()))
                   .collect(Collectors.toList());
 
           // Actually deliver the orders
