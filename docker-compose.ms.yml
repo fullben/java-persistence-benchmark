@@ -12,6 +12,6 @@ services:
       JPB_MS_STORAGE_DIR: "storage"
       JPB_MS_STORAGE_STARTUP: "clear"
     volumes:
-      - microstream_storage:/home/app/${JPB_MS_STORAGE_DIR}
+      - microstream_storage:/home/jpb/${JPB_MS_STORAGE_DIR}
 volumes:
   microstream_storage:
