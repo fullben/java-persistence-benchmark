@@ -7,6 +7,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      SPRING_PROFILES_ACTIVE: "prod"
       JPB_PERSISTENCE_MODE: "jpa"
       JPB_MODEL_INITIALIZE: "true"
       JPB_MODEL_WAREHOUSE-COUNT: "10"
