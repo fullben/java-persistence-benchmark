@@ -7,4 +7,5 @@ FROM openjdk:11.0.12-jre
 WORKDIR /home/jpb
 COPY --from=BUILD_IMAGE /home/jpb/wss-server/build/libs/wss-server.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENV JAVA_OPTS=""
+CMD java $JAVA_OPTS -jar app.jar
