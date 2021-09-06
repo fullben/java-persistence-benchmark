@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+  <Properties>
+    <Property name="ENTRY_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%10.10t] %38.38c{1.} - %m%n</Property>
+  </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %c{1.} - %msg%n"/>
+      <PatternLayout pattern="${ENTRY_PATTERN}"/>
     </Console>
+    <File name="File" fileName="logs/wss-server.log">
+      <PatternLayout pattern="${ENTRY_PATTERN}"/>
+    </File>
   </Appenders>
   <Loggers>
-    <Root level="error">
+    <Logger name="wss-server-logger" level="info"/>
+    <Root level="info">
       <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
     </Root>
   </Loggers>
 </Configuration>

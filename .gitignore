@@ -13,3 +13,6 @@ test-storage
 wss-terminals/report*
 jmeter.log
 results*.jtl
+
+# App log dir
+logs
