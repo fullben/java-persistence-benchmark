@@ -48,7 +48,7 @@ Make sure that the `spring.profiles.active` property in the `application.propert
 
 Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
 
-Once the server has been launched, you may start the JMeter test plan defined in the `clients/*.jmx` file found in this project.
+Once the server has been launched, you may start the JMeter test plan defined in the `wss-terminals/*.jmx` file found in this project.
 
 Note that if using MicroStream persistence, you must delete the MicroStream storage folder created during each server run before performing any further runs.
 
@@ -65,7 +65,7 @@ Deploying either variation of the benchmark can be achieved by calling the comma
 
 The test implemented by this benchmark can be scaled as hinted at in the [configuration](#configuration) section. While the data model maintained by the server can be scaled using the server properties (namely the `jpb.model.warehouse-count` property), the JMeter threads must be scaled accordingly.
 
-As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the *number of threads* of the *Employee terminal actions* thread group. Note that the threads each use their own distinct employee account, defined in the `clients/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
+As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the *number of threads* of the *Employee terminal actions* thread group. Note that the threads each use their own distinct employee account, defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
 
 Each employee thread executes an initial setup followed by running a randomly selected (non-uniform) transaction for the number of times defined in the *loop count* property of the *Simulate employee transactions/work* loop controller. Adjusting this value affects the overall duration of the test and amount of data generated.
 
@@ -73,9 +73,9 @@ Each employee thread executes an initial setup followed by running a randomly se
 
 As mentioned in the [structure](#structure) section, measurements are meant to be taken with JMeter. For this, first ensure that the server is running on this or some other machine and that it already has generated the configured data model and written it to persistent storage.
 
-Make sure that JMeter is installed on your machine. Then, navigate to the folder of this project containing the JMeter sub-project, called `clients`. If the server is running on a remote computer, adjust the `auth.txt` file by replacing `localhost` (and potentially the port number) with the appropriate host identifier.
+Make sure that JMeter is installed on your machine. Then, navigate to the folder of this project containing the JMeter sub-project, called `wss-terminals`. If the server is running on a remote computer, adjust the `auth.txt` file by replacing `localhost` (and potentially the port number) with the appropriate host identifier.
 
-Open a terminal and execute the command `jmeter -n -t jpb-terminals.jmx -l results.jtl` to run the test in JMeter's CLI-mode. This will execute the testplan defined in `jpb-terminals.jmx`. The results will be written as CSV data to the `results.jtl` file.
+Open a terminal and execute the command `jmeter -n -t terminals.jmx -l results.jtl` to run the test in JMeter's CLI-mode. This will execute the testplan defined in `terminals.jmx`. The results will be written as CSV data to the `results.jtl` file.
 
 Once the test has been completed, you can use the `jmeter -g results.jtl -o ./report` command to automatically create a report from the test results. The report will be placed in the `report` directory. Be aware that the `jmeter.reportgenerator.exporter.html.series_filter` property in the `user.properties` file defines which requests will be considered for the report.
 

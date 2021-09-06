@@ -10,6 +10,6 @@ storage
 test-storage
 
 # Ignore JMeter generated data
-clients/report*
+wss-terminals/report*
 jmeter.log
 results*.jtl
