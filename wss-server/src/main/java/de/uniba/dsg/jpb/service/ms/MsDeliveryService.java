@@ -1,7 +1,5 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
-
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CarrierData;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
@@ -86,7 +84,8 @@ public class MsDeliveryService extends DeliveryService {
 
           // Get the order items of all orders
           List<OrderItemData> allOrderItems =
-              fastStream(orderItemStore, i -> orderIds.contains(i.getOrderId()))
+              orderItemStore.stream(i -> orderIds.contains(i.getOrderId()))
+                  .parallel()
                   .collect(Collectors.toList());
 
           // Actually deliver the orders

@@ -1,7 +1,5 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
-
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -51,7 +49,8 @@ public class MsPaymentService extends PaymentService {
           CustomerData customer;
           if (customerId == null) {
             customer =
-                fastStream(customerStore, c -> c.getEmail().equals(req.getCustomerEmail()))
+                customerStore.stream(c -> c.getEmail().equals(req.getCustomerEmail()))
+                    .parallel()
                     .findAny()
                     .orElseThrow(
                         () ->
@@ -59,7 +58,8 @@ public class MsPaymentService extends PaymentService {
                                 "Failed to find customer with email " + req.getCustomerEmail()));
           } else {
             customer =
-                fastStream(customerStore, c -> c.getId().equals(customerId))
+                customerStore.stream(c -> c.getId().equals(customerId))
+                    .parallel()
                     .findAny()
                     .orElseThrow(
                         () ->

@@ -1,7 +1,5 @@
 package de.uniba.dsg.jpb.service.ms;
 
-import static de.uniba.dsg.jpb.data.access.ms.JacisStores.fastStream;
-
 import de.uniba.dsg.jpb.data.access.ms.TransactionManager;
 import de.uniba.dsg.jpb.data.model.ms.CustomerData;
 import de.uniba.dsg.jpb.data.model.ms.DistrictData;
@@ -92,11 +90,11 @@ public class MsNewOrderService extends NewOrderService {
 
           // Get all relevant stocks
           List<StockData> stocks =
-              fastStream(
-                      stockStore,
+              stockStore.stream(
                       s ->
                           productIds.contains(s.getProductId())
                               && supplyingWarehouseIds.contains(s.getWarehouseId()))
+                  .parallel()
                   .collect(Collectors.toList());
 
           // Create a new order
