@@ -332,7 +332,7 @@ import java.util.concurrent.ThreadLocalRandom
 def warehouseId = vars.get(&quot;empWarehouseId&quot;);
 
 // List of all warehouse ids except for that of the employee&apos;s warehouse
-def warehouseIds = Arrays.asList(vars.get(&quot;warehouseId_ALL&quot;).split(&quot;,&quot;))
+def warehouseIds = new LinkedList&lt;String&gt;(Arrays.asList(vars.get(&quot;warehouseId_ALL&quot;).split(&quot;,&quot;)))
 warehouseIds.remove(warehouseId)
 
 // District is one of the home warehouse&apos;s districts, randomly selected
@@ -739,7 +739,7 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
             <hashTree/>
           </hashTree>
         </hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
