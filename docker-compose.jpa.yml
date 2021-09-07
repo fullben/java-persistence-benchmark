@@ -17,7 +17,7 @@ services:
       JPB_JPA_DATASOURCE_DRIVER-CLASS-NAME: "org.postgresql.Driver"
       JPB_JPA_DATASOURCE_USERNAME: "postgres"
       JPB_JPA_DATASOURCE_PASSWORD: "password"
-      JAVA_OPTS: "-Xmx2G"
+      JAVA_OPTS: "-Xmx4G"
   db:
     container_name: "wss-db"
     image: "postgres:13.4"

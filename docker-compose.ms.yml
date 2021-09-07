@@ -12,7 +12,7 @@ services:
       JPB_MODEL_WAREHOUSE-COUNT: "10"
       JPB_MODEL_FULL-SCALE: "true"
       JPB_MS_STORAGE_DIR: "storage"
-      JAVA_OPTS: "-Xmx2G"
+      JAVA_OPTS: "-Xmx4G"
     volumes:
       - microstream_storage:/home/jpb/storage
 volumes:
