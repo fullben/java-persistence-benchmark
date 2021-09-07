@@ -1,6 +1,7 @@
 version: "3.7"
 services:
-  jpb-server:
+  wss-server:
+    container_name: "wss-server"
     build: .
     depends_on:
       - db
@@ -18,6 +19,7 @@ services:
       JPB_JPA_DATASOURCE_PASSWORD: "password"
       JAVA_OPTS: "-Xmx2G"
   db:
+    container_name: "wss-db"
     image: "postgres:13.4"
     volumes:
       - postgres_data:/var/lib/postgresql/data

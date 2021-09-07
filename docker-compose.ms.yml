@@ -1,6 +1,7 @@
 version: "3.7"
 services:
-  jpb-server:
+  wss-server:
+    container_name: "wss-server"
     build: .
     ports:
       - "8080:8080"
