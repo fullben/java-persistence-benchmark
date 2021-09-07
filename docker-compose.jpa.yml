@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2.4"
 services:
   wss-server:
     container_name: "wss-server"
@@ -18,6 +18,9 @@ services:
       JPB_JPA_DATASOURCE_USERNAME: "postgres"
       JPB_JPA_DATASOURCE_PASSWORD: "password"
       JAVA_OPTS: "-Xmx4G"
+    cpu_count: 4
+    mem_reservation: 2g
+    mem_limit: 4g
   db:
     container_name: "wss-db"
     image: "postgres:13.4"

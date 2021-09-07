@@ -1,4 +1,4 @@
-version: "3.7"
+version: "2.4"
 services:
   wss-server:
     container_name: "wss-server"
@@ -15,5 +15,8 @@ services:
       JAVA_OPTS: "-Xmx4G"
     volumes:
       - microstream_storage:/home/jpb/storage
+    cpu_count: 4
+    mem_reservation: 2g
+    mem_limit: 4g
 volumes:
   microstream_storage:
