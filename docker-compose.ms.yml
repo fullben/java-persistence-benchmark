@@ -9,7 +9,7 @@ services:
       SPRING_PROFILES_ACTIVE: "prod"
       JPB_PERSISTENCE_MODE: "ms"
       JPB_MODEL_INITIALIZE: "true"
-      JPB_MODEL_WAREHOUSE-COUNT: "10"
+      JPB_MODEL_WAREHOUSE-COUNT: "5"
       JPB_MODEL_FULL-SCALE: "true"
       JPB_MS_STORAGE_DIR: "storage"
       JAVA_OPTS: "-Xmx12G"
