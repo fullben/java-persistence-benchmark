@@ -8,18 +8,19 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: "prod"
-      JPB_PERSISTENCE_MODE: "jpa"
-      JPB_MODEL_INITIALIZE: "true"
-      JPB_MODEL_WAREHOUSE-COUNT: "5"
-      JPB_MODEL_FULL-SCALE: "true"
-      JPB_JPA_DATASOURCE_URL: "jdbc:postgresql://db:5432/wholesale_supplier"
-      JPB_JPA_DATASOURCE_DRIVER-CLASS-NAME: "org.postgresql.Driver"
-      JPB_JPA_DATASOURCE_USERNAME: "postgres"
-      JPB_JPA_DATASOURCE_PASSWORD: "password"
-      JAVA_OPTS: "-Xmx12G"
+      - TZ=Europe/Berlin
+      - SPRING_PROFILES_ACTIVE=prod
+      - JPB_PERSISTENCE_MODE=jpa
+      - JPB_MODEL_INITIALIZE=true
+      - JPB_MODEL_WAREHOUSE_COUNT=5
+      - JPB_MODEL_FULL_SCALE=true
+      - JPB_JPA_DATASOURCE_URL=jdbc:postgresql://db:5432/wholesale_supplier
+      - JPB_JPA_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - JPB_JPA_DATASOURCE_USERNAME=postgres
+      - JPB_JPA_DATASOURCE_PASSWORD=password
+      - JAVA_OPTS=-Xmx12G
     cpu_count: 4
-    mem_reservation: 8g
+    mem_reservation: 10g
     mem_limit: 12g
   db:
     container_name: "wss-db"

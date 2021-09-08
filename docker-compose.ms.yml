@@ -6,17 +6,18 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - TZ=Europe/Berlin
       - SPRING_PROFILES_ACTIVE=prod
       - JPB_PERSISTENCE_MODE=ms
       - JPB_MODEL_INITIALIZE=true
-      - JPB_MODEL_WAREHOUSE-COUNT=1
-      - JPB_MODEL_FULL-SCALE=true
+      - JPB_MODEL_WAREHOUSE_COUNT=5
+      - JPB_MODEL_FULL_SCALE=true
       - JPB_MS_STORAGE_DIR=storage
-      - JAVA_OPTS=-Xmx6G
+      - JAVA_OPTS=-Xmx12G
     volumes:
       - ms_data:/home/jpb/storage
     cpu_count: 4
-    mem_reservation: 4g
-    mem_limit: 6g
+    mem_reservation: 10g
+    mem_limit: 12g
 volumes:
   ms_data:
