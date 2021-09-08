@@ -193,9 +193,10 @@ public class JpaDataGenerator {
   public void generate() {
     Stopwatch stopwatch = new Stopwatch(true);
     LOG.info(
-        "Generating {} products, {} warehouses, {} districts, {} customers, and {} orders",
+        "Generating {} products, {} warehouses, {} districts, {} employees, {} customers, and {} orders",
         productCount,
         warehouseCount,
+        warehouseCount * districtsPerWarehouseCount,
         warehouseCount * districtsPerWarehouseCount,
         warehouseCount * districtsPerWarehouseCount * customersPerDistrictCount,
         warehouseCount * districtsPerWarehouseCount * ordersPerDistrictCount);
