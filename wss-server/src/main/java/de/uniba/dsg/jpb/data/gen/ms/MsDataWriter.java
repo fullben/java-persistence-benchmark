@@ -10,6 +10,9 @@ import de.uniba.dsg.jpb.data.model.ms.OrderItemData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.util.Stopwatch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsDataWriter implements DataWriter<JpaToMsConverter> {
 
+  private static final Logger LOG = LogManager.getLogger(MsDataWriter.class);
   private final JacisContainer container;
   private final JacisStore<String, CarrierData> carrierStore;
   private final JacisStore<String, ProductData> productStore;
@@ -63,6 +67,7 @@ public class MsDataWriter implements DataWriter<JpaToMsConverter> {
 
   @Override
   public void writeAll(JpaToMsConverter converter) {
+    Stopwatch stopwatch = new Stopwatch(true);
     container.withLocalTx(
         () -> {
           carrierStore.update(converter.getCarriers(), CarrierData::getId);
@@ -75,5 +80,7 @@ public class MsDataWriter implements DataWriter<JpaToMsConverter> {
           orderStore.update(converter.getOrders(), OrderData::getId);
           orderItemStore.update(converter.getOrderItems(), OrderItemData::getId);
         });
+    stopwatch.stop();
+    LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
   }
 }

@@ -2,7 +2,6 @@ package de.uniba.dsg.jpb.data.gen.ms;
 
 import de.uniba.dsg.jpb.data.gen.DataInitializer;
 import de.uniba.dsg.jpb.data.gen.jpa.JpaDataGenerator;
-import de.uniba.dsg.jpb.util.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -30,21 +29,13 @@ public class MsDataInitializer extends DataInitializer {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
+    LOG.info("Max heap size: {}MB", Runtime.getRuntime().maxMemory() / 1024 / 1024);
     JpaDataGenerator jpaDataGenerator = createJpaDataGenerator();
     LOG.info("Beginning model data generation");
-    Stopwatch stopwatch = new Stopwatch(true);
     jpaDataGenerator.generate();
-    stopwatch.stop();
-    LOG.info("Model data generation took {}", stopwatch.getDuration());
-    stopwatch.start();
     JpaToMsConverter converter = new JpaToMsConverter(jpaDataGenerator);
     converter.convert();
-    stopwatch.stop();
-    LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
-    stopwatch.start();
     dataWriter.writeAll(converter);
-    stopwatch.stop();
-    LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
   }
 }

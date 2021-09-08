@@ -23,10 +23,13 @@ import de.uniba.dsg.jpb.data.model.ms.PaymentData;
 import de.uniba.dsg.jpb.data.model.ms.ProductData;
 import de.uniba.dsg.jpb.data.model.ms.StockData;
 import de.uniba.dsg.jpb.data.model.ms.WarehouseData;
+import de.uniba.dsg.jpb.util.Stopwatch;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Converts a JPA data model to a MicroStream data model. Converting an existing model ensures that
@@ -38,6 +41,7 @@ import java.util.stream.Collectors;
  */
 public class JpaToMsConverter {
 
+  private static final Logger LOG = LogManager.getLogger(JpaToMsConverter.class);
   private final List<ProductEntity> productEntities;
   private final List<CarrierEntity> carrierEntities;
   private final List<WarehouseEntity> warehouseEntities;
@@ -73,6 +77,7 @@ public class JpaToMsConverter {
   }
 
   public void convert() {
+    Stopwatch stopwatch = new Stopwatch(true);
     products = convertProducts(productEntities);
     carriers = convertCarriers(carrierEntities);
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
@@ -83,6 +88,8 @@ public class JpaToMsConverter {
     orders = convertOrders(warehouseEntities);
     orderItems = convertOrderItems(warehouseEntities);
     payments = convertPayments(warehouseEntities);
+    stopwatch.stop();
+    LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
   }
 
   public List<ProductData> getProducts() {

@@ -15,6 +15,7 @@ import de.uniba.dsg.jpb.data.model.jpa.ProductEntity;
 import de.uniba.dsg.jpb.data.model.jpa.StockEntity;
 import de.uniba.dsg.jpb.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.jpb.util.RandomSelector;
+import de.uniba.dsg.jpb.util.Stopwatch;
 import de.uniba.dsg.jpb.util.UniformRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -23,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -53,6 +56,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public class JpaDataGenerator {
 
+  private static final Logger LOG = LogManager.getLogger(JpaDataGenerator.class);
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
   private static final String ORIGINAL = "ORIGINAL";
@@ -187,11 +191,21 @@ public class JpaDataGenerator {
   }
 
   public void generate() {
+    Stopwatch stopwatch = new Stopwatch(true);
+    LOG.info(
+        "Generating {} products, {} warehouses, {} districts, {} customers, and {} orders",
+        productCount,
+        warehouseCount,
+        warehouseCount * districtsPerWarehouseCount,
+        warehouseCount * districtsPerWarehouseCount * customersPerDistrictCount,
+        warehouseCount * districtsPerWarehouseCount * ordersPerDistrictCount);
     employees.clear();
     existingEmails.clear();
     products = generateProducts();
     carriers = generateCarriers();
     warehouses = generateWarehouses();
+    stopwatch.stop();
+    LOG.info("Model data generation took {}", stopwatch.getDuration());
   }
 
   private List<ProductEntity> generateProducts() {

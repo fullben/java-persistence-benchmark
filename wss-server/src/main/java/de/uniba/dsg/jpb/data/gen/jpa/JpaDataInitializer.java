@@ -1,9 +1,6 @@
 package de.uniba.dsg.jpb.data.gen.jpa;
 
 import de.uniba.dsg.jpb.data.gen.DataInitializer;
-import de.uniba.dsg.jpb.util.Stopwatch;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.env.Environment;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Component;
 @ConditionalOnExpression("'${jpb.persistence.mode}' == 'jpa' and '${jpb.model.initialize}'")
 public class JpaDataInitializer extends DataInitializer {
 
-  private static final Logger LOG = LogManager.getLogger(JpaDataInitializer.class);
   private final JpaDataWriter databaseWriter;
 
   @Autowired
@@ -34,14 +30,7 @@ public class JpaDataInitializer extends DataInitializer {
   @Override
   public void run(String... args) {
     JpaDataGenerator jpaDataGenerator = createJpaDataGenerator();
-    LOG.info("Beginning model data generation");
-    Stopwatch stopwatch = new Stopwatch(true);
     jpaDataGenerator.generate();
-    stopwatch.stop();
-    LOG.info("Model data generation took {}", stopwatch.getDuration());
-    stopwatch.start();
     databaseWriter.writeAll(jpaDataGenerator);
-    stopwatch.stop();
-    LOG.info("Wrote model data to database, took {}", stopwatch.getDuration());
   }
 }

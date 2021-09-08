@@ -5,6 +5,9 @@ import de.uniba.dsg.jpb.data.access.jpa.EmployeeRepository;
 import de.uniba.dsg.jpb.data.access.jpa.ProductRepository;
 import de.uniba.dsg.jpb.data.access.jpa.WarehouseRepository;
 import de.uniba.dsg.jpb.data.gen.DataWriter;
+import de.uniba.dsg.jpb.util.Stopwatch;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaDataWriter implements DataWriter<JpaDataGenerator> {
 
+  private static final Logger LOG = LogManager.getLogger(JpaDataWriter.class);
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
   private final WarehouseRepository warehouseRepository;
@@ -37,9 +41,12 @@ public class JpaDataWriter implements DataWriter<JpaDataGenerator> {
 
   @Override
   public void writeAll(JpaDataGenerator generator) {
+    Stopwatch stopwatch = new Stopwatch(true);
     productRepository.saveAll(generator.getProducts());
     carrierRepository.saveAll(generator.getCarriers());
     warehouseRepository.saveAll(generator.getWarehouses());
     employeeRepository.saveAll(generator.getEmployees());
+    stopwatch.stop();
+    LOG.info("Wrote model data to database, took {}", stopwatch.getDuration());
   }
 }
