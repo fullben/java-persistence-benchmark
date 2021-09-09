@@ -89,10 +89,20 @@ public class TransactionManager {
         }
       } catch (JacisStaleObjectException e) {
         if (performedTries == maxTries) {
+          LOG.error("Unable to complete transaction after having tried {} times", performedTries);
           close();
           throw e;
         } else {
-          LOG.info("Retrying transaction (try: {}, max: {})", performedTries, maxTries);
+          try {
+            Thread.sleep(10L * performedTries);
+          } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+          }
+          LOG.warn(
+              "Retrying transaction (performed tries: {}, max tries: {}) after having encountered exception:",
+              performedTries,
+              maxTries,
+              e);
         }
       }
     }
