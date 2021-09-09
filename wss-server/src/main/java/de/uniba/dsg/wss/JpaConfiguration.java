@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Benedikt Full
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "de.uniba.dsg.jpb.data.access.jpa")
+@EnableJpaRepositories(basePackages = "de.uniba.dsg.wss.data.access.jpa")
 @EnableTransactionManagement
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaConfiguration {
