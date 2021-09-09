@@ -1,2 +1,2 @@
 # JMeter generated Authorization file
-http://localhost:8080/api/transactions	${username}	${password}			BASIC
+http://141.13.4.32:8080/api	${username}	${password}			BASIC
