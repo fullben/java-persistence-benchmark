@@ -211,7 +211,7 @@ public class JpaDataGenerator {
 
   private List<ProductEntity> generateProducts() {
     UniformRandom priceRandom = new UniformRandom(1.0, 100.0, 2);
-    List<ProductEntity> items = new ArrayList<>(productCount);
+    List<ProductEntity> products = new ArrayList<>(productCount);
     for (int i = 0; i < productCount; i++) {
       ProductEntity product = new ProductEntity();
       product.setImagePath(faker.file().fileName(null, null, "jpg", "/"));
@@ -222,9 +222,10 @@ public class JpaDataGenerator {
         product.setData(lorem26To50());
       }
       product.setPrice(priceRandom.nextDouble());
-      items.add(product);
+      products.add(product);
     }
-    return items;
+    LOG.debug("Generated {} products", products.size());
+    return products;
   }
 
   private List<CarrierEntity> generateCarriers() {
@@ -237,6 +238,7 @@ public class JpaDataGenerator {
       carrier.setAddress(addresses.get(i));
       carriers.add(carrier);
     }
+    LOG.debug("Generated {} carriers", carriers.size());
     return carriers;
   }
 
@@ -253,6 +255,7 @@ public class JpaDataGenerator {
       warehouse.setStocks(generateStocks(warehouse, products));
       warehouses.add(warehouse);
     }
+    LOG.debug("Generated {} warehouses", warehouses.size());
     return warehouses;
   }
 
@@ -272,6 +275,7 @@ public class JpaDataGenerator {
       district.setOrders(generateOrders(district, products));
       employees.add(generateEmployee(district, warehouseNbr, i + 1));
     }
+    LOG.debug("Generated {} districts", districts.size());
     return districts;
   }
 
@@ -329,6 +333,7 @@ public class JpaDataGenerator {
       customer.setData(lorem(300, 500));
       customers.add(customer);
     }
+    LOG.debug("Generated {} customers", customers.size());
     return customers;
   }
 
@@ -367,6 +372,7 @@ public class JpaDataGenerator {
       stock.setQuantity(quantityRandom.nextInt());
       stocks.add(stock);
     }
+    LOG.debug("Generated {} stocks", stocks.size());
     return stocks;
   }
 
@@ -422,6 +428,7 @@ public class JpaDataGenerator {
       order.setItems(generateOrderItems(order, products));
       orders.add(order);
     }
+    LOG.debug("Generated {} orders", orders.size());
     return orders;
   }
 
