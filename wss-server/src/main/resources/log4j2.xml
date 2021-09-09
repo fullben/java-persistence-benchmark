@@ -12,8 +12,8 @@
     </File>
   </Appenders>
   <Loggers>
-    <Logger name="wss-server-logger" level="debug"/>
-    <Root level="debug">
+    <Logger name="wss-server-logger" level="info"/>
+    <Root level="info">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Root>
