@@ -11,9 +11,13 @@ import de.uniba.dsg.wss.data.model.jpa.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.wss.service.PaymentService;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +43,11 @@ public class JpaPaymentService extends PaymentService {
     this.paymentRepository = paymentRepository;
   }
 
-  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Retryable(
+      value = {RuntimeException.class, SQLException.class, PSQLException.class},
+      backoff = @Backoff(delay = 100),
+      maxAttempts = 5)
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
   @Override
   public PaymentResponse process(PaymentRequest req) {
     // Fetch warehouse, district, and customer (either by id or email)

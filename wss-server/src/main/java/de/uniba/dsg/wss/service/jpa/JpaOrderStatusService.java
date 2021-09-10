@@ -10,10 +10,14 @@ import de.uniba.dsg.wss.data.transfer.messages.OrderItemStatusResponse;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusResponse;
 import de.uniba.dsg.wss.service.OrderStatusService;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +36,11 @@ public class JpaOrderStatusService extends OrderStatusService {
     this.orderRepository = orderRepository;
   }
 
-  @Transactional(isolation = Isolation.SERIALIZABLE, readOnly = true)
+  @Retryable(
+      value = {RuntimeException.class, SQLException.class, PSQLException.class},
+      backoff = @Backoff(delay = 100),
+      maxAttempts = 5)
+  @Transactional(isolation = Isolation.READ_COMMITTED, readOnly = true)
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
     // Fetch customer (either by id or email)

@@ -12,10 +12,14 @@ import de.uniba.dsg.wss.data.model.jpa.OrderItemEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.wss.service.DeliveryService;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +45,11 @@ public class JpaDeliveryService extends DeliveryService {
     this.carrierRepository = carrierRepository;
   }
 
-  @Transactional(isolation = Isolation.SERIALIZABLE)
+  @Retryable(
+      value = {RuntimeException.class, SQLException.class, PSQLException.class},
+      backoff = @Backoff(delay = 100),
+      maxAttempts = 5)
+  @Transactional(isolation = Isolation.REPEATABLE_READ)
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
     // Find districts and carrier
