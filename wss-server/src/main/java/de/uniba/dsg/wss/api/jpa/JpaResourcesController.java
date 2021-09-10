@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -70,6 +71,7 @@ public class JpaResourcesController implements ResourcesController {
     modelMapper = new ModelMapper();
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Iterable<ProductRepresentation> getProducts() {
     return productRepository.findAll().stream()
@@ -77,6 +79,7 @@ public class JpaResourcesController implements ResourcesController {
         .collect(Collectors.toList());
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ResponseEntity<EmployeeRepresentation> getEmployee(String username) {
     EmployeeEntity employee = employeeRepository.findByUsername(username).orElse(null);
@@ -86,6 +89,7 @@ public class JpaResourcesController implements ResourcesController {
     return ResponseEntity.ok(modelMapper.map(employee, EmployeeRepresentation.class));
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<WarehouseRepresentation> getWarehouses() {
     return warehouseRepository.findAll().stream()
@@ -93,6 +97,7 @@ public class JpaResourcesController implements ResourcesController {
         .collect(Collectors.toList());
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(String warehouseId) {
     List<DistrictRepresentation> districts =
@@ -105,6 +110,7 @@ public class JpaResourcesController implements ResourcesController {
     return ResponseEntity.ok(districts);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(String warehouseId) {
     List<StockRepresentation> stocks =
@@ -114,6 +120,7 @@ public class JpaResourcesController implements ResourcesController {
     return ResponseEntity.ok(stocks);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
       String warehouseId, String districtId) {
@@ -129,6 +136,7 @@ public class JpaResourcesController implements ResourcesController {
     return ResponseEntity.ok(customerReps);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
       String warehouseId, String districtId) {
@@ -144,6 +152,7 @@ public class JpaResourcesController implements ResourcesController {
     return ResponseEntity.ok(orderReps);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<CarrierRepresentation> getCarriers() {
     return carrierRepository.findAll().stream()
