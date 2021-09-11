@@ -20,24 +20,38 @@ public class TransactionManager {
 
   private static final Logger LOG = LogManager.getLogger(TransactionManager.class);
   private JacisContainer container;
-  private int maxTries;
+  private int attempts;
+  private int backoff;
   private boolean closed;
 
   public TransactionManager(JacisContainer container) {
     this.container = container;
-    maxTries = 1;
+    attempts = 3;
+    backoff = 100;
     closed = false;
   }
 
-  public int getMaxTries() {
-    return maxTries;
+  public int getAttempts() {
+    return attempts;
   }
 
-  public TransactionManager setMaxTries(int maxTries) {
-    if (maxTries < 1) {
+  public TransactionManager setAttempts(int attempts) {
+    if (attempts < 1) {
       throw new IllegalArgumentException("Max tries must be greater than zero");
     }
-    this.maxTries = maxTries;
+    this.attempts = attempts;
+    return this;
+  }
+
+  public int getBackoff() {
+    return backoff;
+  }
+
+  public TransactionManager setBackoff(int backoffMillis) {
+    if (backoffMillis < 1) {
+      throw new IllegalArgumentException("Backoff millis must be greater than zero");
+    }
+    backoff = backoffMillis;
     return this;
   }
 
@@ -57,9 +71,9 @@ public class TransactionManager {
     if (closed) {
       throw new IllegalStateException("Transaction manager is closed");
     }
-    final int maxTries = this.maxTries;
-    int performedTries = 0;
-    while ((maxTries - performedTries++) > 0) {
+    final int maxAttempts = this.attempts;
+    int performedAttempts = 0;
+    while ((maxAttempts - performedAttempts++) > 0) {
       try {
         JacisLocalTransaction tx = container.beginLocalTransaction();
         Throwable txException = null;
@@ -88,26 +102,30 @@ public class TransactionManager {
           }
         }
       } catch (JacisStaleObjectException e) {
-        if (performedTries == maxTries) {
-          LOG.error("Unable to complete transaction after having tried {} times", performedTries);
+        if (performedAttempts == maxAttempts) {
+          LOG.error(
+              "Unable to complete transaction after having attempted it for {} times",
+              performedAttempts);
           close();
           throw e;
         } else {
           try {
-            Thread.sleep(10L * performedTries);
+            Thread.sleep(backoff);
           } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
           }
           LOG.warn(
-              "Retrying transaction (performed tries: {}, max tries: {}) after having encountered exception:",
-              performedTries,
-              maxTries,
-              e);
+              "Retrying transaction (performed attempts: {}, max attempts: {}) after having encountered exception: {}: {}",
+              performedAttempts,
+              maxAttempts,
+              e.getClass().getName(),
+              e.getMessage());
         }
       }
     }
     close();
-    throw new JacisTxCommitException("Unable to commit transaction after " + maxTries + " tries");
+    throw new JacisTxCommitException(
+        "Unable to commit transaction after " + maxAttempts + " tries");
   }
 
   private void close() {

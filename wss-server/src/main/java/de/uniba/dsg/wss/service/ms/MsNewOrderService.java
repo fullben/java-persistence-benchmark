@@ -58,7 +58,7 @@ public class MsNewOrderService extends NewOrderService {
 
   @Override
   public NewOrderResponse process(NewOrderRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container).setMaxTries(5);
+    TransactionManager transactionManager = new TransactionManager(container).setAttempts(3);
     return transactionManager.commit(
         () -> {
           // Get warehouse, district and customer
