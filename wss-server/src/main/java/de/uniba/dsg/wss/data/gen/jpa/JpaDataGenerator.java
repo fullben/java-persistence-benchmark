@@ -206,7 +206,38 @@ public class JpaDataGenerator {
     carriers = generateCarriers();
     warehouses = generateWarehouses();
     stopwatch.stop();
-    LOG.info("Model data generation took {}", stopwatch.getDuration());
+    LOG.info("Generated {} model data entities, took {}", countEntities(), stopwatch.getDuration());
+  }
+
+  private int countEntities() {
+    int entityCount = employees.size();
+    entityCount += products.size();
+    entityCount += carriers.size();
+    entityCount +=
+        warehouses.stream()
+            .mapToInt(
+                w -> {
+                  int warehouseEntities = w.getStocks().size();
+                  warehouseEntities +=
+                      w.getDistricts().stream()
+                          .mapToInt(
+                              d -> {
+                                int districtEntities = d.getCustomers().size();
+                                districtEntities +=
+                                    d.getCustomers().stream()
+                                        .mapToInt(c -> c.getPayments().size())
+                                        .sum();
+                                districtEntities +=
+                                    d.getOrders().stream()
+                                        .mapToInt(o -> o.getItems().size() + 1)
+                                        .sum();
+                                return districtEntities + 1;
+                              })
+                          .sum();
+                  return warehouseEntities + 1;
+                })
+            .sum();
+    return entityCount;
   }
 
   private List<ProductEntity> generateProducts() {
