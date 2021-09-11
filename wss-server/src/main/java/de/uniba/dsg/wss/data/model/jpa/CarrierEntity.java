@@ -15,9 +15,10 @@ import javax.persistence.Table;
 @Table(name = "carriers")
 public class CarrierEntity extends BaseEntity {
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String name;
 
+  @Column(nullable = false)
   private String phoneNumber;
 
   @Embedded private AddressEmbeddable address;

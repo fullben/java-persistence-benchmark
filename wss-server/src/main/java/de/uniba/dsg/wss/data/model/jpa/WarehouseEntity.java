@@ -2,6 +2,7 @@ package de.uniba.dsg.wss.data.model.jpa;
 
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +18,9 @@ import javax.persistence.Table;
 @Table(name = "warehouses")
 public class WarehouseEntity extends BaseEntity {
 
+  @Column(nullable = false)
   private String name;
+
   @Embedded private AddressEmbeddable address;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse", cascade = CascadeType.ALL)

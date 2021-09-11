@@ -26,6 +26,8 @@ public class PaymentEntity extends BaseEntity {
   private DistrictEntity district;
 
   private double amount;
+
+  @Column(nullable = false)
   private String data;
 
   public CustomerEntity getCustomer() {

@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.data.model.jpa;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -17,28 +18,50 @@ import javax.persistence.Table;
 public class StockEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  @JoinColumn(name = "product_id")
+  @JoinColumn(nullable = false, name = "product_id")
   private ProductEntity product;
 
   private int quantity;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  @JoinColumn(name = "warehouse_id")
+  @JoinColumn(nullable = false, name = "warehouse_id")
   private WarehouseEntity warehouse;
 
   private double yearToDateBalance;
   private int orderCount;
   private int remoteCount;
+
+  @Column(nullable = false)
   private String data;
+
+  @Column(nullable = false)
   private String dist01;
+
+  @Column(nullable = false)
   private String dist02;
+
+  @Column(nullable = false)
   private String dist03;
+
+  @Column(nullable = false)
   private String dist04;
+
+  @Column(nullable = false)
   private String dist05;
+
+  @Column(nullable = false)
   private String dist06;
+
+  @Column(nullable = false)
   private String dist07;
+
+  @Column(nullable = false)
   private String dist08;
+
+  @Column(nullable = false)
   private String dist09;
+
+  @Column(nullable = false)
   private String dist10;
 
   public ProductEntity getProduct() {

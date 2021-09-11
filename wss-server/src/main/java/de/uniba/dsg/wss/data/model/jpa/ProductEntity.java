@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.data.model.jpa;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -12,9 +13,15 @@ import javax.persistence.Table;
 @Table(name = "products")
 public class ProductEntity extends BaseEntity {
 
+  @Column(nullable = false)
   private String imagePath;
+
+  @Column(nullable = false)
   private String name;
+
   private double price;
+
+  @Column(nullable = false)
   private String data;
 
   public String getImagePath() {

@@ -19,11 +19,13 @@ public class EmployeeEntity extends PersonEntity {
   @OneToOne(optional = false, fetch = FetchType.EAGER)
   private DistrictEntity district;
 
+  @Column(nullable = false)
   private String title;
 
   @Column(unique = true)
   private String username;
 
+  @Column(nullable = false)
   private String password;
 
   public DistrictEntity getDistrict() {

@@ -1,6 +1,7 @@
 package de.uniba.dsg.wss.data.model.jpa;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -30,6 +31,8 @@ public class OrderItemEntity extends BaseEntity {
   private LocalDateTime deliveryDate;
   private int quantity;
   private double amount;
+
+  @Column(nullable = false)
   private String distInfo;
 
   public OrderEntity getOrder() {

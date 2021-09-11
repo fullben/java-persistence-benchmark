@@ -2,6 +2,7 @@ package de.uniba.dsg.wss.data.model.jpa;
 
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 public class DistrictEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  @JoinColumn(name = "warehouse_id")
+  @JoinColumn(name = "warehouse_id", nullable = false)
   private WarehouseEntity warehouse;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "district", cascade = CascadeType.ALL)
@@ -31,7 +32,9 @@ public class DistrictEntity extends BaseEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "district", cascade = CascadeType.ALL)
   private List<OrderEntity> orders;
 
+  @Column(nullable = false)
   private String name;
+
   @Embedded private AddressEmbeddable address;
   private double salesTax;
   private double yearToDateBalance;

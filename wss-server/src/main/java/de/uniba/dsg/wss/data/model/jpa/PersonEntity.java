@@ -12,13 +12,21 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class PersonEntity extends BaseEntity {
 
+  @Column(nullable = false)
   private String firstName;
+
+  @Column(nullable = false)
   private String middleName;
+
+  @Column(nullable = false)
   private String lastName;
+
   @Embedded private AddressEmbeddable address;
+
+  @Column(nullable = false)
   private String phoneNumber;
 
-  @Column(unique = true)
+  @Column(nullable = false, unique = true)
   private String email;
 
   public String getFirstName() {

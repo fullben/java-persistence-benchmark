@@ -23,6 +23,7 @@ public class CustomerEntity extends PersonEntity {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private DistrictEntity district;
 
+  @Column(nullable = false)
   private LocalDateTime since;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
@@ -31,14 +32,19 @@ public class CustomerEntity extends PersonEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
   private List<OrderEntity> orders;
 
+  @Column(nullable = false)
   private String credit;
+
   private double creditLimit;
   private double discount;
   private double balance;
   private double yearToDatePayment;
   private int paymentCount;
   private int deliveryCount;
-  @Lob @Column private String data;
+
+  @Lob
+  @Column(nullable = false)
+  private String data;
 
   public DistrictEntity getDistrict() {
     return district;
