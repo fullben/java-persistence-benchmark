@@ -322,7 +322,9 @@ public class JpaDataGenerator {
           generateUniqueEmail(
               customer.getFirstName(), customer.getMiddleName(), customer.getLastName()));
       customer.setSince(randomTimeBefore(now.minusMonths(2), 3));
-      customer.setPayments(List.of(generatePayment(customer)));
+      List<PaymentEntity> payments = new ArrayList<>();
+      payments.add(generatePayment(customer));
+      customer.setPayments(payments);
       customer.setCredit(creditRandom.nextInt() < 11 ? BAD_CREDIT : GOOD_CREDIT);
       customer.setCreditLimit(50_000);
       customer.setDiscount(discountRandom.nextDouble());
