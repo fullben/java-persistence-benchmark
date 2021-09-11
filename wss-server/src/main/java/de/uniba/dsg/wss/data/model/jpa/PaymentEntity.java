@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * A payment made by a {@link CustomerEntity Customer}.
+ * A payment made by a {@link CustomerEntity customer}.
  *
  * @author Benedikt Full
  */

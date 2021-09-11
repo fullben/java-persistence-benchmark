@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * Defines {@link ProductData Product}, quantity, supplying {@link WarehouseData Warehouse} and
- * other properties of an individual {@link OrderData Order} item.
+ * Defines {@link ProductData product}, quantity, supplying {@link WarehouseData warehouse} and
+ * other properties of an individual {@link OrderData order} item.
  *
  * @author Benedikt Full
  */

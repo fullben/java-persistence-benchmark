@@ -13,9 +13,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * A district is one of ten areas supplied by a specific {@link WarehouseEntity Warehouse}. Each
- * district is administered by a single {@link EmployeeEntity Employee} and has 3000 {@link
- * CustomerEntity Customers}.
+ * A district is one of ten areas supplied by a specific {@link WarehouseEntity warehouse}. Each
+ * district is administered by a single {@link EmployeeEntity employee} and has 3000 {@link
+ * CustomerEntity customers}.
  *
  * @author Benedikt Full
  */

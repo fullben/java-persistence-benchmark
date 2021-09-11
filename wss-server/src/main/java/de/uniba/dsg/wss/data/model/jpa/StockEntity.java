@@ -9,8 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
- * The available amount of a specific {@link ProductEntity Product} at some {@link WarehouseEntity
- * Warehouse}.
+ * The available amount of a specific {@link ProductEntity product} at some {@link WarehouseEntity
+ * warehouse}.
  *
  * @author Benedikt Full
  */

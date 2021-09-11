@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * A payment made by a {@link CustomerData Customer}.
+ * A payment made by a {@link CustomerData customer}.
  *
  * @author Benedikt Full
  */

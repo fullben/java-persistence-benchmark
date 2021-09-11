@@ -3,9 +3,9 @@ package de.uniba.dsg.wss.data.model.ms;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * A district is one of ten areas supplied by a specific {@link WarehouseData Warehouse}. Each
- * district is administered by a single {@link EmployeeData Employee} and has 3000 {@link
- * CustomerData Customers}.
+ * A district is one of ten areas supplied by a specific {@link WarehouseData warehouse}. Each
+ * district is administered by a single {@link EmployeeData employee} and has 3000 {@link
+ * CustomerData customers}.
  *
  * @author Benedikt Full
  */

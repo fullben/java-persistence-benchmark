@@ -12,8 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * An order issued by a {@link CustomerEntity Customer} for a certain amount of {@link ProductEntity
- * Products}.
+ * An order issued by a {@link CustomerEntity customer} for a certain amount of {@link ProductEntity
+ * products}.
  *
  * @see OrderItemEntity
  * @author Benedikt Full

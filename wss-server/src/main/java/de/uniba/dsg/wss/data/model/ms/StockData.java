@@ -3,8 +3,8 @@ package de.uniba.dsg.wss.data.model.ms;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * The available amount of a specific {@link ProductData Product} at some {@link WarehouseData
- * Warehouse}.
+ * The available amount of a specific {@link ProductData product} at some {@link WarehouseData
+ * warehouse}.
  *
  * @author Benedikt Full
  */

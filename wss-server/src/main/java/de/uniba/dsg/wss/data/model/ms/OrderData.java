@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * An order issued by a {@link CustomerData Customer} for a certain amount of {@link ProductData
- * Products}.
+ * An order issued by a {@link CustomerData customer} for a certain amount of {@link ProductData
+ * products}.
  *
  * @see OrderItemData
  * @author Benedikt Full

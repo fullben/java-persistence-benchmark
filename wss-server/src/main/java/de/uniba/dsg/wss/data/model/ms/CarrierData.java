@@ -3,8 +3,8 @@ package de.uniba.dsg.wss.data.model.ms;
 import org.jacis.plugin.objectadapter.cloning.JacisCloneable;
 
 /**
- * A carrier is responsible for fulfilling {@link OrderData Orders} by delivering the ordered items
- * to the {@link CustomerData Customer}.
+ * A carrier is responsible for fulfilling {@link OrderData orders} by delivering the ordered items
+ * to the {@link CustomerData customer}.
  *
  * @author Benedikt Full
  */
