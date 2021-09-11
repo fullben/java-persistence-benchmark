@@ -4,10 +4,12 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 /**
- * The base class for all JPA entities. It defines the identifier for the object, which is a UUID.
- * Furthermore, object equality and hashcode are defined as functions of the identity.
+ * The base class for all JPA entities. It defines the identifier for the object, which is a UUID
+ * and a version field for optimistic locking. Furthermore, object equality and hashcode are defined
+ * as functions of the identity.
  *
  * @author Benedikt Full
  */
@@ -15,6 +17,8 @@ import javax.persistence.MappedSuperclass;
 public abstract class BaseEntity {
 
   @Id private String id;
+
+  @Version private Long version;
 
   public BaseEntity() {
     id = UUID.randomUUID().toString();
