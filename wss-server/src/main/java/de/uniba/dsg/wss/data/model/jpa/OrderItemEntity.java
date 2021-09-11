@@ -12,7 +12,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "OrderItem")
 @Table(name = "orderitems")
 public class OrderItemEntity extends BaseEntity {
 

@@ -16,7 +16,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Customer")
 @Table(name = "customers")
 public class CustomerEntity extends PersonEntity {
 

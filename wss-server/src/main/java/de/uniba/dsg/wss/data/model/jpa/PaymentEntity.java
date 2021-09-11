@@ -12,7 +12,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Payment")
 @Table(name = "payments")
 public class PaymentEntity extends BaseEntity {
 

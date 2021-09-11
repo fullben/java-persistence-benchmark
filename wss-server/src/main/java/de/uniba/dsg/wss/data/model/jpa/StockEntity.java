@@ -12,7 +12,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Stock")
 @Table(name = "stocks")
 public class StockEntity extends BaseEntity {
 

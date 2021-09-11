@@ -17,7 +17,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "District")
 @Table(name = "districts")
 public class DistrictEntity extends BaseEntity {
 

@@ -8,7 +8,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Product")
 @Table(name = "products")
 public class ProductEntity extends BaseEntity {
 

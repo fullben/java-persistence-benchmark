@@ -11,7 +11,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Carrier")
 @Table(name = "carriers")
 public class CarrierEntity extends BaseEntity {
 

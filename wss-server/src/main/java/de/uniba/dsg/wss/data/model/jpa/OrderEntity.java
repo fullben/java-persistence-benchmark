@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @see OrderItemEntity
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Order")
 @Table(name = "orders")
 public class OrderEntity extends BaseEntity {
 

@@ -13,7 +13,7 @@ import javax.persistence.Table;
  *
  * @author Benedikt Full
  */
-@Entity
+@Entity(name = "Warehouse")
 @Table(name = "warehouses")
 public class WarehouseEntity extends BaseEntity {
 
