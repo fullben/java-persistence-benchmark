@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,7 +19,13 @@ import javax.persistence.Table;
  * @author Benedikt Full
  */
 @Entity(name = "Order")
-@Table(name = "orders")
+@Table(
+    name = "orders",
+    indexes = {
+      @Index(name = "orders_idx_entrydate", columnList = "entrydate"),
+      @Index(name = "orders_idx_customer_id", columnList = "customer_id"),
+      @Index(name = "orders_idx_district_id", columnList = "district_id")
+    })
 public class OrderEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)

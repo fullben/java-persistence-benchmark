@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.data.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -14,7 +15,11 @@ import javax.persistence.Table;
  * @author Benedikt Full
  */
 @Entity(name = "Stock")
-@Table(name = "stocks")
+@Table(
+    name = "stocks",
+    indexes = {
+      @Index(name = "stocks_idx_warehouse_product_id", columnList = "warehouse_id,product_id")
+    })
 public class StockEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)

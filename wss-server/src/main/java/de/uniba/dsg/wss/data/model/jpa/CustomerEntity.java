@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,7 +18,12 @@ import javax.persistence.Table;
  * @author Benedikt Full
  */
 @Entity(name = "Customer")
-@Table(name = "customers")
+@Table(
+    name = "customers",
+    indexes = {
+      @Index(name = "customers_idx_email", columnList = "email"),
+      @Index(name = "customers_idx_district_id", columnList = "district_id")
+    })
 public class CustomerEntity extends PersonEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)

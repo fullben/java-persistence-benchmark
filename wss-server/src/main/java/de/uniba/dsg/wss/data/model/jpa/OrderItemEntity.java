@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -14,7 +15,9 @@ import javax.persistence.Table;
  * @author Benedikt Full
  */
 @Entity(name = "OrderItem")
-@Table(name = "orderitems")
+@Table(
+    name = "orderitems",
+    indexes = {@Index(name = "orderitems_idx_order_id", columnList = "order_id")})
 public class OrderItemEntity extends BaseEntity {
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)

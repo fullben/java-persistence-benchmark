@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.data.model.jpa;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -13,7 +14,9 @@ import javax.persistence.Table;
  * @author Benedikt Full
  */
 @Entity(name = "Employee")
-@Table(name = "employees")
+@Table(
+    name = "employees",
+    indexes = {@Index(name = "employees_idx_username", columnList = "username")})
 public class EmployeeEntity extends PersonEntity {
 
   @OneToOne(optional = false, fetch = FetchType.EAGER)
