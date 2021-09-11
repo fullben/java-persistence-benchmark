@@ -110,7 +110,11 @@ public class JpaNewOrderServiceIntegrationTests {
 
     newOrderService =
         new JpaNewOrderService(
-            productRepository, stockRepository, orderRepository, customerRepository);
+            warehouseRepository,
+            productRepository,
+            stockRepository,
+            orderRepository,
+            customerRepository);
   }
 
   @Test

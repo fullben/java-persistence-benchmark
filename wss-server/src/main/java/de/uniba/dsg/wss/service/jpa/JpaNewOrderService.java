@@ -4,6 +4,8 @@ import de.uniba.dsg.wss.data.access.jpa.CustomerRepository;
 import de.uniba.dsg.wss.data.access.jpa.OrderRepository;
 import de.uniba.dsg.wss.data.access.jpa.ProductRepository;
 import de.uniba.dsg.wss.data.access.jpa.StockRepository;
+import de.uniba.dsg.wss.data.access.jpa.WarehouseRepository;
+import de.uniba.dsg.wss.data.model.jpa.BaseEntity;
 import de.uniba.dsg.wss.data.model.jpa.CustomerEntity;
 import de.uniba.dsg.wss.data.model.jpa.DistrictEntity;
 import de.uniba.dsg.wss.data.model.jpa.OrderEntity;
@@ -20,6 +22,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaNewOrderService extends NewOrderService {
 
+  private final WarehouseRepository warehouseRepository;
   private final ProductRepository productRepository;
   private final StockRepository stockRepository;
   private final OrderRepository orderRepository;
@@ -41,10 +47,12 @@ public class JpaNewOrderService extends NewOrderService {
 
   @Autowired
   public JpaNewOrderService(
+      WarehouseRepository warehouseRepository,
       ProductRepository productRepository,
       StockRepository stockRepository,
       OrderRepository orderRepository,
       CustomerRepository customerRepository) {
+    this.warehouseRepository = warehouseRepository;
     this.productRepository = productRepository;
     this.stockRepository = stockRepository;
     this.orderRepository = orderRepository;
@@ -79,12 +87,31 @@ public class JpaNewOrderService extends NewOrderService {
     order.setAllLocal(
         req.getItems().stream()
             .allMatch(line -> line.getSupplyingWarehouseId().equals(warehouse.getId())));
+
     // Process individual order items
     List<OrderItemEntity> orderItems = toOrderItems(req.getItems(), order);
     List<NewOrderResponseItem> responseLines = new ArrayList<>(orderItems.size());
     double orderItemSum = 0;
+    // Find all supplying warehouses and products
+    Set<String> supplyingWarehouseIds =
+        orderItems.stream().map(i -> i.getSupplyingWarehouse().getId()).collect(Collectors.toSet());
+    Map<String, WarehouseEntity> supplyingWarehouses =
+        warehouseRepository.findAllById(supplyingWarehouseIds).stream()
+            .collect(Collectors.toMap(BaseEntity::getId, Function.identity()));
+    if (supplyingWarehouseIds.size() != supplyingWarehouses.size()) {
+      throw new IllegalStateException();
+    }
+    Set<String> orderProductIds =
+        orderItems.stream().map(i -> i.getProduct().getId()).collect(Collectors.toSet());
+    Map<String, ProductEntity> orderProducts =
+        productRepository.findAllById(orderProductIds).stream()
+            .collect(Collectors.toMap(BaseEntity::getId, Function.identity()));
+
     for (int i = 0; i < orderItems.size(); i++) {
       OrderItemEntity orderItem = orderItems.get(i);
+      orderItem.setSupplyingWarehouse(
+          supplyingWarehouses.get(orderItem.getSupplyingWarehouse().getId()));
+      orderItem.setProduct(orderProducts.get(orderItem.getProduct().getId()));
       ProductEntity product = productRepository.getById(orderItem.getProduct().getId());
       StockEntity stock =
           stockRepository

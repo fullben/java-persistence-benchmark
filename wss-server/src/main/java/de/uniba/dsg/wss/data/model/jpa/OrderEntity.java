@@ -27,7 +27,7 @@ public class OrderEntity extends BaseEntity {
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   private CustomerEntity customer;
 
-  @Column(name = "entrydate")
+  @Column(nullable = false, name = "entrydate")
   private LocalDateTime entryDate;
 
   @ManyToOne(fetch = FetchType.EAGER)
