@@ -1,6 +1,6 @@
 # Wholesale Supplier Java Persistence Benchmark (JPB)
 
-Benchmark for comparing the performance of a [JPA](https://www.oracle.com/java/technologies/persistence-jsp.html) implementation with that of [MicroStream](https://microstream.one/platforms/microstream-for-java/), loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
+Benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
 ## Structure
 
