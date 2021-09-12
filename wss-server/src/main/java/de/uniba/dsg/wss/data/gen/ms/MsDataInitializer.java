@@ -30,7 +30,6 @@ public class MsDataInitializer extends DataInitializer {
 
   @Override
   public void run(String... args) {
-    LOG.info("Max heap size: {}MB", Runtime.getRuntime().maxMemory() / 1024 / 1024);
     JpaDataGenerator jpaDataGenerator = createJpaDataGenerator();
     LOG.info("Beginning model data generation");
     jpaDataGenerator.generate();
