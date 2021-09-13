@@ -3,14 +3,14 @@ package de.uniba.dsg.wss.data.access.jpa;
 import de.uniba.dsg.wss.data.model.jpa.EmployeeEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * JPA repository for accessing and modifying {@link EmployeeEntity employees}.
  *
  * @author Benedikt Full
  */
-@Repository
+@Transactional(readOnly = true)
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, String> {
 
   Optional<EmployeeEntity> findByUsername(String username);
