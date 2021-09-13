@@ -10,9 +10,9 @@ import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
 
 /**
  * Helper for running JACIS transactions. While the {@link JacisContainer} provides various
- * convenience methods for running transactions, some necessary for in the context of this
- * application are missing. For example, the container has no method which allows a transaction with
- * a return value being retried for a certain amount of times.
+ * convenience methods for running transactions, some necessary in the context of this application
+ * are missing. For example, the container has no method which allows a transaction with a return
+ * value being retried for a certain amount of times.
  *
  * @author Benedikt Full
  */
@@ -35,6 +35,14 @@ public class TransactionManager {
     return attempts;
   }
 
+  /**
+   * Sets the number of attempts for which the transaction executed with this manager is tried
+   * before failing.
+   *
+   * @param attempts the max number of times the transaction can be executed for, must be a positive
+   *     value
+   * @return this manager
+   */
   public TransactionManager setAttempts(int attempts) {
     if (attempts < 1) {
       throw new IllegalArgumentException("Max tries must be greater than zero");
@@ -47,6 +55,13 @@ public class TransactionManager {
     return backoff;
   }
 
+  /**
+   * Sets the delay between any transaction execution attempts.
+   *
+   * @param backoffMillis the delay between the attempts, a milliseconds value, must be greater than
+   *     zero
+   * @return this manager
+   */
   public TransactionManager setBackoff(int backoffMillis) {
     if (backoffMillis < 1) {
       throw new IllegalArgumentException("Backoff millis must be greater than zero");
