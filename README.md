@@ -18,6 +18,8 @@ Transactions can be simulated using the included JMeter project, which uses empl
 
 ## Configuration
 
+### Server
+
 The main configuration properties of the server can be found in the `application.properties`, `application-prod.properties`, and `application-dev.properties` files. 
 
 The server can be launched with one of the two following profiles (configurable via the `spring.profiles.active` property in the `application.properties` file):
@@ -33,6 +35,16 @@ The persistence layer of the server application is implemented both for JPA and 
 * `jpb.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
 * `jpb.jpa.*`: Configuration values of the JPA persistence implementation
 * `jpb.ms.*`: Configuration values of the MicroStream persistence implementation
+
+### Clients
+
+The main configuration properties for the clients simulated are located in the *User Defined Variables* of the set-up thread group.
+
+* `server.url`: The url of the targeted server, excluding port and protocol, e.g. `localhost` for a server running on the same machine.
+* `server.port`: The port of the targeted server.
+* `server.protocol`: The protocol of the targeted server, usually either `http` or `https`.
+* `employee.count`: The number of employees to be simulated.
+* `work.duration`: The duration for which employee work will be simulated in milliseconds.
 
 ## Setup & Usage
 
@@ -66,15 +78,15 @@ Deploying either variation of the benchmark can be achieved by calling the comma
 
 The test implemented by this benchmark can be scaled as hinted at in the [configuration](#configuration) section. While the data model maintained by the server can be scaled using the server properties (namely the `jpb.model.warehouse-count` property), the JMeter threads must be scaled accordingly.
 
-As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the *number of threads* of the *Employee terminal actions* thread group. Note that the threads each use their own distinct employee account, defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
+As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the `employee.count` variable. Note that the threads each use their own distinct employee account, defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
 
-Each employee thread executes an initial setup followed by running randomly selected (non-uniform) transactions until the duration defined in the *Runtime (seconds)* property of the *Simulate employee work* runtime controller has been exceeded. Adjusting this value affects the overall duration of the test and amount of data generated.
+Each employee thread executes an initial setup followed by running randomly selected (non-uniform) transactions until the duration defined in the `work.duration` variable has been exceeded. Adjusting this value affects the overall duration of the test and amount of data generated.
 
 ### Making and Processing Measurements
 
 As mentioned in the [structure](#structure) section, measurements are meant to be taken with JMeter. For this, first ensure that the server is running on this or some other machine and that it already has generated the configured data model and written it to persistent storage.
 
-Make sure that JMeter is installed on your machine. Then, navigate to the folder of this project containing the JMeter sub-project, called `wss-terminals`. If the server is running on a remote computer, adjust the `auth.txt` file by replacing `localhost` (and potentially the port number) with the appropriate host identifier. The same goes for the *Server Name or IP* value in the *HTTP Request Defaults* of the JMeter project.
+Make sure that JMeter is installed on your machine. Then, navigate to the folder of this project containing the JMeter sub-project, called `wss-terminals`. If the server is running on a remote computer, adjust the `server.` properties found in the *User Defined Variables* accordingly.
 
 Open a terminal and execute the command `jmeter -n -t terminals.jmx -l results.jtl` to run the test in JMeter's CLI-mode. This will execute the testplan defined in `terminals.jmx`. The results will be written as CSV data to the `results.jtl` file.
 
