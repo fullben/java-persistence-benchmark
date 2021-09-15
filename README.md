@@ -1,4 +1,4 @@
-# Wholesale Supplier Java Persistence Benchmark (JPB)
+# Wholesale Supplier Java Persistence Benchmark (WSS-JPB)
 
 Benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
@@ -18,7 +18,7 @@ Transactions can be simulated using the included JMeter project, which uses empl
 
 ## Configuration
 
-### Server
+### WSS Server
 
 The main configuration properties of the server can be found in the `application.properties`, `application-prod.properties`, and `application-dev.properties` files. 
 
@@ -36,7 +36,7 @@ The persistence layer of the server application is implemented both for JPA and 
 * `jpb.jpa.*`: Configuration values of the JPA persistence implementation
 * `jpb.ms.*`: Configuration values of the MicroStream persistence implementation
 
-### Clients
+### WSS Clients
 
 The main configuration properties for the clients simulated are located in the *User Defined Variables* of the set-up thread group.
 
