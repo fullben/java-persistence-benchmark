@@ -41,7 +41,7 @@ public class MsPaymentService extends PaymentService {
 
   @Override
   public PaymentResponse process(PaymentRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container).setAttempts(3);
+    TransactionManager transactionManager = new TransactionManager(container, 5, 100);
     return transactionManager.commit(
         () -> {
           // Find customer (either by id or email)

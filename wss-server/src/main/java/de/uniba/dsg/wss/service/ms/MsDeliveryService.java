@@ -53,7 +53,7 @@ public class MsDeliveryService extends DeliveryService {
 
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container).setAttempts(3);
+    TransactionManager transactionManager = new TransactionManager(container, 5, 100);
     return transactionManager.commit(
         () -> {
           // Find warehouse and carrier to be employed for delivery

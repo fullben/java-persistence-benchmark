@@ -14,6 +14,11 @@ import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
  * are missing. For example, the container has no method which allows a transaction with a return
  * value being retried for a certain amount of times.
  *
+ * <p>An instance of this class can be used to execute exactly one transaction. Using any of the
+ * {@code commit(...)} methods will result in the manager from changing its internal state to closed
+ * before returning, resulting in an {@link IllegalStateException} being thrown upon any further
+ * calls to any state-altering methods of the instance.
+ *
  * @author Benedikt Full
  */
 public class TransactionManager {
@@ -25,9 +30,13 @@ public class TransactionManager {
   private boolean closed;
 
   public TransactionManager(JacisContainer container) {
+    this(container, 5, 100);
+  }
+
+  public TransactionManager(JacisContainer container, int attempts, int backoff) {
     this.container = container;
-    attempts = 3;
-    backoff = 100;
+    this.attempts = requireValidAttempts(attempts);
+    this.backoff = requireValidBackoff(backoff);
     closed = false;
   }
 
@@ -44,11 +53,20 @@ public class TransactionManager {
    * @return this manager
    */
   public TransactionManager setAttempts(int attempts) {
-    if (attempts < 1) {
-      throw new IllegalArgumentException("Max tries must be greater than zero");
-    }
-    this.attempts = attempts;
+    requireNotClosed();
+    this.attempts = requireValidAttempts(attempts);
     return this;
+  }
+
+  /**
+   * Sets the number of attempts for which the transaction may be executed to 1.
+   *
+   * @return this manager
+   * @see #setAttempts(int)
+   */
+  public TransactionManager noRetries() {
+    requireNotClosed();
+    return setAttempts(1);
   }
 
   public int getBackoff() {
@@ -63,18 +81,18 @@ public class TransactionManager {
    * @return this manager
    */
   public TransactionManager setBackoff(int backoffMillis) {
-    if (backoffMillis < 1) {
-      throw new IllegalArgumentException("Backoff millis must be greater than zero");
-    }
-    backoff = backoffMillis;
+    requireNotClosed();
+    backoff = requireValidBackoff(backoffMillis);
     return this;
   }
 
   public <T> T commit(Supplier<T> transaction) {
+    requireNotClosed();
     return executeAndCommit(transaction);
   }
 
   public void commit(Runnable transaction) {
+    requireNotClosed();
     executeAndCommit(
         () -> {
           transaction.run();
@@ -83,9 +101,6 @@ public class TransactionManager {
   }
 
   private <T> T executeAndCommit(Supplier<T> transaction) {
-    if (closed) {
-      throw new IllegalStateException("Transaction manager is closed");
-    }
     final int maxAttempts = this.attempts;
     int performedAttempts = 0;
     while ((maxAttempts - performedAttempts++) > 0) {
@@ -149,5 +164,25 @@ public class TransactionManager {
     }
     container = null;
     closed = true;
+  }
+
+  private void requireNotClosed() {
+    if (closed) {
+      throw new IllegalStateException("Transaction manager is closed");
+    }
+  }
+
+  private int requireValidAttempts(int attempts) {
+    if (attempts < 1) {
+      throw new IllegalArgumentException("Max tries must be greater than zero");
+    }
+    return attempts;
+  }
+
+  private int requireValidBackoff(int backoff) {
+    if (backoff < 1) {
+      throw new IllegalArgumentException("Backoff millis must be greater than zero");
+    }
+    return backoff;
   }
 }
