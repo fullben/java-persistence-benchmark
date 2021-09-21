@@ -1,6 +1,5 @@
 package de.uniba.dsg.wss.service.ms;
 
-import de.uniba.dsg.wss.data.access.ms.TransactionManager;
 import de.uniba.dsg.wss.data.model.ms.CustomerData;
 import de.uniba.dsg.wss.data.model.ms.DistrictData;
 import de.uniba.dsg.wss.data.model.ms.OrderData;
@@ -49,56 +48,50 @@ public class MsOrderStatusService extends OrderStatusService {
 
   @Override
   public OrderStatusResponse process(OrderStatusRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container, 5, 100);
-    return transactionManager.commit(
-        () -> {
-          // Fetch warehouse, district, and customer (either by id or email)
-          WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
-          DistrictData district = districtStore.getReadOnly(req.getDistrictId());
-          String customerId = req.getCustomerId();
-          CustomerData customer;
-          if (customerId == null) {
-            customer =
-                customerStore
-                    .streamReadOnly()
-                    .parallel()
-                    .filter(c -> c.getEmail().equals(req.getCustomerEmail()))
-                    .findAny()
-                    .orElseThrow(
-                        () ->
-                            new IllegalStateException(
-                                "Failed to find customer with email " + req.getCustomerEmail()));
-          } else {
-            customer =
-                customerStore
-                    .streamReadOnly()
-                    .parallel()
-                    .filter(c -> c.getId().equals(customerId))
-                    .findAny()
-                    .orElseThrow(
-                        () ->
-                            new IllegalStateException(
-                                "Failed to find customer with id " + customerId));
-          }
+    // Fetch warehouse, district, and customer (either by id or email)
+    WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
+    DistrictData district = districtStore.getReadOnly(req.getDistrictId());
+    String customerId = req.getCustomerId();
+    CustomerData customer;
+    if (customerId == null) {
+      customer =
+          customerStore
+              .streamReadOnly()
+              .parallel()
+              .filter(c -> c.getEmail().equals(req.getCustomerEmail()))
+              .findAny()
+              .orElseThrow(
+                  () ->
+                      new IllegalStateException(
+                          "Failed to find customer with email " + req.getCustomerEmail()));
+    } else {
+      customer =
+          customerStore
+              .streamReadOnly()
+              .parallel()
+              .filter(c -> c.getId().equals(customerId))
+              .findAny()
+              .orElseThrow(
+                  () -> new IllegalStateException("Failed to find customer with id " + customerId));
+    }
 
-          // Find the most recent order of the customer and parse the delivery dates (and some other
-          // info)
-          OrderData order =
-              orderStore
-                  .streamReadOnly()
-                  .parallel()
-                  .filter(o -> o.getCustomerId().equals(customer.getId()))
-                  .max(Comparator.comparing(OrderData::getEntryDate))
-                  .orElseThrow(IllegalStateException::new);
+    // Find the most recent order of the customer and parse the delivery dates (and some other
+    // info)
+    OrderData order =
+        orderStore
+            .streamReadOnly()
+            .parallel()
+            .filter(o -> o.getCustomerId().equals(customer.getId()))
+            .max(Comparator.comparing(OrderData::getEntryDate))
+            .orElseThrow(IllegalStateException::new);
 
-          List<OrderItemData> orderItems =
-              orderItemStore
-                  .streamReadOnly(i -> i.getOrderId().equals(order.getId()))
-                  .parallel()
-                  .collect(Collectors.toList());
+    List<OrderItemData> orderItems =
+        orderItemStore
+            .streamReadOnly(i -> i.getOrderId().equals(order.getId()))
+            .parallel()
+            .collect(Collectors.toList());
 
-          return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(orderItems));
-        });
+    return toOrderStatusResponse(req, order, customer, toOrderItemStatusResponse(orderItems));
   }
 
   private static List<OrderItemStatusResponse> toOrderItemStatusResponse(

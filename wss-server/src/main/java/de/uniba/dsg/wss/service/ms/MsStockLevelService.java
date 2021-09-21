@@ -1,6 +1,5 @@
 package de.uniba.dsg.wss.service.ms;
 
-import de.uniba.dsg.wss.data.access.ms.TransactionManager;
 import de.uniba.dsg.wss.data.model.ms.DistrictData;
 import de.uniba.dsg.wss.data.model.ms.OrderData;
 import de.uniba.dsg.wss.data.model.ms.OrderItemData;
@@ -47,44 +46,40 @@ public class MsStockLevelService extends StockLevelService {
 
   @Override
   public StockLevelResponse process(StockLevelRequest req) {
-    TransactionManager transactionManager = new TransactionManager(container, 5, 100);
-    return transactionManager.commit(
-        () -> {
-          // Fetch warehouse and district
-          WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
-          DistrictData district = districtStore.getReadOnly(req.getDistrictId());
-          // Find the most 20 recent orders for the district
-          List<String> orderIds =
-              orderStore
-                  .streamReadOnly(o -> o.getDistrictId().equals(district.getId()))
-                  .parallel()
-                  .sorted(Comparator.comparing(OrderData::getEntryDate))
-                  .limit(20)
-                  .map(OrderData::getId)
-                  .collect(Collectors.toList());
+    // Fetch warehouse and district
+    WarehouseData warehouse = warehouseStore.getReadOnly(req.getWarehouseId());
+    DistrictData district = districtStore.getReadOnly(req.getDistrictId());
+    // Find the most 20 recent orders for the district
+    List<String> orderIds =
+        orderStore
+            .streamReadOnly(o -> o.getDistrictId().equals(district.getId()))
+            .parallel()
+            .sorted(Comparator.comparing(OrderData::getEntryDate))
+            .limit(20)
+            .map(OrderData::getId)
+            .collect(Collectors.toList());
 
-          // Find the corresponding stock objects and count the ones below the given threshold
-          List<String> productIds =
-              orderItemStore
-                  .streamReadOnly(i -> orderIds.contains(i.getOrderId()))
-                  .parallel()
-                  .map(OrderItemData::getProductId)
-                  .distinct()
-                  .collect(Collectors.toList());
-          int lowStockCount =
-              (int)
-                  stockStore
-                      .streamReadOnly(s -> s.getWarehouseId().equals(warehouse.getId()))
-                      .parallel()
-                      .filter(
-                          s ->
-                              productIds.contains(s.getProductId())
-                                  && s.getQuantity() < req.getStockThreshold())
-                      .count();
+    // Find the corresponding stock objects and count the ones below the given threshold
+    List<String> productIds =
+        orderItemStore
+            .streamReadOnly(i -> orderIds.contains(i.getOrderId()))
+            .parallel()
+            .map(OrderItemData::getProductId)
+            .distinct()
+            .collect(Collectors.toList());
+    int lowStockCount =
+        (int)
+            stockStore
+                .streamReadOnly(s -> s.getWarehouseId().equals(warehouse.getId()))
+                .parallel()
+                .filter(
+                    s ->
+                        productIds.contains(s.getProductId())
+                            && s.getQuantity() < req.getStockThreshold())
+                .count();
 
-          StockLevelResponse res = new StockLevelResponse(req);
-          res.setLowStocksCount(lowStockCount);
-          return res;
-        });
+    StockLevelResponse res = new StockLevelResponse(req);
+    res.setLowStocksCount(lowStockCount);
+    return res;
   }
 }
