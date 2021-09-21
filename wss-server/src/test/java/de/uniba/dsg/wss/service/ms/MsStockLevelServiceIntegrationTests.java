@@ -76,7 +76,7 @@ public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest 
 
     stockLevelService =
         new MsStockLevelService(
-            warehouseStore, districtStore, orderStore, orderItemStore, stockStore);
+            container, warehouseStore, districtStore, orderStore, orderItemStore, stockStore);
   }
 
   @Test

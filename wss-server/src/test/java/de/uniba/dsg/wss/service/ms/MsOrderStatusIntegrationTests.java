@@ -86,7 +86,7 @@ public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
 
     orderStatusService =
         new MsOrderStatusService(
-            warehouseStore, districtStore, customerStore, orderStore, orderItemStore);
+            container, warehouseStore, districtStore, customerStore, orderStore, orderItemStore);
   }
 
   @Test
