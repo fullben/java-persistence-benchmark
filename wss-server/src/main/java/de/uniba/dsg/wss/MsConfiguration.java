@@ -63,7 +63,7 @@ public class MsConfiguration {
         EmbeddedStorageFoundation.New()
             .setConfiguration(
                 StorageConfiguration.Builder()
-                    .setHousekeepingController(Storage.HousekeepingController(1_000, 1_000_000))
+                    .setHousekeepingController(Storage.HousekeepingController(1_000, 10_000_000))
                     .setDataFileEvaluator(
                         Storage.DataFileEvaluator(1024 * 1024, 1024 * 1024 * 8, 0.75))
                     .setEntityCacheEvaluator(
