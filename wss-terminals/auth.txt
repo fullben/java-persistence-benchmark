@@ -1,2 +1,2 @@
 # JMeter generated Authorization file
-http://141.13.4.32:8080/api	${username}	${password}			BASIC
+${server.protocol}://${server.url}:${server.port}/api	${username}	${password}			BASIC

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsOrderStatusService extends OrderStatusService {
 
+  private final JacisContainer container;
   private final JacisStore<String, WarehouseData> warehouseStore;
   private final JacisStore<String, DistrictData> districtStore;
   private final JacisStore<String, CustomerData> customerStore;
@@ -30,11 +32,13 @@ public class MsOrderStatusService extends OrderStatusService {
 
   @Autowired
   public MsOrderStatusService(
+      JacisContainer container,
       JacisStore<String, WarehouseData> warehouseStore,
       JacisStore<String, DistrictData> districtStore,
       JacisStore<String, CustomerData> customerStore,
       JacisStore<String, OrderData> orderStore,
       JacisStore<String, OrderItemData> orderItemStore) {
+    this.container = container;
     this.warehouseStore = warehouseStore;
     this.districtStore = districtStore;
     this.customerStore = customerStore;

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'de.uniba'
-version 'unspecified'
+version '1.0.0'
 sourceCompatibility = '11'
 
 repositories {

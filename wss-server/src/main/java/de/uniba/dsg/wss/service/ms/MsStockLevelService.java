@@ -11,6 +11,7 @@ import de.uniba.dsg.wss.service.StockLevelService;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsStockLevelService extends StockLevelService {
 
+  private final JacisContainer container;
   private final JacisStore<String, WarehouseData> warehouseStore;
   private final JacisStore<String, DistrictData> districtStore;
   private final JacisStore<String, OrderData> orderStore;
@@ -28,11 +30,13 @@ public class MsStockLevelService extends StockLevelService {
 
   @Autowired
   public MsStockLevelService(
+      JacisContainer container,
       JacisStore<String, WarehouseData> warehouseStore,
       JacisStore<String, DistrictData> districtStore,
       JacisStore<String, OrderData> orderStore,
       JacisStore<String, OrderItemData> orderItemStore,
       JacisStore<String, StockData> stockStore) {
+    this.container = container;
     this.warehouseStore = warehouseStore;
     this.districtStore = districtStore;
     this.orderStore = orderStore;
