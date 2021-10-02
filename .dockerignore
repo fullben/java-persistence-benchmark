@@ -1,0 +1,2 @@
+# Ignore other project components which are not part of server
+wss-clients

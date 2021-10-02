@@ -1,0 +1,2 @@
+# JMeter generated Authorization file
+${server.protocol}://${server.url}:${server.port}/api	${username}	${password}			BASIC

@@ -1,0 +1,23 @@
+version: "2.4"
+services:
+  wss-server:
+    container_name: wss-server
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Europe/Berlin
+      - SPRING_PROFILES_ACTIVE=prod
+      - JPB_PERSISTENCE_MODE=ms
+      - JPB_MODEL_INITIALIZE=true
+      - JPB_MODEL_WAREHOUSE_COUNT=5
+      - JPB_MODEL_FULL_SCALE=true
+      - JPB_MS_STORAGE_DIR=storage
+      - JAVA_OPTS=-Xmx14G
+    volumes:
+      - ms_data:/home/jpb/storage
+    cpu_count: 4
+    mem_reservation: 12g
+    mem_limit: 14g
+volumes:
+  ms_data:

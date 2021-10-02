@@ -4,3 +4,15 @@
 # Ignore Gradle build output directory
 build
 .idea
+
+# Ignore default MicroStream storage directory
+storage
+test-storage
+
+# Ignore JMeter generated data
+wss-terminals/report*
+jmeter.log
+results*.jtl
+
+# App log dir
+logs
