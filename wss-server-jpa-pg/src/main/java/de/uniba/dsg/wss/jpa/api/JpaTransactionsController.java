@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.jpa.api;
 
+import de.uniba.dsg.wss.api.ApiResponse;
 import de.uniba.dsg.wss.api.TransactionsController;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
@@ -53,26 +54,26 @@ public class JpaTransactionsController implements TransactionsController {
 
   @Override
   public ResponseEntity<NewOrderResponse> doNewOrderTransaction(NewOrderRequest req) {
-    return ResponseEntity.ok(newOrderService.process(req));
+    return ApiResponse.ok().withDurationHeader().withBody(() -> newOrderService.process(req));
   }
 
   @Override
   public ResponseEntity<PaymentResponse> doPaymentTransaction(PaymentRequest req) {
-    return ResponseEntity.ok(paymentService.process(req));
+    return ApiResponse.ok().withDurationHeader().withBody(() -> paymentService.process(req));
   }
 
   @Override
   public ResponseEntity<OrderStatusResponse> doOrderStatusTransaction(OrderStatusRequest req) {
-    return ResponseEntity.ok(orderStatusService.process(req));
+    return ApiResponse.ok().withDurationHeader().withBody(() -> orderStatusService.process(req));
   }
 
   @Override
   public ResponseEntity<DeliveryResponse> doDeliveryTransaction(DeliveryRequest req) {
-    return ResponseEntity.ok(deliveryService.process(req));
+    return ApiResponse.ok().withDurationHeader().withBody(() -> deliveryService.process(req));
   }
 
   @Override
   public ResponseEntity<StockLevelResponse> doStockLevelTransaction(StockLevelRequest req) {
-    return ResponseEntity.ok(stockLevelService.process(req));
+    return ApiResponse.ok().withDurationHeader().withBody(() -> stockLevelService.process(req));
   }
 }

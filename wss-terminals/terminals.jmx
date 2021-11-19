@@ -310,7 +310,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Simulate employee work" enabled="false">
+        <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Simulate employee work" enabled="true">
           <stringProp name="RunTime.seconds">${work.duration}</stringProp>
         </RunTime>
         <hashTree>
@@ -427,6 +427,15 @@ vars.put(&quot;orderItems&quot;, orderItems)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">12000</stringProp>
@@ -521,6 +530,15 @@ vars.put(&quot;paymentRequest&quot;, req)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">12000</stringProp>
@@ -612,6 +630,15 @@ vars.put(&quot;orderStatusReq&quot;, req)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">10000</stringProp>
@@ -695,6 +722,15 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                   <boolProp name="Assertion.assume_success">false</boolProp>
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
                 <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
@@ -781,6 +817,15 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
                   <boolProp name="Assertion.assume_success">false</boolProp>
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
                 <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">

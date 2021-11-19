@@ -88,7 +88,7 @@ As mentioned in the [structure](#structure) section, measurements are meant to b
 
 Make sure that JMeter is installed on your machine. Then, navigate to the folder of this project containing the JMeter sub-project, called `wss-terminals`. If the server is running on a remote computer, adjust the `server.` properties found in the *User Defined Variables* accordingly.
 
-Open a terminal and execute the command `jmeter -n -t terminals.jmx -l results.jtl` to run the test in JMeter's CLI-mode. This will execute the testplan defined in `terminals.jmx`. The results will be written as CSV data to the `results.jtl` file.
+Open a terminal and execute the command `jmeter -Jsample_variables=processingNs -n -t terminals.jmx -l results.jtl` to run the test in JMeter's CLI-mode. This will execute the testplan defined in `terminals.jmx`. The results will be written as CSV data to the `results.jtl` file.
 
 Once the test has been completed, you can use the `jmeter -g results.jtl -o ./report` command to automatically create a report from the test results. The report will be placed in the `report` directory. Be aware that the `jmeter.reportgenerator.exporter.html.series_filter` property in the `user.properties` file defines which requests will be considered for the report.
 
