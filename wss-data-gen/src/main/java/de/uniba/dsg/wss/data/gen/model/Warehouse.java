@@ -2,6 +2,11 @@ package de.uniba.dsg.wss.data.gen.model;
 
 import java.util.List;
 
+/**
+ * A warehouse of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class Warehouse extends Base {
 
   private String name;

@@ -2,6 +2,12 @@ package de.uniba.dsg.wss.data.gen.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * Defines {@link Product product}, quantity, supplying {@link Warehouse warehouse} and other
+ * properties of an individual {@link Order order} item.
+ *
+ * @author Benedikt Full
+ */
 public class OrderItem extends Base {
 
   private Order order;

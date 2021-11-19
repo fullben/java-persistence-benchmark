@@ -1,5 +1,10 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * Base class for all data classes that represent an actual human person.
+ *
+ * @author Benedikt Full
+ */
 public abstract class Person extends Base {
 
   private String firstName;

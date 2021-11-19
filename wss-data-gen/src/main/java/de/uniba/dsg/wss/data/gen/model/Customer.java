@@ -3,6 +3,11 @@ package de.uniba.dsg.wss.data.gen.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * A customer of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class Customer extends Person {
 
   private District district;

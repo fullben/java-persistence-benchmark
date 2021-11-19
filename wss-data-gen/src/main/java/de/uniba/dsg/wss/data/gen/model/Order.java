@@ -3,6 +3,12 @@ package de.uniba.dsg.wss.data.gen.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * An order issued by a {@link Customer customer} for a certain amount of {@link Product products}.
+ *
+ * @see OrderItem
+ * @author Benedikt Full
+ */
 public class Order extends Base {
 
   private District district;

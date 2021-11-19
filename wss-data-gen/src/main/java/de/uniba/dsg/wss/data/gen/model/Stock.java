@@ -1,5 +1,10 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * The available amount of a specific {@link Product product} at some {@link Warehouse warehouse}.
+ *
+ * @author Benedikt Full
+ */
 public class Stock extends Base {
 
   private Product product;

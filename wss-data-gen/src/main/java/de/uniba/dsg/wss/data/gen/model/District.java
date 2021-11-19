@@ -2,6 +2,12 @@ package de.uniba.dsg.wss.data.gen.model;
 
 import java.util.List;
 
+/**
+ * A district is one of ten areas supplied by a specific {@link Warehouse warehouse}. Each district
+ * is administered by a single {@link Employee employee} and has 3000 {@link Customer customers}.
+ *
+ * @author Benedikt Full
+ */
 public class District extends Base {
 
   private Warehouse warehouse;

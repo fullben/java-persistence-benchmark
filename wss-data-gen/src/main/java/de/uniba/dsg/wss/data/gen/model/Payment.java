@@ -2,6 +2,11 @@ package de.uniba.dsg.wss.data.gen.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * A payment made by a {@link Customer customer}.
+ *
+ * @author Benedikt Full
+ */
 public class Payment extends Base {
 
   private Customer customer;

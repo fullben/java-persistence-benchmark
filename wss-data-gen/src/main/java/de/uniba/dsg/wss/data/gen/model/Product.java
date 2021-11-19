@@ -1,5 +1,10 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * A product of the wholesale supplier.
+ *
+ * @author Benedikt Full
+ */
 public class Product extends Base {
 
   private String imagePath;

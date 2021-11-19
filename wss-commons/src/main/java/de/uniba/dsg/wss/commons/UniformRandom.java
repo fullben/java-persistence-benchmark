@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 /**
- * DataGenerator for creating random numbers in specific ranges and with specific precision.
+ * Data generator for creating random numbers in specific ranges and with specific precision.
  *
  * @author Benedikt Full
  */

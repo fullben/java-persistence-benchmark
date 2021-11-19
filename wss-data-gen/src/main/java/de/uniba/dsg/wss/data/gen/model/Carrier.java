@@ -1,5 +1,11 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * A carrier is responsible for fulfilling {@link Order orders} by delivering the ordered items to
+ * the {@link Customer customer}.
+ *
+ * @author Benedikt Full
+ */
 public class Carrier extends Base {
 
   private String name;

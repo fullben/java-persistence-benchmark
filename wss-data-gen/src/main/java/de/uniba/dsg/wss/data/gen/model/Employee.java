@@ -1,5 +1,11 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * An employee of the wholesale supplier. Employees are the user group meant to perform the business
+ * transactions, i.e. create new orders, or add new payments.
+ *
+ * @author Benedikt Full
+ */
 public class Employee extends Person {
 
   private String title;

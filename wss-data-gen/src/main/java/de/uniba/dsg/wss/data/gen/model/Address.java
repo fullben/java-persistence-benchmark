@@ -1,5 +1,10 @@
 package de.uniba.dsg.wss.data.gen.model;
 
+/**
+ * A representation of a United States address.
+ *
+ * @author Benedikt Full
+ */
 public class Address {
 
   private String street1;
