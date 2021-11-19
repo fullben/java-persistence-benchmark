@@ -1,7 +1,7 @@
 version: "2.4"
 services:
   wss-server:
-    container_name: wss-server
+    container_name: "wss-server"
     build:
       context: .
       dockerfile: Dockerfile-ms-jacis
