@@ -29,7 +29,6 @@ The server can be launched with one of the two following profiles (configurable 
 
 The persistence layer of the server application is implemented both for JPA and MicroStream. Which implementation is to be utilized at runtime can be configured using the `application-dev.properties` and `application-prod.properties` files.
 
-* `jpb.persistence.mode`: Set `jpa` to use JPA-based relational persistence or use `ms` to use MicroStream as persistence provider.
 * `jpb.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
 * `jpb.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
 * `jpb.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
@@ -69,8 +68,8 @@ Note that if using MicroStream persistence, you must delete the MicroStream stor
 
 The server application is meant to be deployed and run as a Docker container. The appropriate container build instructions are defined in the Docker files found in the base directory of this repository. Depending on the persistence solution to be evaluated, one of the provided *docker-compose* files must be utilized:
 
-* `docker-compose.jpa.pg.yml`: Creates a container for the server application (persistence mode will be set to JPA) and launches it after having started another container with a PostgreSQL database.
-* `docker-compose.ms.jacis.yml`: Creates a container just for the server application (persistence mode will be set to MicroStream) and launches it.
+* `docker-compose.jpa.pg.yml`: Creates a container for the server application (JPA/PostgreSQL based persistence implementation will be used) and launches it after having started another container with a PostgreSQL database.
+* `docker-compose.ms.jacis.yml`: Creates a container just for the server application (MicroStream/JACIS based persistence implementation will be used) and launches it.
 
 Deploying either variation of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with either of the two compose file names.
 

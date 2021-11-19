@@ -5,7 +5,6 @@ import de.uniba.dsg.wss.auth.EmployeeUserDetailsService;
 import de.uniba.dsg.wss.jpa.data.access.EmployeeRepository;
 import de.uniba.dsg.wss.jpa.data.model.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
  * @author Benedikt Full
  */
 @Service
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
 
   private final EmployeeRepository employeeRepository;

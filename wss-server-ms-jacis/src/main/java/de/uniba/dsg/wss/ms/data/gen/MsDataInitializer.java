@@ -4,19 +4,19 @@ import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.DataInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * If the server is launched in MS persistence mode, this initializer generates a data model based
- * on the associated configuration properties and writes it to the configured MicroStream storage.
+ * This initializer generates a data model based on the associated configuration properties and
+ * writes it to the configured MicroStream storage.
  *
  * @author Benedikt Full
  */
 @Component
-@ConditionalOnExpression("'${jpb.persistence.mode}' == 'ms' and '${jpb.model.initialize}'")
+@ConditionalOnProperty(name = "jpb.model.initialize", havingValue = "true")
 public class MsDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(MsDataInitializer.class);

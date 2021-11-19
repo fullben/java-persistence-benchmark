@@ -12,7 +12,6 @@ services:
     environment:
       - TZ=Europe/Berlin
       - SPRING_PROFILES_ACTIVE=prod
-      - JPB_PERSISTENCE_MODE=jpa
       - JPB_MODEL_INITIALIZE=true
       - JPB_MODEL_WAREHOUSE_COUNT=5
       - JPB_MODEL_FULL_SCALE=true

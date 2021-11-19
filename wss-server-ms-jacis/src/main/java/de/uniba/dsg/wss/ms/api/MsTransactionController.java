@@ -17,7 +17,6 @@ import de.uniba.dsg.wss.ms.service.MsNewOrderService;
 import de.uniba.dsg.wss.ms.service.MsOrderStatusService;
 import de.uniba.dsg.wss.ms.service.MsPaymentService;
 import de.uniba.dsg.wss.ms.service.MsStockLevelService;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Benedikt Full
  */
 @RestController
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsTransactionController implements TransactionController {
 
   private final MsNewOrderService newOrderService;

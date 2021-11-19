@@ -12,11 +12,9 @@ import java.time.LocalDateTime;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsPaymentService extends PaymentService {
 
   private final JacisContainer container;

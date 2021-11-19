@@ -24,20 +24,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This controller provides read-only access to many of the resources managed by the server when
- * launched in JPA persistence mode.
+ * This controller provides read-only access to many of the resources managed by the server.
  *
  * @author Benedikt Full
  */
 @RestController
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaResourceController implements ResourceController {
 
   private final ProductRepository productRepository;

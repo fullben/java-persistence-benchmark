@@ -18,7 +18,6 @@ import de.uniba.dsg.wss.jpa.service.JpaOrderStatusService;
 import de.uniba.dsg.wss.jpa.service.JpaPaymentService;
 import de.uniba.dsg.wss.jpa.service.JpaStockLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Benedikt Full
  */
 @RestController
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaTransactionController implements TransactionController {
 
   private final JpaNewOrderService newOrderService;

@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Component;
  * @author Benedikt Full
  */
 @Component
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsDataWriter implements DataWriter<MsDataConverter> {
 
   private static final Logger LOG = LogManager.getLogger(MsDataWriter.class);

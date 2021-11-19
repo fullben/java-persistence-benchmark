@@ -26,7 +26,6 @@ import org.jacis.extension.persistence.microstream.MicrostreamStorage;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +42,6 @@ import org.springframework.core.env.Environment;
  * @author Benedikt Full
  */
 @Configuration
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class MsConfiguration {
 

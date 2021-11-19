@@ -21,19 +21,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.jacis.store.JacisStore;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This controller provides read-only access to many of the resources managed by the server when
- * launched in MS persistence mode.
+ * This controller provides read-only access to many of the resources managed by the server.
  *
  * @author Benedikt Full
  */
 @RestController
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsResourceController implements ResourceController {
 
   private final JacisStore<String, CarrierData> carrierStore;

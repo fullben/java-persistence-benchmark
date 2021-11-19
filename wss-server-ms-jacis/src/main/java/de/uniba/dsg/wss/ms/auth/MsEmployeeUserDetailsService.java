@@ -5,7 +5,6 @@ import de.uniba.dsg.wss.auth.EmployeeUserDetailsService;
 import de.uniba.dsg.wss.data.model.ms.EmployeeData;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
  * @author Benedikt Full
  */
 @Service
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
 public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
 
   private final JacisStore<String, EmployeeData> employeeStore;

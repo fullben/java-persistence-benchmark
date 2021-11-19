@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaStockLevelService extends StockLevelService {
 
   private final OrderRepository orderRepository;

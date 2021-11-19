@@ -76,13 +76,13 @@ public class JpaDataConverter {
     warehouses = convertWarehouses(warehouseEntities, products, carriers);
     stocks = convertStocks(warehouseEntities);
     districts = convertDistricts(warehouseEntities);
-    employees = convertEmployees(employeeEntities, warehouses);
+    employees = convertEmployees(employeeEntities);
     customers = convertCustomers(warehouseEntities);
     orders = convertOrders(warehouseEntities);
     orderItems = convertOrderItems(warehouseEntities);
     payments = convertPayments(warehouseEntities);
     stopwatch.stop();
-    LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
+    LOG.info("Converted model data to JPA data, took {}", stopwatch.getDuration());
   }
 
   public List<ProductEntity> getProducts() {
@@ -211,15 +211,14 @@ public class JpaDataConverter {
     List<DistrictEntity> districts = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
-        districts.add(district(d, w));
+        districts.add(district(d));
       }
     }
     LOG.debug("Converted {} districts", districts.size());
     return districts;
   }
 
-  private List<EmployeeEntity> convertEmployees(
-      List<Employee> es, List<WarehouseEntity> warehouses) {
+  private List<EmployeeEntity> convertEmployees(List<Employee> es) {
     List<EmployeeEntity> employees = new ArrayList<>(es.size());
     for (Employee e : es) {
       EmployeeEntity employee = new EmployeeEntity();
@@ -233,9 +232,7 @@ public class JpaDataConverter {
       employee.setUsername(e.getUsername());
       employee.setPassword(e.getPassword());
       employee.setTitle(e.getTitle());
-      DistrictEntity district = new DistrictEntity();
-      district.setId(e.getDistrict().getId());
-      employee.setDistrict(district);
+      employee.setDistrict(findDistrictById(e.getDistrict().getId(), districts));
       employees.add(employee);
     }
     LOG.debug("Converted {} employees", employees.size());
@@ -399,12 +396,10 @@ public class JpaDataConverter {
     return payments;
   }
 
-  private DistrictEntity district(District d, Warehouse w) {
+  private DistrictEntity district(District d) {
     DistrictEntity district = new DistrictEntity();
     district.setId(d.getId());
-    WarehouseEntity warehouse = new WarehouseEntity();
-    warehouse.setId(d.getWarehouse().getId());
-    district.setWarehouse(warehouse);
+    district.setWarehouse(findWarehouseById(d.getWarehouse().getId(), warehouses));
     district.setName(d.getName());
     district.setAddress(address(d.getAddress()));
     district.setSalesTax(d.getSalesTax());
@@ -422,9 +417,16 @@ public class JpaDataConverter {
     return address;
   }
 
-  public WarehouseEntity findById(String id, Collection<WarehouseEntity> entities) {
+  public WarehouseEntity findWarehouseById(String id, Collection<WarehouseEntity> entities) {
     return entities.stream()
         .filter(w -> w.getId().equals(id))
+        .findAny()
+        .orElseThrow(IllegalStateException::new);
+  }
+
+  public DistrictEntity findDistrictById(String id, Collection<DistrictEntity> entities) {
+    return entities.stream()
+        .filter(d -> d.getId().equals(id))
         .findAny()
         .orElseThrow(IllegalStateException::new);
   }
