@@ -6,7 +6,7 @@ plugins {
 subprojects {
     apply plugin: 'java'
     // Apply Spring Boot to all subprojects that are meant to implement full applications
-    if (name != 'wss-data-gen' || name != 'wss-server-commons') {
+    if (name != 'wss-data-gen' || name != 'wss-commons') {
         apply plugin: 'org.springframework.boot'
         apply plugin: 'io.spring.dependency-management'
     }
