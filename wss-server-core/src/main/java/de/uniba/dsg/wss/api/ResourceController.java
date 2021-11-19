@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @RequestMapping("api")
 @Validated
-public interface ResourcesController {
+public interface ResourceController {
 
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   ResponseEntity<Iterable<ProductRepresentation>> getProducts();

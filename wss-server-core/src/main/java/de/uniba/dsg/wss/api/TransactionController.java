@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @RequestMapping("api")
 @Validated
-public interface TransactionsController {
+public interface TransactionController {
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   ResponseEntity<NewOrderResponse> doNewOrderTransaction(@Valid @RequestBody NewOrderRequest req);

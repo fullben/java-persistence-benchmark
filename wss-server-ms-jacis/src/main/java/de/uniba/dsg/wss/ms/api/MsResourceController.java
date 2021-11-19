@@ -1,6 +1,6 @@
 package de.uniba.dsg.wss.ms.api;
 
-import de.uniba.dsg.wss.api.ResourcesController;
+import de.uniba.dsg.wss.api.ResourceController;
 import de.uniba.dsg.wss.data.transfer.representations.CarrierRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-public class MsResourcesController implements ResourcesController {
+public class MsResourceController implements ResourceController {
 
   private final JacisStore<String, CarrierData> carrierStore;
   private final JacisStore<String, WarehouseData> warehouseStore;
@@ -46,7 +46,7 @@ public class MsResourcesController implements ResourcesController {
   private final JacisStore<String, ProductData> productStore;
   private final ModelMapper modelMapper;
 
-  public MsResourcesController(
+  public MsResourceController(
       JacisStore<String, CarrierData> carrierStore,
       JacisStore<String, WarehouseData> warehouseStore,
       JacisStore<String, DistrictData> districtStore,
@@ -68,11 +68,12 @@ public class MsResourcesController implements ResourcesController {
 
   @Override
   public ResponseEntity<Iterable<ProductRepresentation>> getProducts() {
-    List<ProductRepresentation> products = productStore
-        .streamReadOnly()
-        .parallel()
-        .map(p -> modelMapper.map(p, ProductRepresentation.class))
-        .collect(Collectors.toList());
+    List<ProductRepresentation> products =
+        productStore
+            .streamReadOnly()
+            .parallel()
+            .map(p -> modelMapper.map(p, ProductRepresentation.class))
+            .collect(Collectors.toList());
     return ResponseEntity.ok(products);
   }
 
@@ -89,10 +90,10 @@ public class MsResourcesController implements ResourcesController {
   @Override
   public ResponseEntity<List<WarehouseRepresentation>> getWarehouses() {
     List<WarehouseRepresentation> warehouses =
-     warehouseStore
-        .streamReadOnly()
-        .map(w -> modelMapper.map(w, WarehouseRepresentation.class))
-        .collect(Collectors.toList());
+        warehouseStore
+            .streamReadOnly()
+            .map(w -> modelMapper.map(w, WarehouseRepresentation.class))
+            .collect(Collectors.toList());
     return ResponseEntity.ok(warehouses);
   }
 
@@ -158,10 +159,11 @@ public class MsResourcesController implements ResourcesController {
 
   @Override
   public ResponseEntity<List<CarrierRepresentation>> getCarriers() {
-    List<CarrierRepresentation> carriers = carrierStore
-        .streamReadOnly()
-        .map(c -> modelMapper.map(c, CarrierRepresentation.class))
-        .collect(Collectors.toList());
+    List<CarrierRepresentation> carriers =
+        carrierStore
+            .streamReadOnly()
+            .map(c -> modelMapper.map(c, CarrierRepresentation.class))
+            .collect(Collectors.toList());
     ResponseEntity.ok(carriers);
   }
 }

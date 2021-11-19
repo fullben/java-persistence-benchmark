@@ -1,6 +1,6 @@
 package de.uniba.dsg.wss.jpa.api;
 
-import de.uniba.dsg.wss.api.ResourcesController;
+import de.uniba.dsg.wss.api.ResourceController;
 import de.uniba.dsg.wss.data.transfer.representations.CarrierRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
-public class JpaResourcesController implements ResourcesController {
+public class JpaResourceController implements ResourceController {
 
   private final ProductRepository productRepository;
   private final CarrierRepository carrierRepository;
@@ -51,7 +51,7 @@ public class JpaResourcesController implements ResourcesController {
   private final ModelMapper modelMapper;
 
   @Autowired
-  public JpaResourcesController(
+  public JpaResourceController(
       ProductRepository productRepository,
       CarrierRepository carrierRepository,
       WarehouseRepository warehouseRepository,

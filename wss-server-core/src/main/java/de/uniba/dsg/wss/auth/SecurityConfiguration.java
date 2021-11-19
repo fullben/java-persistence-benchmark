@@ -16,9 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Configures the security of this server. While the API provided by implementations of the {@link
- * de.uniba.dsg.wss.api.ResourcesController ResourcesController} is publicly available, access to
- * the API provided by implementations of the {@link de.uniba.dsg.wss.api.TransactionsController
- * TransactionsController} is restricted to users which can authenticate themselves with basic
+ * de.uniba.dsg.wss.api.ResourceController ResourceController} is publicly available, access to the
+ * API provided by implementations of the {@link de.uniba.dsg.wss.api.TransactionController
+ * TransactionController} is restricted to users which can authenticate themselves with basic
  * authentication.
  *
  * @author Benedikt Full

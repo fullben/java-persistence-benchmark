@@ -1,7 +1,7 @@
-package de.uniba.dsg.wss.ms.api;
+package de.uniba.dsg.wss.jpa.api;
 
 import de.uniba.dsg.wss.api.ApiResponse;
-import de.uniba.dsg.wss.api.TransactionsController;
+import de.uniba.dsg.wss.api.TransactionController;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequest;
@@ -12,37 +12,39 @@ import de.uniba.dsg.wss.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentResponse;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.wss.ms.service.MsDeliveryService;
-import de.uniba.dsg.wss.ms.service.MsNewOrderService;
-import de.uniba.dsg.wss.ms.service.MsOrderStatusService;
-import de.uniba.dsg.wss.ms.service.MsPaymentService;
-import de.uniba.dsg.wss.ms.service.MsStockLevelService;
+import de.uniba.dsg.wss.jpa.service.JpaDeliveryService;
+import de.uniba.dsg.wss.jpa.service.JpaNewOrderService;
+import de.uniba.dsg.wss.jpa.service.JpaOrderStatusService;
+import de.uniba.dsg.wss.jpa.service.JpaPaymentService;
+import de.uniba.dsg.wss.jpa.service.JpaStockLevelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This controller provides access to the services of the server when launched in MS persistence
+ * This controller provides access to the services of the server when launched in JPA persistence
  * mode.
  *
  * @author Benedikt Full
  */
 @RestController
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "ms")
-public class MsTransactionsController implements TransactionsController {
+@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
+public class JpaTransactionController implements TransactionController {
 
-  private final MsNewOrderService newOrderService;
-  private final MsPaymentService paymentService;
-  private final MsOrderStatusService orderStatusService;
-  private final MsDeliveryService deliveryService;
-  private final MsStockLevelService stockLevelService;
+  private final JpaNewOrderService newOrderService;
+  private final JpaPaymentService paymentService;
+  private final JpaOrderStatusService orderStatusService;
+  private final JpaDeliveryService deliveryService;
+  private final JpaStockLevelService stockLevelService;
 
-  public MsTransactionsController(
-      MsNewOrderService newOrderService,
-      MsPaymentService paymentService,
-      MsOrderStatusService orderStatusService,
-      MsDeliveryService deliveryService,
-      MsStockLevelService stockLevelService) {
+  @Autowired
+  public JpaTransactionController(
+      JpaNewOrderService newOrderService,
+      JpaPaymentService paymentService,
+      JpaOrderStatusService orderStatusService,
+      JpaDeliveryService deliveryService,
+      JpaStockLevelService stockLevelService) {
     this.newOrderService = newOrderService;
     this.paymentService = paymentService;
     this.orderStatusService = orderStatusService;
