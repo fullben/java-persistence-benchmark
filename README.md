@@ -95,3 +95,38 @@ Once the test has been completed, you can use the `jmeter -g results.jtl -o ./re
 Note that when executing the JMeter tests, no resource intensive features such as *Result Trees*, *Debug Samplers*, *Listeners*, or *Summary Reports* should be active in the script.
 
 Furthermore, if you have configured a large number of threads as described in the section [scaling](#scaling), you may have to adjust the amount of heap memory available to the JVM executing the JMeter script. This can be facilitated by modifying the appropriate JMeter file. This file is found at `PATH-TO-JMETER-INSTALLATION/bin/jmeter`. Open the file and find the line `: "${HEAP:="-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m"}"` and adjust the values of `-Xms` and `-Xmx`. For example, if you have 50 threads, a size of 4GB to 6GB is appropriate.
+
+## Extensibility
+
+This benchmark is extensible, meaning it is possible to add custom implementations for a persistence solution of your choice.
+
+For this, simply create a new module. By convention, the module name should start with `wss-server-`, followed by a very short acronym (or multiple) identifying the persistence solution. For example, if you were to implement a JPA-based solution backed by a MySQL database management system, an appropriate module name would be `wss-server-jpa-mssql`.
+
+The `build.gradle` of the module should start out similar to the following build file:
+
+```groovy
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'de.uniba.dsg.wss.Application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':wss-server-core')
+    implementation project(':wss-data-gen')
+    // Dependencies for your persistence solution here
+}
+```
+
+The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or the two implementations provided with the original benchmark version (`wss-server-jpa-pg` and `wss-server-ms-jacis`).
+
+Aside from the application implementation, you must also provide a `Dockerfile` and `docker-compose` file for enabling the execution of your implementation in a container environment. These files must be defined in the root directory of this project. Check the existing implementations there for further information. 
