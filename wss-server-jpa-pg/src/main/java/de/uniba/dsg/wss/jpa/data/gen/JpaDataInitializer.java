@@ -33,6 +33,7 @@ public class JpaDataInitializer extends DataInitializer {
         new DataGenerator(getModelWarehouseCount(), isFullScaleModel(), getPasswordEncoder());
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter(generator);
+    converter.convert();
     databaseWriter.writeAll(converter);
   }
 }

@@ -5,11 +5,9 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -26,10 +24,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Benedikt Full
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "de.uniba.dsg.wss.data.access.jpa")
+@EnableJpaRepositories(basePackages = "de.uniba.dsg.wss.jpa.data.access")
 @EnableTransactionManagement
 @EnableRetry
-@ConditionalOnProperty(name = "jpb.persistence.mode", havingValue = "jpa")
 public class JpaConfiguration {
 
   private static final Map<String, String> PROPERTY_KEYS =
@@ -68,7 +65,7 @@ public class JpaConfiguration {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("de.uniba.dsg.wss.data.model.jpa");
+    factory.setPackagesToScan("de.uniba.dsg.wss.jpa.data.model");
     factory.setDataSource(dataSource());
     Map<String, Object> props = new HashMap<>(PROPERTY_KEYS.size());
     PROPERTY_KEYS.forEach(
