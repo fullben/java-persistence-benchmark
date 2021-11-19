@@ -17,6 +17,7 @@ import de.uniba.dsg.wss.ms.service.MsOrderStatusService;
 import de.uniba.dsg.wss.ms.service.MsPaymentService;
 import de.uniba.dsg.wss.ms.service.MsStockLevelService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -49,27 +50,27 @@ public class MsTransactionsController implements TransactionsController {
   }
 
   @Override
-  public NewOrderResponse doNewOrderTransaction(NewOrderRequest req) {
-    return newOrderService.process(req);
+  public ResponseEntity<NewOrderResponse> doNewOrderTransaction(NewOrderRequest req) {
+    return ResponseEntity.ok(newOrderService.process(req));
   }
 
   @Override
-  public PaymentResponse doPaymentTransaction(PaymentRequest req) {
-    return paymentService.process(req);
+  public ResponseEntity<PaymentResponse> doPaymentTransaction(PaymentRequest req) {
+    return ResponseEntity.ok(paymentService.process(req));
   }
 
   @Override
-  public OrderStatusResponse doOrderStatusTransaction(OrderStatusRequest req) {
-    return orderStatusService.process(req);
+  public ResponseEntity<OrderStatusResponse> doOrderStatusTransaction(OrderStatusRequest req) {
+    return ResponseEntity.ok(orderStatusService.process(req));
   }
 
   @Override
-  public DeliveryResponse doDeliveryTransaction(DeliveryRequest req) {
-    return deliveryService.process(req);
+  public ResponseEntity<DeliveryResponse> doDeliveryTransaction(DeliveryRequest req) {
+    return ResponseEntity.ok(deliveryService.process(req));
   }
 
   @Override
-  public StockLevelResponse doStockLevelTransaction(StockLevelRequest req) {
-    return stockLevelService.process(req);
+  public ResponseEntity<StockLevelResponse> doStockLevelTransaction(StockLevelRequest req) {
+    return ResponseEntity.ok(stockLevelService.process(req));
   }
 }

@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ResourcesController {
 
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  Iterable<ProductRepresentation> getProducts();
+  ResponseEntity<Iterable<ProductRepresentation>> getProducts();
 
   @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   ResponseEntity<EmployeeRepresentation> getEmployee(@NotBlank @PathVariable String username);
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  List<WarehouseRepresentation> getWarehouses();
+  ResponseEntity<List<WarehouseRepresentation>> getWarehouses();
 
   @GetMapping(
       value = "warehouses/{warehouseId}/districts",
@@ -61,5 +61,5 @@ public interface ResourcesController {
       @NotBlank @PathVariable String warehouseId, @NotBlank @PathVariable String districtId);
 
   @GetMapping(value = "carriers", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  List<CarrierRepresentation> getCarriers();
+  ResponseEntity<List<CarrierRepresentation>> getCarriers();
 }

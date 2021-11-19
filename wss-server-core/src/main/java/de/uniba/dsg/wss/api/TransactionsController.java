@@ -12,6 +12,7 @@ import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,17 +31,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface TransactionsController {
 
   @PostMapping(value = "transactions/new-order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  NewOrderResponse doNewOrderTransaction(@Valid @RequestBody NewOrderRequest req);
+  ResponseEntity<NewOrderResponse> doNewOrderTransaction(@Valid @RequestBody NewOrderRequest req);
 
   @PostMapping(value = "transactions/payment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  PaymentResponse doPaymentTransaction(@Valid @RequestBody PaymentRequest req);
+  ResponseEntity<PaymentResponse> doPaymentTransaction(@Valid @RequestBody PaymentRequest req);
 
   @GetMapping(value = "transactions/order-status", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  OrderStatusResponse doOrderStatusTransaction(@Valid @RequestBody OrderStatusRequest req);
+  ResponseEntity<OrderStatusResponse> doOrderStatusTransaction(
+      @Valid @RequestBody OrderStatusRequest req);
 
   @PutMapping(value = "transactions/delivery", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  DeliveryResponse doDeliveryTransaction(@Valid @RequestBody DeliveryRequest req);
+  ResponseEntity<DeliveryResponse> doDeliveryTransaction(@Valid @RequestBody DeliveryRequest req);
 
   @GetMapping(value = "transactions/stock-level", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  StockLevelResponse doStockLevelTransaction(@Valid @RequestBody StockLevelRequest req);
+  ResponseEntity<StockLevelResponse> doStockLevelTransaction(
+      @Valid @RequestBody StockLevelRequest req);
 }

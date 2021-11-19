@@ -73,10 +73,12 @@ public class JpaResourcesController implements ResourcesController {
 
   @Transactional(readOnly = true)
   @Override
-  public Iterable<ProductRepresentation> getProducts() {
-    return productRepository.findAll().stream()
-        .map(p -> modelMapper.map(p, ProductRepresentation.class))
-        .collect(Collectors.toList());
+  public ResponseEntity<Iterable<ProductRepresentation>> getProducts() {
+    List<ProductRepresentation> products =
+        productRepository.findAll().stream()
+            .map(p -> modelMapper.map(p, ProductRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(products);
   }
 
   @Transactional(readOnly = true)
@@ -91,10 +93,12 @@ public class JpaResourcesController implements ResourcesController {
 
   @Transactional(readOnly = true)
   @Override
-  public List<WarehouseRepresentation> getWarehouses() {
-    return warehouseRepository.findAll().stream()
-        .map(w -> modelMapper.map(w, WarehouseRepresentation.class))
-        .collect(Collectors.toList());
+  public ResponseEntity<List<WarehouseRepresentation>> getWarehouses() {
+    List<WarehouseRepresentation> warehouses =
+        warehouseRepository.findAll().stream()
+            .map(w -> modelMapper.map(w, WarehouseRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(warehouses);
   }
 
   @Transactional(readOnly = true)
@@ -154,9 +158,11 @@ public class JpaResourcesController implements ResourcesController {
 
   @Transactional(readOnly = true)
   @Override
-  public List<CarrierRepresentation> getCarriers() {
-    return carrierRepository.findAll().stream()
-        .map(c -> modelMapper.map(c, CarrierRepresentation.class))
-        .collect(Collectors.toList());
+  public ResponseEntity<List<CarrierRepresentation>> getCarriers() {
+    List<CarrierRepresentation> carriers =
+        carrierRepository.findAll().stream()
+            .map(c -> modelMapper.map(c, CarrierRepresentation.class))
+            .collect(Collectors.toList());
+    return ResponseEntity.ok(carriers);
   }
 }

@@ -67,12 +67,13 @@ public class MsResourcesController implements ResourcesController {
   }
 
   @Override
-  public Iterable<ProductRepresentation> getProducts() {
-    return productStore
+  public ResponseEntity<Iterable<ProductRepresentation>> getProducts() {
+    List<ProductRepresentation> products = productStore
         .streamReadOnly()
         .parallel()
         .map(p -> modelMapper.map(p, ProductRepresentation.class))
         .collect(Collectors.toList());
+    return ResponseEntity.ok(products);
   }
 
   @Override
@@ -86,11 +87,13 @@ public class MsResourcesController implements ResourcesController {
   }
 
   @Override
-  public List<WarehouseRepresentation> getWarehouses() {
-    return warehouseStore
+  public ResponseEntity<List<WarehouseRepresentation>> getWarehouses() {
+    List<WarehouseRepresentation> warehouses =
+     warehouseStore
         .streamReadOnly()
         .map(w -> modelMapper.map(w, WarehouseRepresentation.class))
         .collect(Collectors.toList());
+    return ResponseEntity.ok(warehouses);
   }
 
   @Override
@@ -154,10 +157,11 @@ public class MsResourcesController implements ResourcesController {
   }
 
   @Override
-  public List<CarrierRepresentation> getCarriers() {
-    return carrierStore
+  public ResponseEntity<List<CarrierRepresentation>> getCarriers() {
+    List<CarrierRepresentation> carriers = carrierStore
         .streamReadOnly()
         .map(c -> modelMapper.map(c, CarrierRepresentation.class))
         .collect(Collectors.toList());
+    ResponseEntity.ok(carriers);
   }
 }
