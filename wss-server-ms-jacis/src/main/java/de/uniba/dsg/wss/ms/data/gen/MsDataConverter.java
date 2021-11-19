@@ -1,7 +1,7 @@
 package de.uniba.dsg.wss.ms.data.gen;
 
+import de.uniba.dsg.wss.commons.Stopwatch;
 import de.uniba.dsg.wss.data.gen.DataGenerator;
-import de.uniba.dsg.wss.data.gen.jpa.JpaDataGenerator;
 import de.uniba.dsg.wss.data.gen.model.Address;
 import de.uniba.dsg.wss.data.gen.model.Carrier;
 import de.uniba.dsg.wss.data.gen.model.Customer;
@@ -24,7 +24,6 @@ import de.uniba.dsg.wss.ms.data.model.PaymentData;
 import de.uniba.dsg.wss.ms.data.model.ProductData;
 import de.uniba.dsg.wss.ms.data.model.StockData;
 import de.uniba.dsg.wss.ms.data.model.WarehouseData;
-import de.uniba.dsg.wss.util.Stopwatch;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +36,7 @@ import org.apache.logging.log4j.Logger;
  * both models are alike and at the same time eliminates the need for duplicate model generation
  * code.
  *
- * @see JpaDataGenerator
+ * @see DataGenerator
  * @author Benedikt Full
  */
 public class MsDataConverter {

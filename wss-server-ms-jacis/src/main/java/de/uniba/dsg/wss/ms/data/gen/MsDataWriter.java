@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.ms.data.gen;
 
+import de.uniba.dsg.wss.commons.Stopwatch;
 import de.uniba.dsg.wss.data.gen.DataWriter;
 import de.uniba.dsg.wss.ms.data.model.CarrierData;
 import de.uniba.dsg.wss.ms.data.model.CustomerData;
@@ -10,7 +11,6 @@ import de.uniba.dsg.wss.ms.data.model.OrderItemData;
 import de.uniba.dsg.wss.ms.data.model.ProductData;
 import de.uniba.dsg.wss.ms.data.model.StockData;
 import de.uniba.dsg.wss.ms.data.model.WarehouseData;
-import de.uniba.dsg.wss.util.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jacis.container.JacisContainer;

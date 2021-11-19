@@ -2,7 +2,7 @@ package de.uniba.dsg.wss.ms.auth;
 
 import de.uniba.dsg.wss.auth.EmployeeUserDetails;
 import de.uniba.dsg.wss.auth.EmployeeUserDetailsService;
-import de.uniba.dsg.wss.data.model.ms.EmployeeData;
+import de.uniba.dsg.wss.ms.data.model.EmployeeData;
 import org.jacis.store.JacisStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
