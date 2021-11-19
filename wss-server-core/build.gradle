@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':wss-commons')
+    api project(':wss-commons')
     // Automatic mapping between model classes
     api 'org.modelmapper:modelmapper:2.4.4'
     // API documentation and web interface
