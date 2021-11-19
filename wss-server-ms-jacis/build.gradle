@@ -1,0 +1,30 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'de.uniba.dsg.wss.Application'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        credentials {
+            username "JanWiemer"
+            password "3a2355ceaed919fb4ff19f8ea14f98424c7aba8a"
+        }
+        url "https://maven.pkg.github.com/janwiemer/jacis"
+    }
+}
+
+dependencies {
+    implementation project(':wss-server-core')
+    implementation project(':wss-data-gen')
+    // MicroStream persistence
+    implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
+    implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'
+    implementation 'org.jacis:jacis:2.0.10'
+}

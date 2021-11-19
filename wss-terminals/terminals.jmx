@@ -310,7 +310,7 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Simulate employee work" enabled="true">
+        <RunTime guiclass="RunTimeGui" testclass="RunTime" testname="Simulate employee work" enabled="false">
           <stringProp name="RunTime.seconds">${work.duration}</stringProp>
         </RunTime>
         <hashTree>

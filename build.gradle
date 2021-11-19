@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.3' apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+    // Apply Spring Boot to all subprojects that are meant to implement full applications
+    if (name != 'wss-data-gen' || name != 'wss-server-commons') {
+        apply plugin: 'org.springframework.boot'
+        apply plugin: 'io.spring.dependency-management'
+    }
+
+    group 'de.uniba.dsg'
+    version '1.0'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // Configure common Java stuff
+    if (plugins.hasPlugin('java')) {
+        sourceCompatibility = 11
+
+        dependencies {
+            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+        }
+
+        test {
+            useJUnitPlatform()
+        }
+    }
+
+    // Add all core Spring Boot dependencies to all modules using Spring Boot
+    if (plugins.hasPlugin('org.springframework.boot') && plugins.hasPlugin('io.spring.dependency-management')) {
+        configurations {
+            all {
+                exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+            }
+        }
+
+        dependencies {
+            compile 'org.springframework.boot:spring-boot-starter-web'
+            compile 'org.springframework.boot:spring-boot-starter-log4j2'
+            compile 'org.springframework.boot:spring-boot-starter-validation'
+            compile 'org.springframework.boot:spring-boot-starter-security'
+            testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        }
+    }
+}
