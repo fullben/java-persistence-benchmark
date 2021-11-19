@@ -4,7 +4,7 @@ services:
     container_name: "wss-server"
     build:
       context: .
-      dockerfile: Dockerfile-jpa-pq
+      dockerfile: Dockerfile-jpa-pg
     depends_on:
       - db
     ports:

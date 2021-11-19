@@ -1,6 +1,6 @@
 rootProject.name = 'java-persistence-benchmark'
 include 'wss-server-core'
 include 'wss-data-gen'
-include 'wss-server-jpa-pq'
+include 'wss-server-jpa-pg'
 include 'wss-server-ms-jacis'
 include 'wss-commons'

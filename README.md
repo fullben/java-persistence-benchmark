@@ -12,7 +12,7 @@ The benchmark is based on the famous TPC-C benchmark. Like TPC-C, it models the 
 * Update the delivery status of an order (read-write)
 * Check the stock levels of products at a warehouse (read)
 
-In order to model this scenario, the benchmark has a server application (implemented using [Spring Boot](https://spring.io/projects/spring-boot)), which provides access to the data of the supplier and can execute the transactions described above. This application is implemented in multiple 'flavors'. The core of the application resides in the `wss-server-core` module, while the actual implementations for each persistence mechanism reside in their own dedicated subproject (e.g., `wss-server-jpa-pq` for JPA-based persistence backed by a PostgreSQL database).
+In order to model this scenario, the benchmark has a server application (implemented using [Spring Boot](https://spring.io/projects/spring-boot)), which provides access to the data of the supplier and can execute the transactions described above. This application is implemented in multiple 'flavors'. The core of the application resides in the `wss-server-core` module, while the actual implementations for each persistence mechanism reside in their own dedicated subproject (e.g., `wss-server-jpa-pg` for JPA-based persistence backed by a PostgreSQL database).
 
 Transactions can be simulated using the included [JMeter](https://jmeter.apache.org/) project, which uses employee accounts to perform the transactions at a rate and probability similar to the specifications of the TPC-C benchmark by calling the corresponding API endpoints of the server application.
 
@@ -69,7 +69,7 @@ Note that if using MicroStream persistence, you must delete the MicroStream stor
 
 The server application is meant to be deployed and run as a Docker container. The appropriate container build instructions are defined in the Docker files found in the base directory of this repository. Depending on the persistence solution to be evaluated, one of the provided *docker-compose* files must be utilized:
 
-* `docker-compose.jpa.pq.yml`: Creates a container for the server application (persistence mode will be set to JPA) and launches it after having started another container with a PostgreSQL database.
+* `docker-compose.jpa.pg.yml`: Creates a container for the server application (persistence mode will be set to JPA) and launches it after having started another container with a PostgreSQL database.
 * `docker-compose.ms.jacis.yml`: Creates a container just for the server application (persistence mode will be set to MicroStream) and launches it.
 
 Deploying either variation of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with either of the two compose file names.
