@@ -37,13 +37,15 @@ The persistence layer of the server application is implemented both for JPA and 
 
 ### Wholesale Supplier Clients
 
-The main configuration properties for the clients simulated are located in the *User Defined Variables* of the set-up thread group.
+The main configuration properties for the clients simulated are located in the *User Defined Variables* of the set-up thread group. You can set the values there or alternatively use the appropriate command-line arguments.
 
-* `server.url`: The url of the targeted server, excluding port and protocol, e.g. `localhost` for a server running on the same machine.
-* `server.port`: The port of the targeted server.
-* `server.protocol`: The protocol of the targeted server, usually either `http` or `https`.
-* `employee.count`: The number of employees to be simulated.
-* `work.duration`: The duration for which employee work will be simulated in milliseconds.
+User Defined Variable|Command-Line Argument|Default Value|Description
+---|---|---|---
+`server.url`|`-Jurl`|`localhost`|The url of the targeted server, excluding port and protocol, e.g. `localhost` for a server running on the same machine.
+`server.port`|`-Jport`|8080|The port of the targeted server.
+`server.protocol`|`-Jprotocol`|http|The protocol of the targeted server, usually either `http` or `https`.
+`employee.count`|`-Jemployees`|10|The number of employees to be simulated.
+`work.duration`|`-Jduration`|9000|The duration for which employee work will be simulated in seconds.
 
 ## Setup & Usage
 
