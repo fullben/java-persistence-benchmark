@@ -13,8 +13,8 @@ public abstract class MicroStreamServiceTest {
 
   public void populateStorage(DataGenerator generator, MsDataWriter dataWriter) {
     generator.generate();
-    MsDataConverter converter = new MsDataConverter(generator);
-    converter.convert();
+    MsDataConverter converter = new MsDataConverter();
+    converter.convert(generator);
     dataWriter.writeAll(converter);
   }
 }

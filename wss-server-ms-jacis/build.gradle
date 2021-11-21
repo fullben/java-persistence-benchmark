@@ -22,7 +22,6 @@ repositories {
 
 dependencies {
     implementation project(':wss-server-core')
-    implementation project(':wss-data-gen')
     // MicroStream persistence
     implementation 'one.microstream:microstream-storage-embedded:05.00.02-MS-GA'
     implementation 'one.microstream:microstream-storage-embedded-configuration:05.00.02-MS-GA'

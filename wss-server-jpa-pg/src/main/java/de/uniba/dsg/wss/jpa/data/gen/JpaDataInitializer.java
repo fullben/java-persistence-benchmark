@@ -2,6 +2,8 @@ package de.uniba.dsg.wss.jpa.data.gen;
 
 import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.DataInitializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "jpb.model.initialize", havingValue = "true")
 public class JpaDataInitializer extends DataInitializer {
 
+  private static final Logger LOG = LogManager.getLogger(JpaDataInitializer.class);
   private final JpaDataWriter databaseWriter;
 
   @Autowired
@@ -28,12 +31,12 @@ public class JpaDataInitializer extends DataInitializer {
   }
 
   @Override
-  public void run(String... args) {
-    DataGenerator generator =
-        new DataGenerator(getModelWarehouseCount(), isFullScaleModel(), getPasswordEncoder());
+  public void initializePersistentData() {
+    LOG.info("Beginning model data generation");
+    DataGenerator generator = createDataGenerator();
     generator.generate();
-    JpaDataConverter converter = new JpaDataConverter(generator);
-    converter.convert();
+    JpaDataConverter converter = new JpaDataConverter();
+    converter.convert(generator);
     databaseWriter.writeAll(converter);
   }
 }

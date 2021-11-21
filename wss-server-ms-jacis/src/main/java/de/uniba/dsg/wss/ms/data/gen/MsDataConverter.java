@@ -1,6 +1,7 @@
 package de.uniba.dsg.wss.ms.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
+import de.uniba.dsg.wss.data.gen.DataConverter;
 import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.model.Address;
 import de.uniba.dsg.wss.data.gen.model.Carrier;
@@ -32,20 +33,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Converts a JPA data model to a MicroStream data model. Converting an existing model ensures that
- * both models are alike and at the same time eliminates the need for duplicate model generation
- * code.
+ * Converts a generated data model to a MicroStream data model.
  *
  * @see DataGenerator
  * @author Benedikt Full
  */
-public class MsDataConverter {
+public class MsDataConverter implements DataConverter {
 
   private static final Logger LOG = LogManager.getLogger(MsDataConverter.class);
-  private final List<Product> productEntities;
-  private final List<Carrier> carrierEntities;
-  private final List<Warehouse> warehouseEntities;
-  private final List<Employee> employeeEntities;
   private List<ProductData> products;
   private List<CarrierData> carriers;
   private List<WarehouseData> warehouses;
@@ -57,14 +52,7 @@ public class MsDataConverter {
   private List<OrderItemData> orderItems;
   private List<PaymentData> payments;
 
-  public MsDataConverter(DataGenerator dataGenerator) {
-    if (!dataGenerator.isDataGenerated()) {
-      dataGenerator.generate();
-    }
-    productEntities = dataGenerator.getProducts();
-    carrierEntities = dataGenerator.getCarriers();
-    warehouseEntities = dataGenerator.getWarehouses();
-    employeeEntities = dataGenerator.getEmployees();
+  public MsDataConverter() {
     products = null;
     carriers = null;
     warehouses = null;
@@ -76,20 +64,52 @@ public class MsDataConverter {
     payments = null;
   }
 
-  public void convert() {
+  @Override
+  public void convert(DataGenerator generator) {
     Stopwatch stopwatch = new Stopwatch(true);
-    products = convertProducts(productEntities);
-    carriers = convertCarriers(carrierEntities);
-    warehouses = convertWarehouses(warehouseEntities, products, carriers);
-    stocks = convertStocks(warehouseEntities);
-    districts = convertDistricts(warehouseEntities);
-    employees = convertEmployees(employeeEntities, warehouses);
-    customers = convertCustomers(warehouseEntities);
-    orders = convertOrders(warehouseEntities);
-    orderItems = convertOrderItems(warehouseEntities);
-    payments = convertPayments(warehouseEntities);
+    products = convertProducts(generator.getProducts());
+    carriers = convertCarriers(generator.getCarriers());
+    warehouses = convertWarehouses(generator.getWarehouses(), products, carriers);
+    stocks = convertStocks(generator.getWarehouses());
+    districts = convertDistricts(generator.getWarehouses());
+    employees = convertEmployees(generator.getEmployees(), warehouses);
+    customers = convertCustomers(generator.getWarehouses());
+    orders = convertOrders(generator.getWarehouses());
+    orderItems = convertOrderItems(generator.getWarehouses());
+    payments = convertPayments(generator.getWarehouses());
     stopwatch.stop();
     LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
+  }
+
+  @Override
+  public boolean hasConvertedData() {
+    return products != null
+        && carriers != null
+        && warehouses != null
+        && stocks != null
+        && districts != null
+        && employees != null
+        && customers != null
+        && orders != null
+        && orderItems != null
+        && payments != null;
+  }
+
+  @Override
+  public void clear() {
+    if (!hasConvertedData()) {
+      return;
+    }
+    products = null;
+    carriers = null;
+    warehouses = null;
+    stocks = null;
+    districts = null;
+    employees = null;
+    customers = null;
+    orders = null;
+    orderItems = null;
+    payments = null;
   }
 
   public List<ProductData> getProducts() {

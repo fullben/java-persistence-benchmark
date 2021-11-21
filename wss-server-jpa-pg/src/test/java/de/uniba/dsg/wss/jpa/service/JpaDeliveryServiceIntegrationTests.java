@@ -40,8 +40,8 @@ public class JpaDeliveryServiceIntegrationTests {
   public void setUp() {
     DataGenerator generator = new DataGenerator(1, 1, 1, 1, 1_000, new BCryptPasswordEncoder());
     generator.generate();
-    JpaDataConverter converter = new JpaDataConverter(generator);
-    converter.generate();
+    JpaDataConverter converter = new JpaDataConverter();
+    converter.convert(generator);
 
     productRepository.saveAll(converter.getProducts());
     carrierRepository.saveAll(converter.getCarriers());

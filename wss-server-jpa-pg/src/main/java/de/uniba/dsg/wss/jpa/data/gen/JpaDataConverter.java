@@ -1,6 +1,7 @@
 package de.uniba.dsg.wss.jpa.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
+import de.uniba.dsg.wss.data.gen.DataConverter;
 import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.model.Address;
 import de.uniba.dsg.wss.data.gen.model.Carrier;
@@ -32,13 +33,15 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class JpaDataConverter {
+/**
+ * Converts a generated data model to a JPA entity data model.
+ *
+ * @see DataGenerator
+ * @author Benedikt Full
+ */
+public class JpaDataConverter implements DataConverter {
 
   private static final Logger LOG = LogManager.getLogger(JpaDataConverter.class);
-  private final List<Product> productEntities;
-  private final List<Carrier> carrierEntities;
-  private final List<Warehouse> warehouseEntities;
-  private final List<Employee> employeeEntities;
   private List<ProductEntity> products;
   private List<CarrierEntity> carriers;
   private List<WarehouseEntity> warehouses;
@@ -50,14 +53,7 @@ public class JpaDataConverter {
   private List<OrderItemEntity> orderItems;
   private List<PaymentEntity> payments;
 
-  public JpaDataConverter(DataGenerator generator) {
-    if (!generator.isDataGenerated()) {
-      generator.generate();
-    }
-    productEntities = generator.getProducts();
-    carrierEntities = generator.getCarriers();
-    warehouseEntities = generator.getWarehouses();
-    employeeEntities = generator.getEmployees();
+  public JpaDataConverter() {
     products = null;
     carriers = null;
     warehouses = null;
@@ -69,20 +65,55 @@ public class JpaDataConverter {
     payments = null;
   }
 
-  public void convert() {
+  @Override
+  public void convert(DataGenerator generator) {
     Stopwatch stopwatch = new Stopwatch(true);
-    products = convertProducts(productEntities);
-    carriers = convertCarriers(carrierEntities);
-    warehouses = convertWarehouses(warehouseEntities, products, carriers);
-    stocks = convertStocks(warehouseEntities);
-    districts = convertDistricts(warehouseEntities);
-    employees = convertEmployees(employeeEntities);
-    customers = convertCustomers(warehouseEntities);
-    orders = convertOrders(warehouseEntities);
-    orderItems = convertOrderItems(warehouseEntities);
-    payments = convertPayments(warehouseEntities);
+    if (!generator.isDataGenerated()) {
+      generator.generate();
+    }
+    products = convertProducts(generator.getProducts());
+    carriers = convertCarriers(generator.getCarriers());
+    warehouses = convertWarehouses(generator.getWarehouses(), products, carriers);
+    stocks = convertStocks(generator.getWarehouses());
+    districts = convertDistricts(generator.getWarehouses());
+    employees = convertEmployees(generator.getEmployees());
+    customers = convertCustomers(generator.getWarehouses());
+    orders = convertOrders(generator.getWarehouses());
+    orderItems = convertOrderItems(generator.getWarehouses());
+    payments = convertPayments(generator.getWarehouses());
     stopwatch.stop();
-    LOG.info("Converted model data to JPA data, took {}", stopwatch.getDuration());
+    LOG.info("Converted model data to JPA entity data, took {}", stopwatch.getDuration());
+  }
+
+  @Override
+  public boolean hasConvertedData() {
+    return products != null
+        && carriers != null
+        && warehouses != null
+        && stocks != null
+        && districts != null
+        && employees != null
+        && customers != null
+        && orders != null
+        && orderItems != null
+        && payments != null;
+  }
+
+  @Override
+  public void clear() {
+    if (!hasConvertedData()) {
+      return;
+    }
+    products = null;
+    carriers = null;
+    warehouses = null;
+    stocks = null;
+    districts = null;
+    employees = null;
+    customers = null;
+    orders = null;
+    orderItems = null;
+    payments = null;
   }
 
   public List<ProductEntity> getProducts() {
