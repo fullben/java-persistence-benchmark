@@ -121,11 +121,10 @@ repositories {
 
 dependencies {
     implementation project(':wss-server-core')
-    implementation project(':wss-data-gen')
     // Dependencies for your persistence solution here
 }
 ```
 
-The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or the two implementations provided with the original benchmark version (`wss-server-jpa-pg` and `wss-server-ms-jacis`).
+The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or the two implementations provided with the original benchmark version (`wss-server-jpa-pg` and `wss-server-ms-jacis`). Note that this module should use the same package structure as the core module. In order to avoid name collisions, use prefixes or postfixes on your class names.
 
 Aside from the application implementation, you must also provide a `Dockerfile` and `docker-compose` file for enabling the execution of your implementation in a container environment. These files must be defined in the root directory of this project. Check the existing implementations there for further information. 
