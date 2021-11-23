@@ -1,13 +1,8 @@
 package de.uniba.dsg.wss.data.model;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  * A warehouse of the wholesale supplier.
@@ -31,6 +26,11 @@ public class WarehouseEntity extends BaseEntity {
 
   private double salesTax;
   private double yearToDateBalance;
+
+  public WarehouseEntity(){
+    this.districts = new ArrayList<>();
+    this.stocks = new ArrayList<>();
+  }
 
   public String getName() {
     return name;

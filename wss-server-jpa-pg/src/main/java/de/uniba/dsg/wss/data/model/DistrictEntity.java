@@ -1,16 +1,8 @@
 package de.uniba.dsg.wss.data.model;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  * A district is one of ten areas supplied by a specific {@link WarehouseEntity warehouse}. Each
@@ -41,6 +33,11 @@ public class DistrictEntity extends BaseEntity {
   @Embedded private AddressEmbeddable address;
   private double salesTax;
   private double yearToDateBalance;
+
+  public DistrictEntity(){
+    this.customers = new ArrayList<>();
+    this.orders = new ArrayList<>();
+  }
 
   public WarehouseEntity getWarehouse() {
     return warehouse;
