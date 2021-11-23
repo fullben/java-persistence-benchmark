@@ -18,6 +18,18 @@ public class PaymentRequest {
   @Min(value = 1, message = "Amount must be greater than zero")
   private double amount;
 
+  public PaymentRequest(){
+
+  }
+
+  public PaymentRequest(String warehouseId, String districtId, String customerId, String customerEmail, double amount) {
+    this.warehouseId = warehouseId;
+    this.districtId = districtId;
+    this.customerId = customerId;
+    this.customerEmail = customerEmail;
+    this.amount = amount;
+  }
+
   public String getWarehouseId() {
     return warehouseId;
   }

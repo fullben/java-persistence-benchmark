@@ -11,7 +11,19 @@ public class NewOrderResponseItem {
   private int stockQuantity;
   private String brandGeneric;
 
-  public NewOrderResponseItem() {}
+  public NewOrderResponseItem(){
+  }
+
+  public NewOrderResponseItem(String supplyingWarehouseId, String itemId, String itemName, double itemPrice, double amount, int quantity, int stockQuantity, String brandGeneric) {
+    this.supplyingWarehouseId = supplyingWarehouseId;
+    this.itemId = itemId;
+    this.itemName = itemName;
+    this.itemPrice = itemPrice;
+    this.amount = amount;
+    this.quantity = quantity;
+    this.stockQuantity = stockQuantity;
+    this.brandGeneric = brandGeneric;
+  }
 
   public String getSupplyingWarehouseId() {
     return supplyingWarehouseId;

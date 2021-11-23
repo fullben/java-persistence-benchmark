@@ -13,6 +13,13 @@ public class StockLevelResponse {
     stockThreshold = req.getStockThreshold();
   }
 
+  public StockLevelResponse(StockLevelRequest req, int lowStocksCount) {
+    warehouseId = req.getWarehouseId();
+    districtId = req.getDistrictId();
+    stockThreshold = req.getStockThreshold();
+    this.lowStocksCount = lowStocksCount;
+  }
+
   public String getWarehouseId() {
     return warehouseId;
   }
