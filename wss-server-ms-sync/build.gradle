@@ -1,0 +1,21 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'de.uniba.dsg.wss.Application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':wss-server-core')
+    // MicroStream persistence
+    implementation 'one.microstream:microstream-storage-embedded:' + version_microstream
+    implementation 'one.microstream:microstream-storage-embedded-configuration:' + version_microstream
+}

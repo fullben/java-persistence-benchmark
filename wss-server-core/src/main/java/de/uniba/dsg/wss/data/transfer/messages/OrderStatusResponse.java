@@ -17,6 +17,24 @@ public class OrderStatusResponse {
   private String orderCarrierId;
   private List<OrderItemStatusResponse> itemStatus;
 
+  public OrderStatusResponse(){
+
+  }
+
+  public OrderStatusResponse(String warehouseId, String districtId, String customerId, String customerFirstName, String customerMiddleName, String customerLastName, double customerBalance, String orderId, LocalDateTime orderEntryDate, String orderCarrierId, List<OrderItemStatusResponse> itemStatus) {
+    this.warehouseId = warehouseId;
+    this.districtId = districtId;
+    this.customerId = customerId;
+    this.customerFirstName = customerFirstName;
+    this.customerMiddleName = customerMiddleName;
+    this.customerLastName = customerLastName;
+    this.customerBalance = customerBalance;
+    this.orderId = orderId;
+    this.orderEntryDate = orderEntryDate;
+    this.orderCarrierId = orderCarrierId;
+    this.itemStatus = itemStatus;
+  }
+
   public String getWarehouseId() {
     return warehouseId;
   }

@@ -10,6 +10,18 @@ public class OrderItemStatusResponse {
   private double amount;
   private LocalDateTime deliveryDate;
 
+  public OrderItemStatusResponse(){
+
+  }
+
+  public OrderItemStatusResponse(String supplyingWarehouseId, String productId, int quantity, double amount, LocalDateTime deliveryDate) {
+    this.supplyingWarehouseId = supplyingWarehouseId;
+    this.productId = productId;
+    this.quantity = quantity;
+    this.amount = amount;
+    this.deliveryDate = deliveryDate;
+  }
+
   public String getSupplyingWarehouseId() {
     return supplyingWarehouseId;
   }
