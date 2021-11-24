@@ -14,7 +14,7 @@ repositories {
     maven {
         credentials {
             username "JanWiemer"
-            password "3a2355ceaed919fb4ff19f8ea14f98424c7aba8a"
+            password "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"
         }
         url "https://maven.pkg.github.com/janwiemer/jacis"
     }
