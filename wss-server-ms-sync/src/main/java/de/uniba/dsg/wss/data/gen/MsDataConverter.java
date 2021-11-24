@@ -1,8 +1,6 @@
-package de.uniba.dsg.wss.gen;
+package de.uniba.dsg.wss.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
-import de.uniba.dsg.wss.data.gen.DataConverter;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.model.Address;
 import de.uniba.dsg.wss.data.gen.model.Carrier;
 import de.uniba.dsg.wss.data.gen.model.Customer;

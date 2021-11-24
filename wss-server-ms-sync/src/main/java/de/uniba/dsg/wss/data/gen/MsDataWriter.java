@@ -1,7 +1,6 @@
-package de.uniba.dsg.wss.gen;
+package de.uniba.dsg.wss.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
-import de.uniba.dsg.wss.data.gen.DataWriter;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 import org.apache.logging.log4j.LogManager;

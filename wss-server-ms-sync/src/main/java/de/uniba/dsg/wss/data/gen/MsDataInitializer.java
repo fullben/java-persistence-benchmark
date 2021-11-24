@@ -1,7 +1,5 @@
-package de.uniba.dsg.wss.gen;
+package de.uniba.dsg.wss.data.gen;
 
-import de.uniba.dsg.wss.data.gen.DataGenerator;
-import de.uniba.dsg.wss.data.gen.DataInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
