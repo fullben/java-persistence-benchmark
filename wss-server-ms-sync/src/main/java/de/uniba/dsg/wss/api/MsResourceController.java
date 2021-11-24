@@ -40,7 +40,6 @@ public class MsResourceController implements ResourceController {
 
   @Override
   public ResponseEntity<Iterable<ProductRepresentation>> getProducts() {
-
     return ResponseEntity.ok(
         this.dataRoot.getProducts().entrySet().stream()
             .parallel()

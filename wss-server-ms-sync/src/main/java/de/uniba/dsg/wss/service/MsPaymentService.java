@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Implements the mentioned transactions in the README.
+ * Implements the transaction to be executed by the {@link PaymentService} implementation.
  *
  * @author Johannes Manner
+ * @author Benedikt Full
  */
 @Service
 public class MsPaymentService extends PaymentService {
