@@ -1,6 +1,13 @@
 package de.uniba.dsg.wss.api;
 
+import de.uniba.dsg.wss.data.model.CarrierData;
+import de.uniba.dsg.wss.data.model.CustomerData;
+import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.EmployeeData;
+import de.uniba.dsg.wss.data.model.OrderData;
+import de.uniba.dsg.wss.data.model.ProductData;
+import de.uniba.dsg.wss.data.model.StockData;
+import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.representations.CarrierRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
@@ -9,13 +16,6 @@ import de.uniba.dsg.wss.data.transfer.representations.OrderRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.ProductRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.StockRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.WarehouseRepresentation;
-import de.uniba.dsg.wss.data.model.CarrierData;
-import de.uniba.dsg.wss.data.model.CustomerData;
-import de.uniba.dsg.wss.data.model.DistrictData;
-import de.uniba.dsg.wss.data.model.OrderData;
-import de.uniba.dsg.wss.data.model.ProductData;
-import de.uniba.dsg.wss.data.model.StockData;
-import de.uniba.dsg.wss.data.model.WarehouseData;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jacis.store.JacisStore;
@@ -160,6 +160,6 @@ public class MsResourceController implements ResourceController {
             .streamReadOnly()
             .map(c -> modelMapper.map(c, CarrierRepresentation.class))
             .collect(Collectors.toList());
-    ResponseEntity.ok(carriers);
+    return ResponseEntity.ok(carriers);
   }
 }
