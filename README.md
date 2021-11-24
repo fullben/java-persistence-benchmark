@@ -1,6 +1,6 @@
 # Wholesale Supplier Java Persistence Benchmark (JPB)
 
-Benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
+Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
 ## Structure
 
@@ -13,6 +13,12 @@ The benchmark is based on the famous TPC-C benchmark. Like TPC-C, it models the 
 * Check the stock levels of products at a warehouse (read)
 
 In order to model this scenario, the benchmark has a server application (implemented using [Spring Boot](https://spring.io/projects/spring-boot)), which provides access to the data of the supplier and can execute the transactions described above. This application is implemented in multiple 'flavors'. The core of the application resides in the `wss-server-core` module, while the actual implementations for each persistence mechanism reside in their own dedicated subproject (e.g., `wss-server-jpa-pg` for JPA-based persistence backed by a PostgreSQL database).
+
+The current version of this project includes the following actual server application implementations:
+
+* `wss-server-jpa-pg`: JPA-based persistence, using Hibernate as JPA-implementation, Spring Data JPA for data access, and PostgreSQL as database management system.
+* `wss-server-ms-jacis`: MicroStream-based persistence which uses the [JACIS framework](https://github.com/JanWiemer/jacis) for data management and transactions on transient data.
+* `wss-server-ms-sync`: MicroStream-based persistence which uses the patterns provided by the MicroStream-developers for structuring and accessing data. This approach heavily relies on Java maps for indexing and basic Java synchronization for concurrent data access.
 
 Transactions can be simulated using the included [JMeter](https://jmeter.apache.org/) project, which uses employee accounts to perform the transactions at a rate and probability similar to the specifications of the TPC-C benchmark by calling the corresponding API endpoints of the server application.
 
