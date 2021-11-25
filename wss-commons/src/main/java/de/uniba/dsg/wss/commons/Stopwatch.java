@@ -124,7 +124,7 @@ public class Stopwatch {
    *   <li>68 nanoseconds: {@code "68 ns"}
    *   <li>23 milliseconds: {@code "23 ms"}
    *   <li>1032 milliseconds: {@code "1.032 seconds"}
-   *   <li>1840 seconds: {@code "30 minutes 40 seconds"}
+   *   <li>1840 seconds: {@code "30.666 minutes"}
    * </ul>
    *
    * <p>Note that the current implementation is only meant for returning human-readable
@@ -139,11 +139,8 @@ public class Stopwatch {
   public String getDuration() {
     requireStopped();
     Duration duration = Duration.ofNanos(getDurationNanos());
-    int minutesPart = duration.toMinutesPart();
-    if (minutesPart > 0) {
-      int secondsPart = duration.toSecondsPart();
-      String minString = minutesPart + " minutes";
-      return secondsPart > 0 ? minString + " " + secondsPart + " seconds" : minString;
+    if (duration.toMinutesPart() > 0) {
+      return toMinutesAndFractionString(duration);
     } else {
       long secs = duration.toSecondsPart();
       if (secs > 0) {
@@ -162,6 +159,23 @@ public class Stopwatch {
         }
       }
     }
+  }
+
+  private static String toMinutesAndFractionString(Duration duration) {
+    if (duration.toSecondsPart() == 0) {
+      return String.valueOf(duration.toMinutesPart());
+    }
+    // Convert to minute fraction
+    String min = String.valueOf((float) duration.toSecondsPart() / 60);
+    if (min.startsWith("0.")) {
+      // Remove first two symbols
+      min = min.substring(2);
+    }
+    // Ensure there are no more than 3 digits (NO rounding, just cut off)
+    if (min.length() > 3) {
+      min = min.substring(0, 3);
+    }
+    return duration.toMinutesPart() + "." + min;
   }
 
   private static String toSecondsAndMillisString(long seconds, long millis) {
