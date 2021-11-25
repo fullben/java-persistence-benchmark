@@ -11,13 +11,6 @@ application {
 
 repositories {
     mavenCentral()
-    maven {
-        credentials {
-            username "JanWiemer"
-            password "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"
-        }
-        url "https://maven.pkg.github.com/janwiemer/jacis"
-    }
 }
 
 dependencies {
@@ -25,7 +18,9 @@ dependencies {
     // MicroStream persistence
     implementation 'one.microstream:microstream-storage-embedded:' + version_microstream
     implementation 'one.microstream:microstream-storage-embedded-configuration:' + version_microstream
-    // implementation 'org.jacis:jacis:2.0.10'
-    // Build based on the JACIS repository; used as the automatic pull is unreliable due to the GitHub credentials system
+    // Build based on the JACIS repository; for reasons see:
+    // https://github.com/JanWiemer/jacis/issues/31
+    // https://github.com/JanWiemer/jacis/wiki/Installation
     implementation files('libs/jacis-2.0.11-2021-10-25-SNAPSHOT.jar')
+    // implementation 'org.jacis:jacis:2.0.10'
 }
