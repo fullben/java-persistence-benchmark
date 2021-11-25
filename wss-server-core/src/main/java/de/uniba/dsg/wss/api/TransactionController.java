@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * <p>By contract, all responses provided by the implementations of this interface must include the
  * {@link ApiResponse#REQUEST_PROCESSING_NANOS_HEADER_NAME REQUEST_PROCESSING_NANOS_HEADER_NAME}
  * header, which indicates how many nanoseconds it took to actually process the request. This can be
- * achieved by utilizing the builder provided by methods such as {@link ApiResponse#ok()}.
+ * achieved by utilizing the response builder provided by methods such as {@link ApiResponse#ok()}
+ * and calling the {@link de.uniba.dsg.wss.api.ApiResponse.ApiResponseBuilder#withDurationHeader()
+ * withDurationHeader()} method.
  *
  * @author Benedikt Full
  */

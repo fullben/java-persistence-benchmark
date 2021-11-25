@@ -16,7 +16,8 @@ public final class ApiResponse {
 
   /**
    * HTTP header name for the header detailing how long the creation of the request body content
-   * took.
+   * took. The header value will detail the processing duration in nanoseconds (therefore
+   * Processing-<i>Ns</i>).
    */
   public static final String REQUEST_PROCESSING_NANOS_HEADER_NAME = "Processing-Ns";
 
