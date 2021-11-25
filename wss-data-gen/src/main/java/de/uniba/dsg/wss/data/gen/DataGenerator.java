@@ -1,22 +1,11 @@
 package de.uniba.dsg.wss.data.gen;
 
-import static java.util.Objects.requireNonNull;
-
 import com.github.javafaker.Faker;
 import de.uniba.dsg.wss.commons.RandomSelector;
 import de.uniba.dsg.wss.commons.Stopwatch;
 import de.uniba.dsg.wss.commons.UniformRandom;
-import de.uniba.dsg.wss.data.gen.model.Address;
-import de.uniba.dsg.wss.data.gen.model.Carrier;
-import de.uniba.dsg.wss.data.gen.model.Customer;
-import de.uniba.dsg.wss.data.gen.model.District;
-import de.uniba.dsg.wss.data.gen.model.Employee;
-import de.uniba.dsg.wss.data.gen.model.Order;
-import de.uniba.dsg.wss.data.gen.model.OrderItem;
-import de.uniba.dsg.wss.data.gen.model.Payment;
-import de.uniba.dsg.wss.data.gen.model.Product;
-import de.uniba.dsg.wss.data.gen.model.Stock;
-import de.uniba.dsg.wss.data.gen.model.Warehouse;
+import de.uniba.dsg.wss.data.gen.model.*;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -26,7 +15,9 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
-public class DataGenerator {
+import static java.util.Objects.requireNonNull;
+
+public class DataGenerator implements IDataGenerator {
 
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";

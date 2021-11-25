@@ -28,12 +28,12 @@ public interface DataConverter {
    * @param generator the generator of which the data will be used for conversion, must not be
    *     {@code null}
    */
-  void convert(DataGenerator generator);
+  void convert(IDataGenerator generator);
 
   /**
    * Indicates whether this converter currently holds references to any converted model data. This
-   * is the case if {@link #convert(DataGenerator)} has been called before, without {@link #clear()}
-   * having been called in the meantime.
+   * is the case if convert method has been called before, without {@link #clear()} having been
+   * called in the meantime.
    *
    * <p>If this method returns {@code true}, the getters of this converter should return references
    * to non-{@code null}, valid model data.
