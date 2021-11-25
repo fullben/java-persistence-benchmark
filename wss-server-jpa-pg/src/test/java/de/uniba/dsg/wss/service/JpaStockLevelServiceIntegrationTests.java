@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.uniba.dsg.wss.data.access.CarrierRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.StockRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
@@ -13,7 +14,6 @@ import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,7 +38,8 @@ public class JpaStockLevelServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator = new DataGenerator(1, 1, 100, 100, 1_000, new BCryptPasswordEncoder());
+    DataGenerator generator =
+        new DataGenerator(1, 1, 100, 100, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);

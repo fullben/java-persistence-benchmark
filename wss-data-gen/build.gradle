@@ -8,7 +8,6 @@ repositories {
 
 dependencies {
     implementation project(':wss-commons')
-    implementation 'org.springframework.security:spring-security-crypto:5.5.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
     // Fake data generator

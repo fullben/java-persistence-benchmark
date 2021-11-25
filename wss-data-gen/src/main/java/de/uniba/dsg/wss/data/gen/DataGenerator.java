@@ -24,9 +24,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class DataGenerator {
 
@@ -72,7 +72,7 @@ public class DataGenerator {
   private List<Warehouse> warehouses;
   private final List<Employee> employees;
   private final List<String> existingEmails;
-  private final PasswordEncoder passwordEncoder;
+  private final Function<String, String> passwordEncoder;
   private final LocalDateTime now;
 
   /**
@@ -85,7 +85,7 @@ public class DataGenerator {
    * @param customers the number of customers per district
    * @param orders the number of orders per district
    * @param products the number of products
-   * @param passwordEncoder the encoder to be used to encode the employee credentials
+   * @param passwordEncoder the encoder function to be used to encode the employee credentials
    */
   public DataGenerator(
       int warehouses,
@@ -93,7 +93,7 @@ public class DataGenerator {
       int customers,
       int orders,
       int products,
-      PasswordEncoder passwordEncoder) {
+      Function<String, String> passwordEncoder) {
     if (warehouses < 1 || districts < 1 || customers < 1 || orders < 1 || products < 1) {
       throw new IllegalArgumentException("Warehouse count must be greater than zero");
     }
@@ -115,7 +115,8 @@ public class DataGenerator {
     now = LocalDateTime.now();
   }
 
-  public DataGenerator(int warehouseCount, boolean fullScale, PasswordEncoder passwordEncoder) {
+  public DataGenerator(
+      int warehouseCount, boolean fullScale, Function<String, String> passwordEncoder) {
     if (warehouseCount < 1) {
       throw new IllegalArgumentException("Warehouse count must be greater than zero");
     }
@@ -144,7 +145,7 @@ public class DataGenerator {
     now = LocalDateTime.now();
   }
 
-  public DataGenerator(int warehouseCount, PasswordEncoder passwordEncoder) {
+  public DataGenerator(int warehouseCount, Function<String, String> passwordEncoder) {
     this(warehouseCount, true, passwordEncoder);
   }
 
@@ -300,7 +301,7 @@ public class DataGenerator {
     employee.setAddress(newAddressSameZip(district.getAddress()));
     String postfix = warehouseNbr + "_" + districtNbr;
     employee.setUsername(EMPLOYEE_USERNAME_PREFIX + postfix);
-    employee.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD + "_" + postfix));
+    employee.setPassword(passwordEncoder.apply(DEFAULT_PASSWORD + "_" + postfix));
     employee.setDistrict(district);
     employee.setTitle(faker.job().title());
     return employee;

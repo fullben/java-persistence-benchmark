@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.PaymentData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentResponse;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import java.util.stream.Collectors;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
@@ -47,7 +47,8 @@ public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
   @BeforeEach
   public void setUp() {
     populateStorage(
-        new DataGenerator(1, 1, 10, 10, 1_000, new BCryptPasswordEncoder()), dataWriter);
+        new DataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
+        dataWriter);
     request = new PaymentRequest();
 
     WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);

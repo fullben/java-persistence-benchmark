@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.uniba.dsg.wss.data.access.CarrierRepository;
 import de.uniba.dsg.wss.data.access.CustomerRepository;
+import de.uniba.dsg.wss.data.access.DistrictRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
 import de.uniba.dsg.wss.data.gen.DataGenerator;
@@ -14,8 +16,6 @@ import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.OrderItemEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
-import de.uniba.dsg.wss.data.access.DistrictRepository;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,8 @@ public class JpaDeliveryServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator = new DataGenerator(1, 1, 1, 1, 1_000, new BCryptPasswordEncoder());
+    DataGenerator generator =
+        new DataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);

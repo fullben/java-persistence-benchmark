@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import de.uniba.dsg.wss.data.model.CarrierData;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
@@ -14,7 +15,6 @@ import de.uniba.dsg.wss.data.model.OrderItemData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import java.util.List;
 import org.jacis.container.JacisContainer;
 import org.jacis.plugin.txadapter.local.JacisLocalTransaction;
@@ -41,7 +41,9 @@ class MsDeliveryServiceIntegrationTests extends MicroStreamServiceTest {
 
   @BeforeEach
   public void setUp() {
-    populateStorage(new DataGenerator(1, 1, 1, 1, 1_000, new BCryptPasswordEncoder()), dataWriter);
+    populateStorage(
+        new DataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
+        dataWriter);
     JacisLocalTransaction tx = container.beginLocalTransaction("Delivery test setup");
     request = new DeliveryRequest();
 

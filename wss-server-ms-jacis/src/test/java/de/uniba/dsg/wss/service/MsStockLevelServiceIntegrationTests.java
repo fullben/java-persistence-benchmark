@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.OrderData;
 import de.uniba.dsg.wss.data.model.OrderItemData;
@@ -10,7 +11,6 @@ import de.uniba.dsg.wss.data.model.StockData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +39,8 @@ public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest 
   @BeforeEach
   public void setUp() {
     populateStorage(
-        new DataGenerator(2, 1, 10, 10, 1_000, new BCryptPasswordEncoder()), dataWriter);
+        new DataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
+        dataWriter);
     request = new StockLevelRequest();
 
     int threshold = 15;

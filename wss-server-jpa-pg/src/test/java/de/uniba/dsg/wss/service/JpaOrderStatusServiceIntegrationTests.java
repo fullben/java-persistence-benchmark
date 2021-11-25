@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import de.uniba.dsg.wss.data.access.CarrierRepository;
 import de.uniba.dsg.wss.data.access.CustomerRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
 import de.uniba.dsg.wss.data.gen.DataGenerator;
@@ -14,7 +15,6 @@ import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusResponse;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import java.util.Comparator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,8 @@ public class JpaOrderStatusServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator = new DataGenerator(1, 1, 10, 10, 1_000, new BCryptPasswordEncoder());
+    DataGenerator generator =
+        new DataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);
