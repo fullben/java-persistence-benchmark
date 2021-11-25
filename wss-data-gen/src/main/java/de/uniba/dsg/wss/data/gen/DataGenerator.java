@@ -25,12 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class DataGenerator {
 
-  private static final Logger LOG = LogManager.getLogger(DataGenerator.class);
   private static final String BAD_CREDIT = "BC";
   private static final String GOOD_CREDIT = "GC";
   private static final String ORIGINAL = "ORIGINAL";
@@ -169,26 +166,42 @@ public class DataGenerator {
     return warehouses != null;
   }
 
-  public void generate() {
+  /**
+   * Generates a data model based on the configuration (of which a summary can be acquired by
+   * calling {@link #getConfiguration()}) of this instance.
+   *
+   * @return information regarding the data generation execution, will never be {@code null}
+   */
+  public Stats generate() {
     Stopwatch stopwatch = new Stopwatch(true);
-    LOG.info(
-        "Generating {} products, {} warehouses, {} districts, {} employees, {} customers, and {} orders",
-        productCount,
-        warehouseCount,
-        warehouseCount * districtsPerWarehouseCount,
-        warehouseCount * districtsPerWarehouseCount,
-        warehouseCount * districtsPerWarehouseCount * customersPerDistrictCount,
-        warehouseCount * districtsPerWarehouseCount * ordersPerDistrictCount);
+
     employees.clear();
     existingEmails.clear();
     products = generateProducts();
     carriers = generateCarriers();
     warehouses = generateWarehouses();
     stopwatch.stop();
-    LOG.info("Generated {} model data entities, took {}", countEntities(), stopwatch.getDuration());
+
+    Stats stats = new Stats();
+    stats.setTotalModelObjectCount(countModelObjects());
+    stats.setDurationMillis(stopwatch.getDurationMillis());
+    stats.setDuration(stopwatch.getDuration());
+    return stats;
   }
 
-  private int countEntities() {
+  public Configuration getConfiguration() {
+    Configuration config = new Configuration();
+    config.setProductCount(productCount);
+    config.setWarehouseCount(warehouseCount);
+    config.setDistrictCount(warehouseCount * districtsPerWarehouseCount);
+    config.setEmployeeCount(warehouseCount * districtsPerWarehouseCount);
+    config.setCustomerCount(
+        warehouseCount * districtsPerWarehouseCount * customersPerDistrictCount);
+    config.setOrderCount(warehouseCount * districtsPerWarehouseCount * ordersPerDistrictCount);
+    return config;
+  }
+
+  private int countModelObjects() {
     int entityCount = employees.size();
     entityCount += products.size();
     entityCount += carriers.size();
@@ -234,7 +247,6 @@ public class DataGenerator {
       product.setPrice(priceRandom.nextDouble());
       products.add(product);
     }
-    LOG.debug("Generated {} products", products.size());
     return products;
   }
 
@@ -248,7 +260,6 @@ public class DataGenerator {
       carrier.setAddress(addresses.get(i));
       carriers.add(carrier);
     }
-    LOG.debug("Generated {} carriers", carriers.size());
     return carriers;
   }
 
@@ -265,7 +276,6 @@ public class DataGenerator {
       warehouse.setStocks(generateStocks(warehouse, products));
       warehouses.add(warehouse);
     }
-    LOG.debug("Generated {} warehouses", warehouses.size());
     return warehouses;
   }
 
@@ -285,7 +295,6 @@ public class DataGenerator {
       district.setOrders(generateOrders(district, products));
       employees.add(generateEmployee(district, warehouseNbr, i + 1));
     }
-    LOG.debug("Generated {} districts", districts.size());
     return districts;
   }
 
@@ -344,7 +353,6 @@ public class DataGenerator {
       customer.setData(lorem(300, 500));
       customers.add(customer);
     }
-    LOG.debug("Generated {} customers", customers.size());
     return customers;
   }
 
@@ -382,7 +390,6 @@ public class DataGenerator {
       stock.setQuantity(quantityRandom.nextInt());
       stocks.add(stock);
     }
-    LOG.debug("Generated {} stocks", stocks.size());
     return stocks;
   }
 
@@ -438,7 +445,6 @@ public class DataGenerator {
       order.setItems(generateOrderItems(order, products));
       orders.add(order);
     }
-    LOG.debug("Generated {} orders", orders.size());
     return orders;
   }
 

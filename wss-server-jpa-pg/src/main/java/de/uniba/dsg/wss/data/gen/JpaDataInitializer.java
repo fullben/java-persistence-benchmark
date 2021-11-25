@@ -31,8 +31,7 @@ public class JpaDataInitializer extends DataInitializer {
   @Override
   public void initializePersistentData() {
     LOG.info("Beginning model data generation");
-    DataGenerator generator = createDataGenerator();
-    generator.generate();
+    DataGenerator generator = generateData();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);
     databaseWriter.writeAll(converter);

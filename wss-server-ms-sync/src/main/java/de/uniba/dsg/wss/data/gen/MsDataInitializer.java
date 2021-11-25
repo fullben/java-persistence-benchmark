@@ -31,8 +31,7 @@ public class MsDataInitializer extends DataInitializer {
   @Override
   public void initializePersistentData() {
     LOG.info("Beginning model data generation");
-    DataGenerator generator = createDataGenerator();
-    generator.generate();
+    DataGenerator generator = generateData();
     MsDataConverter converter = new MsDataConverter();
     converter.convert(generator);
     dataWriter.writeAll(converter);
