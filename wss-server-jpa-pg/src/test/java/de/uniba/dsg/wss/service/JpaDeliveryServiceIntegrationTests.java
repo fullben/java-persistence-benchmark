@@ -10,10 +10,15 @@ import de.uniba.dsg.wss.data.access.DistrictRepository;
 import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
 import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.DataModel;
+import de.uniba.dsg.wss.data.model.CarrierEntity;
+import de.uniba.dsg.wss.data.model.EmployeeEntity;
 import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.OrderItemEntity;
+import de.uniba.dsg.wss.data.model.ProductEntity;
+import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -38,18 +43,18 @@ public class JpaDeliveryServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator =
-        new DataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
-    generator.generate();
+    DefaultDataGenerator generator =
+        new DefaultDataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     JpaDataConverter converter = new JpaDataConverter();
-    converter.convert(generator);
+    DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> model =
+        converter.convert(generator.generate());
 
-    productRepository.saveAll(converter.getProducts());
-    carrierRepository.saveAll(converter.getCarriers());
-    warehouseRepository.saveAll(converter.getWarehouses());
+    productRepository.saveAll(model.getProducts());
+    carrierRepository.saveAll(model.getCarriers());
+    warehouseRepository.saveAll(model.getWarehouses());
 
     // Ensure that single order is not fulfilled
-    orderId = converter.getWarehouses().get(0).getDistricts().get(0).getOrders().get(0).getId();
+    orderId = model.getWarehouses().get(0).getDistricts().get(0).getOrders().get(0).getId();
     OrderEntity order = orderRepository.getById(orderId);
     order.setCarrier(null);
     order.setFulfilled(false);

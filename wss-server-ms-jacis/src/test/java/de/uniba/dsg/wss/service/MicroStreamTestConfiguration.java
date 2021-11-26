@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.service;
 
+import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import de.uniba.dsg.wss.data.model.CarrierData;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
@@ -10,7 +11,6 @@ import de.uniba.dsg.wss.data.model.PaymentData;
 import de.uniba.dsg.wss.data.model.ProductData;
 import de.uniba.dsg.wss.data.model.StockData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import one.microstream.afs.nio.types.NioFileSystem;
 import one.microstream.storage.embedded.types.EmbeddedStorageFoundation;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
@@ -178,7 +178,8 @@ public class MicroStreamTestConfiguration {
       JacisStore<String, StockData> stockStore,
       JacisStore<String, CustomerData> customerStore,
       JacisStore<String, OrderData> orderStore,
-      JacisStore<String, OrderItemData> orderItemStore) {
+      JacisStore<String, OrderItemData> orderItemStore,
+      JacisStore<String, PaymentData> paymentStore) {
     return new MsDataWriter(
         container,
         carrierStore,
@@ -189,6 +190,7 @@ public class MicroStreamTestConfiguration {
         stockStore,
         customerStore,
         orderStore,
-        orderItemStore);
+        orderItemStore,
+        paymentStore);
   }
 }

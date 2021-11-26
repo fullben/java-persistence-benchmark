@@ -2,7 +2,7 @@ package de.uniba.dsg.wss.data.gen;
 
 /**
  * Data regarding the results of the execution of the data creation performed via the {@link
- * DataGenerator#generate()} method.
+ * DefaultDataGenerator#generate()} method.
  *
  * @author Benedikt Full
  */

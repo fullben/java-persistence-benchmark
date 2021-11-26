@@ -2,6 +2,10 @@ package de.uniba.dsg.wss.data.gen;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
@@ -28,7 +32,7 @@ public abstract class DataInitializer implements CommandLineRunner {
   }
 
   /**
-   * Returns a new {@link DataGenerator} based on the configuration properties read by this
+   * Returns a new {@link DefaultDataGenerator} based on the configuration properties read by this
    * instance.
    *
    * <p>Multiple calls to this method on the same bean will always return a new object, but the
@@ -37,21 +41,21 @@ public abstract class DataInitializer implements CommandLineRunner {
    * @return a new data generator
    * @see #generateData()
    */
-  protected DataGenerator createDataGenerator() {
-    return new DataGenerator(modelWarehouseCount, fullScaleModel, passwordEncoder::encode);
+  protected DefaultDataGenerator createDataGenerator() {
+    return new DefaultDataGenerator(modelWarehouseCount, fullScaleModel, passwordEncoder::encode);
   }
 
   /**
-   * Creates a new {@link DataGenerator} by using {@link #createDataGenerator()} and calls its
-   * {@link DataGenerator#generate() generate()} method before returning the instance.
+   * Creates a new {@link DefaultDataGenerator} by using {@link #createDataGenerator()}, calls its
+   * {@link DefaultDataGenerator#generate() generate()} method and returns the result of the method.
    *
-   * <p>Note that the generator itself does not perform any logging, but only provides information
-   * regarding the data it can or has generated. This method uses this data for logging.
+   * <p>Note that as the generator itself does not perform any logging, this method uses the data
+   * provided by the generator for some intermediate logging.
    *
-   * @return a new data generator
+   * @return a newly generated data model
    */
-  protected DataGenerator generateData() {
-    DataGenerator generator = createDataGenerator();
+  protected DataModel<Product, Warehouse, Employee, Carrier> generateData() {
+    DefaultDataGenerator generator = createDataGenerator();
     Configuration config = generator.getConfiguration();
     LOG.info(
         "Generating {} products, {} warehouses, {} districts, {} employees, {} customers, and {} orders",
@@ -61,12 +65,12 @@ public abstract class DataInitializer implements CommandLineRunner {
         box(config.getEmployeeCount()),
         box(config.getCustomerCount()),
         box(config.getOrderCount()));
-    Stats stats = generator.generate();
+    DataModel<Product, Warehouse, Employee, Carrier> model = generator.generate();
     LOG.info(
         "Generated {} model data objects, took {}",
-        box(stats.getTotalModelObjectCount()),
-        stats.getDuration());
-    return generator;
+        box(model.getStats().getTotalModelObjectCount()),
+        model.getStats().getDuration());
+    return model;
   }
 
   /**
@@ -82,7 +86,7 @@ public abstract class DataInitializer implements CommandLineRunner {
   }
 
   /**
-   * Implementations of this method must use the {@link DataGenerator} provided by {@link
+   * Implementations of this method must use the {@link DefaultDataGenerator} provided by {@link
    * #createDataGenerator()} or {@link #generateData()} in conjunction with the appropriate {@link
    * DataConverter} implementation to generate the type of model data required by the backing
    * persistence solution. The converted data must be written to persistent storage using a {@link

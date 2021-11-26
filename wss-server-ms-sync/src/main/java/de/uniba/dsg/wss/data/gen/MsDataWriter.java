@@ -1,7 +1,11 @@
 package de.uniba.dsg.wss.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
+import de.uniba.dsg.wss.data.model.CarrierData;
+import de.uniba.dsg.wss.data.model.EmployeeData;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
+import de.uniba.dsg.wss.data.model.ProductData;
+import de.uniba.dsg.wss.data.model.WarehouseData;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,10 +20,10 @@ import org.springframework.stereotype.Component;
  * @author Johannes Manner
  */
 @Component
-public class MsDataWriter implements DataWriter<MsDataConverter> {
+public class MsDataWriter
+    implements DataWriter<ProductData, WarehouseData, EmployeeData, CarrierData> {
 
   private static final Logger LOG = LogManager.getLogger(MsDataWriter.class);
-
   private final EmbeddedStorageManager storageManager;
   private final MsDataRoot msDataRoot;
 
@@ -30,19 +34,25 @@ public class MsDataWriter implements DataWriter<MsDataConverter> {
   }
 
   @Override
-  public void writeAll(MsDataConverter converter) {
-    Stopwatch stopwatch = new Stopwatch(true);
-
-    this.msDataRoot.getWarehouses().putAll(converter.getWarehouses());
-    this.msDataRoot.getEmployees().putAll(converter.getEmployees());
-    this.msDataRoot.getCustomers().putAll(converter.getCustomers());
-    this.msDataRoot.getStocks().putAll(converter.getStocks());
-    this.msDataRoot.getOrders().putAll(converter.getOrders());
-    this.msDataRoot.getCarriers().putAll(converter.getCarriers());
-    this.msDataRoot.getProducts().putAll(converter.getProducts());
-    this.storageManager.setRoot(this.msDataRoot);
-    this.storageManager.storeRoot();
-
+  public void write(DataModel<ProductData, WarehouseData, EmployeeData, CarrierData> model) {
+    Stopwatch stopwatch = new Stopwatch().start();
+    if (!(model instanceof MsDataModel)) {
+      throw new IllegalArgumentException(
+          "Expected instance of "
+              + MsDataModel.class.getName()
+              + ", but got "
+              + (model == null ? null : model.getClass().getName()));
+    }
+    MsDataModel msModel = (MsDataModel) model;
+    msDataRoot.getWarehouses().putAll(msModel.getIdsToWarehouses());
+    msDataRoot.getEmployees().putAll(msModel.getIdsToEmployees());
+    msDataRoot.getCustomers().putAll(msModel.getIdsToCustomers());
+    msDataRoot.getStocks().putAll(msModel.getIdsToStocks());
+    msDataRoot.getOrders().putAll(msModel.getIdsToOrders());
+    msDataRoot.getCarriers().putAll(msModel.getIdsToCarriers());
+    msDataRoot.getProducts().putAll(msModel.getIdsToProducts());
+    storageManager.setRoot(msDataRoot);
+    storageManager.storeRoot();
     stopwatch.stop();
     LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
   }

@@ -1,5 +1,9 @@
 package de.uniba.dsg.wss.data.gen;
 
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +35,8 @@ public class JpaDataInitializer extends DataInitializer {
   @Override
   public void initializePersistentData() {
     LOG.info("Beginning model data generation");
-    DataGenerator generator = generateData();
-    JpaDataConverter converter = new JpaDataConverter();
-    converter.convert(generator);
-    databaseWriter.writeAll(converter);
+    DataModel<Product, Warehouse, Employee, Carrier> model = generateData();
+    JpaDataModel entityModel = new JpaDataConverter().convert(model);
+    databaseWriter.write(entityModel);
   }
 }

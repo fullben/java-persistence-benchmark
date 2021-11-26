@@ -1,5 +1,10 @@
 package de.uniba.dsg.wss.data.gen;
 
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
+
 /**
  * Implementers of this interface are capable of converting the generic model objects created by a
  * {@link DataGenerator} into a persistence solution-specific model structure.
@@ -7,41 +12,24 @@ package de.uniba.dsg.wss.data.gen;
  * <p>Besides the methods defined in this interface, implementations must also provide access to the
  * converted data by means of appropriate getter methods.
  *
+ * @param <P> the type representing a product
+ * @param <W> the type representing a warehouse
+ * @param <E> the type representing an employee
+ * @param <C> the type representing a carrier
  * @see DataWriter
+ * @see DataGenerator
  * @author Benedikt Full
  */
-public interface DataConverter {
+public interface DataConverter<P, W, E, C> {
 
   /**
-   * Converts the data held by the given generator to the persistence solution-specific model
-   * structure. This instance will maintain internal references to the newly created data
-   * structures.
+   * Converts the given data model to the persistence solution-specific model structure.
    *
-   * <p>Before converting the data, implementations of this method must check whether the generators
-   * already has generated the data to be converted. If this is not the case, the method must
-   * trigger the generation using {@link DataGenerator#generate()}.
+   * <p>Implementations may not hold any references to the given or created model once having
+   * completed this method.
    *
-   * <p>Note that implementations of this method may not assign the provided generator to any
-   * instance fields. Once this method has completed execution, the instance may not hold references
-   * to the given generator.
-   *
-   * @param generator the generator of which the data will be used for conversion, must not be
-   *     {@code null}
+   * @param model the model to be converted, must not be {@code null}
+   * @return the converted model
    */
-  void convert(DataGenerator generator);
-
-  /**
-   * Indicates whether this converter currently holds references to any converted model data. This
-   * is the case if {@link #convert(DataGenerator)} has been called before, without {@link #clear()}
-   * having been called in the meantime.
-   *
-   * <p>If this method returns {@code true}, the getters of this converter should return references
-   * to non-{@code null}, valid model data.
-   *
-   * @return {@code true} if the converter has converted data, {@code false} otherwise
-   */
-  boolean hasConvertedData();
-
-  /** Removes all internal references to any data previously converted by this instance. */
-  void clear();
+  DataModel<P, W, E, C> convert(DataModel<Product, Warehouse, Employee, Carrier> model);
 }
