@@ -76,11 +76,6 @@ public class DefaultDataGenerator implements DataGenerator {
   private final UniformRandom salesTaxRandom;
   private final UniformRandom oneInThreeRandom;
   private final RandomSelector<String> emailService;
-  private List<Product> products;
-  private List<Carrier> carriers;
-  private List<Warehouse> warehouses;
-  private final List<Employee> employees;
-  private final List<String> existingEmails;
   private final Function<String, String> passwordEncoder;
   private final LocalDateTime now;
 
@@ -115,11 +110,6 @@ public class DefaultDataGenerator implements DataGenerator {
     salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
     oneInThreeRandom = new UniformRandom(1, 3);
     emailService = new RandomSelector<>(EMAIL_SERVICES);
-    this.products = null;
-    carriers = null;
-    this.warehouses = null;
-    employees = new ArrayList<>();
-    existingEmails = new ArrayList<>();
     this.passwordEncoder = requireNonNull(passwordEncoder);
     now = LocalDateTime.now();
   }
@@ -145,11 +135,6 @@ public class DefaultDataGenerator implements DataGenerator {
     salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
     oneInThreeRandom = new UniformRandom(1, 3);
     emailService = new RandomSelector<>(EMAIL_SERVICES);
-    products = null;
-    carriers = null;
-    warehouses = null;
-    employees = new ArrayList<>();
-    existingEmails = new ArrayList<>();
     this.passwordEncoder = requireNonNull(passwordEncoder);
     now = LocalDateTime.now();
   }
@@ -163,25 +148,24 @@ public class DefaultDataGenerator implements DataGenerator {
     // Create model objects
     Stopwatch stopwatch = new Stopwatch().start();
     List<Product> products = generateProducts();
-    Map<Warehouse, List<Employee>> warehousesAndEmployees = generateWarehousesAndEmployees();
     List<Carrier> carriers = generateCarriers();
+    Map<Warehouse, List<Employee>> warehousesAndEmployees =
+        generateWarehousesAndEmployees(products, carriers);
+    List<Warehouse> warehouses = new ArrayList<>(warehousesAndEmployees.keySet());
+    List<Employee> employees =
+        warehousesAndEmployees.values().stream()
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
     stopwatch.stop();
 
     // Create summary data
     Stats stats = new Stats();
-    stats.setTotalModelObjectCount(countModelObjects());
+    stats.setTotalModelObjectCount(countModelObjects(products, warehouses, employees, carriers));
     stats.setDurationMillis(stopwatch.getDurationMillis());
     stats.setDuration(stopwatch.getDuration());
 
     // Wrap objects in model instance
-    return new DataGeneratorModel(
-        products,
-        new ArrayList<>(warehousesAndEmployees.keySet()),
-        warehousesAndEmployees.values().stream()
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList()),
-        carriers,
-        stats);
+    return new DataGeneratorModel(products, warehouses, employees, carriers, stats);
   }
 
   public Configuration getConfiguration() {
@@ -196,7 +180,11 @@ public class DefaultDataGenerator implements DataGenerator {
     return config;
   }
 
-  private int countModelObjects() {
+  private int countModelObjects(
+      List<Product> products,
+      List<Warehouse> warehouses,
+      List<Employee> employees,
+      List<Carrier> carriers) {
     int entityCount = employees.size();
     entityCount += products.size();
     entityCount += carriers.size();
@@ -258,23 +246,8 @@ public class DefaultDataGenerator implements DataGenerator {
     return carriers;
   }
 
-  private List<Warehouse> generateWarehouses() {
-    List<Warehouse> warehouses = new ArrayList<>(warehouseCount);
-    List<Address> addresses = generateAddresses(warehouseCount);
-    for (int i = 0; i < warehouseCount; i++) {
-      Warehouse warehouse = new Warehouse();
-      warehouse.setName(faker.address().cityName());
-      warehouse.setAddress(addresses.get(i));
-      warehouse.setSalesTax(salesTaxRandom.nextDouble());
-      warehouse.setYearToDateBalance(300_000);
-      warehouse.setDistricts(generateDistricts(warehouse, i + 1));
-      warehouse.setStocks(generateStocks(warehouse, products));
-      warehouses.add(warehouse);
-    }
-    return warehouses;
-  }
-
-  private Map<Warehouse, List<Employee>> generateWarehousesAndEmployees() {
+  private Map<Warehouse, List<Employee>> generateWarehousesAndEmployees(
+      List<Product> products, List<Carrier> carriers) {
     Map<Warehouse, List<Employee>> warehousesAndEmployees = new HashMap<>(warehouseCount);
     List<Address> addresses = generateAddresses(warehouseCount);
     Set<String> existingEmails = new HashSet<>();
@@ -285,7 +258,7 @@ public class DefaultDataGenerator implements DataGenerator {
       warehouse.setSalesTax(salesTaxRandom.nextDouble());
       warehouse.setYearToDateBalance(300_000);
       Map<District, Employee> districtsAndEmployees =
-          generateDistrictsAndEmployees(warehouse, i + 1, existingEmails);
+          generateDistrictsAndEmployees(products, carriers, warehouse, i + 1, existingEmails);
       warehouse.setDistricts(new ArrayList<>(districtsAndEmployees.keySet()));
       warehouse.setStocks(generateStocks(warehouse, products));
       warehousesAndEmployees.put(warehouse, new ArrayList<>(districtsAndEmployees.values()));
@@ -294,7 +267,11 @@ public class DefaultDataGenerator implements DataGenerator {
   }
 
   private Map<District, Employee> generateDistrictsAndEmployees(
-      Warehouse warehouse, int warehouseNbr, Set<String> existingEmails) {
+      List<Product> products,
+      List<Carrier> carriers,
+      Warehouse warehouse,
+      int warehouseNbr,
+      Set<String> existingEmails) {
     Map<District, Employee> districtsAndEmployees = new HashMap<>(10);
     List<Address> addresses =
         generateAddresses(districtsPerWarehouseCount, warehouse.getAddress().getState());
@@ -306,30 +283,11 @@ public class DefaultDataGenerator implements DataGenerator {
       district.setSalesTax(salesTaxRandom.nextDouble());
       district.setYearToDateBalance(30_000);
       district.setCustomers(generateCustomers(district, existingEmails));
-      district.setOrders(generateOrders(district, products));
+      district.setOrders(generateOrders(district, products, carriers));
       districtsAndEmployees.put(
           district, generateEmployee(district, warehouseNbr, i + 1, existingEmails));
     }
     return districtsAndEmployees;
-  }
-
-  private List<District> generateDistricts(Warehouse warehouse, int warehouseNbr) {
-    List<District> districts = new ArrayList<>(10);
-    List<Address> addresses =
-        generateAddresses(districtsPerWarehouseCount, warehouse.getAddress().getState());
-    for (int i = 0; i < districtsPerWarehouseCount; i++) {
-      District district = new District();
-      district.setWarehouse(warehouse);
-      districts.add(district);
-      district.setName(faker.address().cityName());
-      district.setAddress(addresses.get(i));
-      district.setSalesTax(salesTaxRandom.nextDouble());
-      district.setYearToDateBalance(30_000);
-      district.setCustomers(generateCustomers(district));
-      district.setOrders(generateOrders(district, products));
-      employees.add(generateEmployee(district, warehouseNbr, i + 1));
-    }
-    return districts;
   }
 
   private Employee generateEmployee(
@@ -354,62 +312,11 @@ public class DefaultDataGenerator implements DataGenerator {
     return employee;
   }
 
-  private Employee generateEmployee(District district, int warehouseNbr, int districtNbr) {
-    Employee employee = new Employee();
-    employee.setFirstName(faker.name().firstName());
-    employee.setMiddleName(faker.name().firstName());
-    employee.setLastName(faker.name().lastName());
-    employee.setPhoneNumber(faker.phoneNumber().phoneNumber());
-    employee.setEmail(
-        generateUniqueEmail(
-            employee.getFirstName(), employee.getMiddleName(), employee.getLastName()));
-    employee.setAddress(newAddressSameZip(district.getAddress()));
-    String postfix = warehouseNbr + "_" + districtNbr;
-    employee.setUsername(EMPLOYEE_USERNAME_PREFIX + postfix);
-    employee.setPassword(passwordEncoder.apply(DEFAULT_PASSWORD + "_" + postfix));
-    employee.setDistrict(district);
-    employee.setTitle(faker.job().title());
-    return employee;
-  }
-
   private Address newAddressSameZip(Address address) {
     Address a = new Address(address);
     a.setStreet1(faker.address().streetAddress());
     a.setStreet2(faker.address().secondaryAddress());
     return a;
-  }
-
-  private List<Customer> generateCustomers(District district) {
-    List<Customer> customers = new ArrayList<>(customersPerDistrictCount);
-    List<Address> addresses = generateAddresses(customersPerDistrictCount);
-    UniformRandom discountRandom = new UniformRandom(0.0, 0.5, 2);
-    UniformRandom creditRandom = new UniformRandom(1, 100);
-    for (int i = 0; i < customersPerDistrictCount; i++) {
-      Customer customer = new Customer();
-      customer.setDistrict(district);
-      customer.setAddress(addresses.get(i));
-      customer.setFirstName(faker.name().firstName());
-      customer.setMiddleName(faker.name().firstName());
-      customer.setLastName(faker.name().lastName());
-      customer.setPhoneNumber(faker.phoneNumber().phoneNumber());
-      customer.setEmail(
-          generateUniqueEmail(
-              customer.getFirstName(), customer.getMiddleName(), customer.getLastName()));
-      customer.setSince(randomTimeBefore(now.minusMonths(2), 3));
-      List<Payment> payments = new ArrayList<>();
-      payments.add(generatePayment(customer));
-      customer.setPayments(payments);
-      customer.setCredit(creditRandom.nextInt() < 11 ? BAD_CREDIT : GOOD_CREDIT);
-      customer.setCreditLimit(50_000);
-      customer.setDiscount(discountRandom.nextDouble());
-      customer.setBalance(-10.0);
-      customer.setYearToDatePayment(10.0);
-      customer.setPaymentCount(1);
-      customer.setDeliveryCount(0);
-      customer.setData(lorem(300, 500));
-      customers.add(customer);
-    }
-    return customers;
   }
 
   private List<Customer> generateCustomers(District district, Set<String> existingEmails) {
@@ -513,7 +420,8 @@ public class DefaultDataGenerator implements DataGenerator {
     return addresses;
   }
 
-  private List<Order> generateOrders(District district, List<Product> products) {
+  private List<Order> generateOrders(
+      District district, List<Product> products, List<Carrier> carriers) {
     if (district.getCustomers() == null
         || district.getCustomers().size() != customersPerDistrictCount
         || products.size() != productCount) {
@@ -522,7 +430,6 @@ public class DefaultDataGenerator implements DataGenerator {
     List<Order> orders = new ArrayList<>(ordersPerDistrictCount);
     List<Customer> shuffledCustomers = new ArrayList<>(district.getCustomers());
     Collections.shuffle(shuffledCustomers);
-    UniformRandom carrierIdRandom = new UniformRandom(1, 10);
     RandomSelector<Carrier> carrierSelector = new RandomSelector<>(carriers);
     UniformRandom orderItemCountRandom = new UniformRandom(5, 15);
     for (int i = 0; i < ordersPerDistrictCount; i++) {
@@ -585,21 +492,6 @@ public class DefaultDataGenerator implements DataGenerator {
 
   private String generateUniqueEmail(
       String firstName, String middleName, String lastName, Collection<String> existingEmails) {
-    final String lcFirst = firstName.toLowerCase(Locale.ROOT);
-    final String lcMiddle = middleName.toLowerCase(Locale.ROOT);
-    final String lcLast = lastName.toLowerCase(Locale.ROOT);
-    final String domain = emailService.next();
-    String email = lcFirst + "-" + lcMiddle + "." + lcLast + "@" + domain;
-    int i = 1;
-    while (existingEmails.contains(email)) {
-      email = lcFirst + "-" + lcMiddle + "." + lcLast + i + "@" + domain;
-      i++;
-    }
-    existingEmails.add(email);
-    return email;
-  }
-
-  private String generateUniqueEmail(String firstName, String middleName, String lastName) {
     final String lcFirst = firstName.toLowerCase(Locale.ROOT);
     final String lcMiddle = middleName.toLowerCase(Locale.ROOT);
     final String lcLast = lastName.toLowerCase(Locale.ROOT);
