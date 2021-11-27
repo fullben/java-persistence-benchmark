@@ -1,8 +1,7 @@
 package de.uniba.dsg.wss.data.gen;
 
 /**
- * Data regarding the results of the execution of the data creation performed via the {@link
- * DefaultDataGenerator#generate()} method.
+ * Class for storing metadata regarding the creation and properties of a {@link DataModel}.
  *
  * @author Benedikt Full
  */
