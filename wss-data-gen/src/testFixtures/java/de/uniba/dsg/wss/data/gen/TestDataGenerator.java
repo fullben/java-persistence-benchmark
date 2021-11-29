@@ -102,7 +102,17 @@ public class TestDataGenerator implements IDataGenerator {
           warehouse.getStocks().add(stock);
           stock.setProduct(product);
           stock.setQuantity(i + j);
-          // omit other values
+          stock.setData("");
+          stock.setDist01("");
+          stock.setDist02("");
+          stock.setDist03("");
+          stock.setDist04("");
+          stock.setDist05("");
+          stock.setDist06("");
+          stock.setDist07("");
+          stock.setDist08("");
+          stock.setDist09("");
+          stock.setDist10("");
           stocks.put(stock.getId(), stock);
         }
       }
@@ -133,7 +143,7 @@ public class TestDataGenerator implements IDataGenerator {
       customer.setDistrict(district);
       customer.setPayments(new ArrayList<>());
       customer.setOrders(new ArrayList<>());
-      customer.setEmail("");
+      customer.setEmail(customerId + "@jbp.io");
       customer.setFirstName(customerId + "-first");
       customer.setMiddleName(customerId + "-middle");
       customer.setLastName(customerId + "-last");
@@ -141,6 +151,9 @@ public class TestDataGenerator implements IDataGenerator {
       Payment p = new Payment();
       p.setId("P" + i);
       p.setCustomer(customer);
+      p.setDistrict(customer.getDistrict());
+      p.setData("");
+      p.setDate(LocalDateTime.now());
       customer.getPayments().add(p);
       customer.setPaymentCount(1);
       customer.setAddress(new Address());
@@ -164,6 +177,7 @@ public class TestDataGenerator implements IDataGenerator {
       item.setNumber(1);
       item.setQuantity(2);
       order.getItems().add(item);
+      order.setItemCount(1);
       districts.get("D" + (i % DISTRICTS)).getOrders().add(order);
       customers.get("C" + (i % DISTRICTS)).getOrders().add(order);
       orders.put(order.getId(), order);
