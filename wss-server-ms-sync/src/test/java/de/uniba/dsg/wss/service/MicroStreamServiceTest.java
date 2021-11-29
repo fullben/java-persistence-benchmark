@@ -1,7 +1,7 @@
 package de.uniba.dsg.wss.service;
 
-import de.uniba.dsg.test.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.gen.MsDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
 import one.microstream.storage.embedded.types.EmbeddedStorageManager;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ public abstract class MicroStreamServiceTest {
   public void prepareTestStorage() {
 
     TestDataGenerator generator = new TestDataGenerator();
+    generator.generate();
     MsDataConverter converter = new MsDataConverter();
     converter.convert(generator);
 

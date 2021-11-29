@@ -47,6 +47,7 @@ public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
     String customerId = "C0";
     double amount = 12.45;
     int paymentCount = msDataRoot.getCustomers().get(customerId).getPaymentCount();
+    assertEquals(1, paymentCount);
     PaymentRequest request = new PaymentRequest("W0", "D0", customerId, null, amount);
 
     int iterations = 5;

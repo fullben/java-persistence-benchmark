@@ -1,10 +1,16 @@
-package de.uniba.dsg.test.data.gen;
+package de.uniba.dsg.wss.data.gen;
 
-import de.uniba.dsg.wss.data.gen.Configuration;
-import de.uniba.dsg.wss.data.gen.IDataGenerator;
-import de.uniba.dsg.wss.data.gen.Stats;
-import de.uniba.dsg.wss.data.gen.model.*;
-
+import de.uniba.dsg.wss.data.gen.model.Address;
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Customer;
+import de.uniba.dsg.wss.data.gen.model.District;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Order;
+import de.uniba.dsg.wss.data.gen.model.OrderItem;
+import de.uniba.dsg.wss.data.gen.model.Payment;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Stock;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +31,40 @@ public class TestDataGenerator implements IDataGenerator {
   private List<Carrier> carriers;
 
   public TestDataGenerator() {
+  }
 
+  @Override
+  public List<Warehouse> getWarehouses() {
+    return this.warehouses;
+  }
+
+  @Override
+  public List<Employee> getEmployees() {
+    return this.employees;
+  }
+
+  @Override
+  public List<Product> getProducts() {
+    return this.products;
+  }
+
+  @Override
+  public List<Carrier> getCarriers() {
+    return this.carriers;
+  }
+
+  @Override
+  public boolean isDataGenerated() {
+    return true;
+  }
+
+  @Override
+  public Stats generate() {
+    this.generateFixedModel();
+    return new Stats();
+  }
+
+  private void generateFixedModel() {
     Map<String, Warehouse> warehouses = new HashMap<>();
     for (int i = 0; i < WAREHOUSES; i++) {
       String id = "W" + i;
@@ -94,11 +133,16 @@ public class TestDataGenerator implements IDataGenerator {
       customer.setDistrict(district);
       customer.setPayments(new ArrayList<>());
       customer.setOrders(new ArrayList<>());
+      customer.setEmail("");
+      customer.setFirstName(customerId + "-first");
+      customer.setMiddleName(customerId + "-middle");
+      customer.setLastName(customerId + "-last");
       // omit other values
       Payment p = new Payment();
       p.setId("P" + i);
       p.setCustomer(customer);
       customer.getPayments().add(p);
+      customer.setPaymentCount(1);
       customer.setAddress(new Address());
 
       customers.put(customerId, customer);
@@ -112,7 +156,7 @@ public class TestDataGenerator implements IDataGenerator {
       order.setDistrict(districts.get("D" + (i % DISTRICTS)));
       order.setCustomer(customers.get("C" + (i % DISTRICTS)));
       order.setItems(new ArrayList<>());
-      order.setEntryDate(LocalDateTime.now());
+      order.setEntryDate(LocalDateTime.now().plusSeconds(i));
       OrderItem item = new OrderItem();
       item.setOrder(order);
       item.setProduct(products.get("P" + (i % PRODUCTS)));
@@ -143,36 +187,6 @@ public class TestDataGenerator implements IDataGenerator {
     this.products =
         products.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
     this.carriers = List.of(carrier);
-  }
-
-  @Override
-  public List<Warehouse> getWarehouses() {
-    return this.warehouses;
-  }
-
-  @Override
-  public List<Employee> getEmployees() {
-    return this.employees;
-  }
-
-  @Override
-  public List<Product> getProducts() {
-    return this.products;
-  }
-
-  @Override
-  public List<Carrier> getCarriers() {
-    return this.carriers;
-  }
-
-  @Override
-  public boolean isDataGenerated() {
-    return true;
-  }
-
-  @Override
-  public Stats generate() {
-    return new Stats();
   }
 
   @Override

@@ -63,7 +63,7 @@ public class MsDataConverter implements DataConverter {
   }
 
   @Override
-  public void convert(DataGenerator generator) {
+  public void convert(IDataGenerator generator) {
     Stopwatch stopwatch = new Stopwatch(true);
     products = convertProducts(generator.getProducts());
     carriers = convertCarriers(generator.getCarriers());

@@ -1,11 +1,22 @@
 package de.uniba.dsg.wss.data.gen;
 
+import static java.util.Objects.requireNonNull;
+
 import com.github.javafaker.Faker;
 import de.uniba.dsg.wss.commons.RandomSelector;
 import de.uniba.dsg.wss.commons.Stopwatch;
 import de.uniba.dsg.wss.commons.UniformRandom;
-import de.uniba.dsg.wss.data.gen.model.*;
-
+import de.uniba.dsg.wss.data.gen.model.Address;
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Customer;
+import de.uniba.dsg.wss.data.gen.model.District;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Order;
+import de.uniba.dsg.wss.data.gen.model.OrderItem;
+import de.uniba.dsg.wss.data.gen.model.Payment;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Stock;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -14,8 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
-
-import static java.util.Objects.requireNonNull;
 
 public class DataGenerator implements IDataGenerator {
 
@@ -75,6 +84,7 @@ public class DataGenerator implements IDataGenerator {
    * @param products the number of products
    * @param passwordEncoder the encoder function to be used to encode the employee credentials
    */
+  // TODO remove it
   public DataGenerator(
       int warehouses,
       int districts,
@@ -137,32 +147,32 @@ public class DataGenerator implements IDataGenerator {
     this(warehouseCount, true, passwordEncoder);
   }
 
+  @Override
   public List<Warehouse> getWarehouses() {
     return warehouses;
   }
 
+  @Override
   public List<Employee> getEmployees() {
     return employees;
   }
 
+  @Override
   public List<Product> getProducts() {
     return products;
   }
 
+  @Override
   public List<Carrier> getCarriers() {
     return carriers;
   }
 
+  @Override
   public boolean isDataGenerated() {
     return warehouses != null;
   }
 
-  /**
-   * Generates a data model based on the configuration (of which a summary can be acquired by
-   * calling {@link #getConfiguration()}) of this instance.
-   *
-   * @return information regarding the data generation execution, will never be {@code null}
-   */
+  @Override
   public Stats generate() {
     Stopwatch stopwatch = new Stopwatch(true);
 
@@ -180,6 +190,7 @@ public class DataGenerator implements IDataGenerator {
     return stats;
   }
 
+  @Override
   public Configuration getConfiguration() {
     Configuration config = new Configuration();
     config.setProductCount(productCount);
