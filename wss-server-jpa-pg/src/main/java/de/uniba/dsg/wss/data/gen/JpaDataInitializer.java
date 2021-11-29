@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @author Benedikt Full
  */
 @Component
-@ConditionalOnProperty(name = "jpb.model.initialize", havingValue = "true")
+@ConditionalOnProperty(name = "wss.model.initialize", havingValue = "true")
 public class JpaDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(JpaDataInitializer.class);

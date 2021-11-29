@@ -1,4 +1,4 @@
-# Wholesale Supplier Java Persistence Benchmark (JPB)
+# Wholesale Supplier Java Persistence Benchmark (WSS)
 
 Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
@@ -35,11 +35,11 @@ The server can be launched with one of the two following profiles (configurable 
 
 The persistence layer of the server application is implemented both for JPA and MicroStream. Which implementation is to be utilized at runtime can be configured using the `application-dev.properties` and `application-prod.properties` files.
 
-* `jpb.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
-* `jpb.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
-* `jpb.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
-* `jpb.jpa.*`: Configuration values of the JPA persistence implementation.
-* `jpb.ms.*`: Configuration values of the MicroStream persistence implementation.
+* `wss.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
+* `wss.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
+* `wss.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
+* `wss.jpa.*`: Configuration values of the JPA persistence implementation.
+* `wss.ms.*`: Configuration values of the MicroStream persistence implementation.
 
 ### Wholesale Supplier Clients
 
@@ -83,7 +83,7 @@ Deploying either variation of the benchmark can be achieved by calling the comma
 
 ### Scaling
 
-The test implemented by this benchmark can be scaled as hinted at in the [configuration](#configuration) section. While the data model maintained by the server can be scaled using the server properties (namely the `jpb.model.warehouse-count` property), the JMeter threads must be scaled accordingly.
+The test implemented by this benchmark can be scaled as hinted at in the [configuration](#configuration) section. While the data model maintained by the server can be scaled using the server properties (namely the `wss.model.warehouse-count` property), the JMeter threads must be scaled accordingly.
 
 As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the `employee.count` variable. Note that the threads each use their own distinct employee account, defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
 

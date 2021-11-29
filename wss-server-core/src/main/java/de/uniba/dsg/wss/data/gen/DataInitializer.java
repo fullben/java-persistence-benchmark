@@ -27,8 +27,8 @@ public abstract class DataInitializer implements CommandLineRunner {
 
   public DataInitializer(Environment environment, PasswordEncoder passwordEncoder) {
     this.passwordEncoder = passwordEncoder;
-    modelWarehouseCount = environment.getProperty("jpb.model.warehouse-count", Integer.class, 1);
-    fullScaleModel = environment.getProperty("jpb.model.full-scale", Boolean.class, true);
+    modelWarehouseCount = environment.getProperty("wss.model.warehouse-count", Integer.class, 1);
+    fullScaleModel = environment.getProperty("wss.model.full-scale", Boolean.class, true);
   }
 
   /**

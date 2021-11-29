@@ -70,7 +70,7 @@ public class MsConfiguration {
                         Storage.FileProviderBuilder(fileSystem)
                             .setDirectory(
                                 fileSystem.ensureDirectoryPath(
-                                    environment.getRequiredProperty("jpb.ms.storage.dir")))
+                                    environment.getRequiredProperty("wss.ms.storage.dir")))
                             .createFileProvider())
                     .setChannelCountProvider(
                         StorageChannelCountProvider.New(
