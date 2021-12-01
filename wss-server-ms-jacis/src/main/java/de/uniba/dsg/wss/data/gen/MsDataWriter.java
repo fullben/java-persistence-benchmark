@@ -70,7 +70,7 @@ public class MsDataWriter
   @Override
   public void write(DataModel<ProductData, WarehouseData, EmployeeData, CarrierData> model) {
     Stopwatch stopwatch = new Stopwatch().start();
-    if (!(model instanceof MsDataModel)) {
+    if (!supports(model)) {
       throw new IllegalArgumentException(
           "Expected instance of "
               + MsDataModel.class.getName()
@@ -93,5 +93,10 @@ public class MsDataWriter
         });
     stopwatch.stop();
     LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
+  }
+
+  @Override
+  public boolean supports(DataModel<ProductData, WarehouseData, EmployeeData, CarrierData> model) {
+    return model != null && MsDataModel.class.isAssignableFrom(model.getClass());
   }
 }

@@ -42,7 +42,11 @@ public class JpaDataWriter
   }
 
   @Override
-  public void write(DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> model) {
+  public void write(
+      DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> model) {
+    if (!supports(model)) {
+      throw new UnsupportedDataModelException("Data model was null");
+    }
     Stopwatch stopwatch = new Stopwatch().start();
     productRepository.saveAll(model.getProducts());
     carrierRepository.saveAll(model.getCarriers());
