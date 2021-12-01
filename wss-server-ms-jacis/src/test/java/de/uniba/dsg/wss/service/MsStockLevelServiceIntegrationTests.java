@@ -2,7 +2,7 @@ package de.uniba.dsg.wss.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
 import de.uniba.dsg.wss.data.gen.MsDataWriter;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.OrderData;
@@ -39,7 +39,7 @@ public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest 
   @BeforeEach
   public void setUp() {
     populateStorage(
-        new DataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
+        new DefaultDataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
         dataWriter);
     request = new StockLevelRequest();
 

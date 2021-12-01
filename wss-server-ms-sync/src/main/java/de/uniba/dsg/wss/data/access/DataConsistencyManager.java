@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
  * included here.
  *
  * @author Johannes Manner
+ * @author Benedikt Full
  */
 @Component
 public class DataConsistencyManager {
@@ -62,7 +63,7 @@ public class DataConsistencyManager {
         }
       }
 
-      // compensate the first transactions, if some of the updates fail
+      // compensate the first transactions, if some updates fail
       if (i != stockUpdates.size()) {
         for (int j = 0; j < i; j++) {
           StockUpdateDto stockUpdate = stockUpdates.get(j);
@@ -76,21 +77,21 @@ public class DataConsistencyManager {
 
   public OrderData storeOrder(OrderData order, List<StockUpdateDto> stockUpdates)
       throws MsTransactionException {
-    synchronized (this.storageManger) {
-      List<OrderItemData> itemList = this.updateStock(order, stockUpdates);
+    synchronized (storageManger) {
+      List<OrderItemData> itemList = updateStock(order, stockUpdates);
       if (itemList.isEmpty()) {
         throw new MsTransactionException("Order item update failed");
       }
       order.getItems().addAll(itemList);
 
-      this.dataRoot.getOrders().put(order.getId(), order);
+      dataRoot.getOrders().put(order.getId(), order);
 
       // referential integrity (customer and district)
       order.getDistrictRef().getOrders().put(order.getId(), order);
       order.getCustomerRef().getOrderRefs().put(order.getId(), order);
 
       // A single store is faster as making a store for each object separately
-      this.storageManger.storeRoot();
+      storageManger.storeRoot();
       return order;
     }
   }
@@ -101,7 +102,7 @@ public class DataConsistencyManager {
       CustomerData customer,
       PaymentData payment) {
     double amount = payment.getAmount();
-    synchronized (this.storageManger) {
+    synchronized (storageManger) {
       // update warehouse - increase year to balance
       warehouseData.increaseYearToBalance(amount);
       // update district - increase year to balance
@@ -131,14 +132,14 @@ public class DataConsistencyManager {
         copiedCustomer = new CustomerData(customer);
       }
 
-      this.storageManger.storeRoot();
+      storageManger.storeRoot();
       // only limited copy
       return copiedCustomer;
     }
   }
 
   public void deliverOldestOrders(List<OrderData> oldestOrderForEachDistrict, CarrierData carrier) {
-    synchronized (this.storageManger) {
+    synchronized (storageManger) {
       for (OrderData order : oldestOrderForEachDistrict) {
         // in cases where two terminal worker update the same oldestOrders in parallel,
         // and they are both competing for the storageManager lock
@@ -163,7 +164,7 @@ public class DataConsistencyManager {
           customer.increaseDeliveryCount();
         }
       }
-      this.storageManger.storeRoot();
+      storageManger.storeRoot();
     }
   }
 
@@ -177,12 +178,6 @@ public class DataConsistencyManager {
       String customerId, String warehouseId, String districtId, double amount, String oldData) {
     String newData = "" + customerId + districtId + warehouseId + amount;
     return newData + oldData.substring(newData.length());
-  }
-
-  public void storeRoot() {
-    synchronized (this.storageManger) {
-      this.storageManger.storeRoot();
-    }
   }
 
   public int countStockEntriesLowerThanThreshold(List<StockData> stocks, int stockThreshold) {

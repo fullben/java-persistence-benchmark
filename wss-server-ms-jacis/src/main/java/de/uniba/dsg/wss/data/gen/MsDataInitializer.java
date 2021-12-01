@@ -1,5 +1,9 @@
 package de.uniba.dsg.wss.data.gen;
 
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @author Benedikt Full
  */
 @Component
-@ConditionalOnProperty(name = "jpb.model.initialize", havingValue = "true")
+@ConditionalOnProperty(name = "wss.model.initialize", havingValue = "true")
 public class MsDataInitializer extends DataInitializer {
 
   private static final Logger LOG = LogManager.getLogger(MsDataInitializer.class);
@@ -31,9 +35,8 @@ public class MsDataInitializer extends DataInitializer {
   @Override
   public void initializePersistentData() {
     LOG.info("Beginning model data generation");
-    DataGenerator generator = generateData();
-    MsDataConverter converter = new MsDataConverter();
-    converter.convert(generator);
-    dataWriter.writeAll(converter);
+    DataModel<Product, Warehouse, Employee, Carrier> model = generateData();
+    MsDataModel msDataModel = new MsDataConverter().convert(model);
+    dataWriter.write(msDataModel);
   }
 }

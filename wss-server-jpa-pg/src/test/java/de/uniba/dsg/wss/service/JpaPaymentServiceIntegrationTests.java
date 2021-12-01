@@ -11,10 +11,14 @@ import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.PaymentRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
+import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
 import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.DataModel;
+import de.uniba.dsg.wss.data.model.CarrierEntity;
 import de.uniba.dsg.wss.data.model.CustomerEntity;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
+import de.uniba.dsg.wss.data.model.EmployeeEntity;
+import de.uniba.dsg.wss.data.model.ProductEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentResponse;
@@ -50,15 +54,15 @@ public class JpaPaymentServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator =
-        new DataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
-    generator.generate();
+    DefaultDataGenerator generator =
+        new DefaultDataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     JpaDataConverter converter = new JpaDataConverter();
-    converter.convert(generator);
+    DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> model =
+        converter.convert(generator.generate());
 
-    productRepository.saveAll(converter.getProducts());
-    carrierRepository.saveAll(converter.getCarriers());
-    warehouseRepository.saveAll(converter.getWarehouses());
+    productRepository.saveAll(model.getProducts());
+    carrierRepository.saveAll(model.getCarriers());
+    warehouseRepository.saveAll(model.getWarehouses());
 
     warehouse = warehouseRepository.findAll().get(0);
     warehouseBalance = warehouse.getYearToDateBalance();

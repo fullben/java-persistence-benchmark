@@ -2,7 +2,7 @@ package de.uniba.dsg.wss.data.gen;
 
 /**
  * Data regarding the model objects that can be created by some specific instance of the {@link
- * DataGenerator}.
+ * DefaultDataGenerator}.
  *
  * @author Benedikt Full
  */

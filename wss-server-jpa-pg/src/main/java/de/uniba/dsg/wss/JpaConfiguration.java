@@ -31,11 +31,11 @@ public class JpaConfiguration {
 
   private static final Map<String, String> PROPERTY_KEYS =
       Map.of(
-          "jpb.jpa.hibernate.jdbc.time_zone",
+          "wss.jpa.hibernate.jdbc.time_zone",
           "spring.jpa.properties.hibernate.jdbc.time_zone",
-          "jpb.jpa.hibernate.ddl-auto",
+          "wss.jpa.hibernate.ddl-auto",
           "hibernate.ddl-auto",
-          "jpb.jpa.hibernate.dialect",
+          "wss.jpa.hibernate.dialect",
           "hibernate.dialect");
   private final Environment environment;
 
@@ -49,11 +49,11 @@ public class JpaConfiguration {
   public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
     dataSource.setDriverClassName(
-        environment.getRequiredProperty("jpb.jpa.datasource.driverClassName"));
-    dataSource.setUrl(environment.getRequiredProperty("jpb.jpa.datasource.url"));
-    dataSource.setUsername(environment.getRequiredProperty("jpb.jpa.datasource.username"));
-    dataSource.setPassword(environment.getRequiredProperty("jpb.jpa.datasource.password"));
-    dataSource.setSchema(environment.getProperty("jpb.jpa.datasource.schema"));
+        environment.getRequiredProperty("wss.jpa.datasource.driverClassName"));
+    dataSource.setUrl(environment.getRequiredProperty("wss.jpa.datasource.url"));
+    dataSource.setUsername(environment.getRequiredProperty("wss.jpa.datasource.username"));
+    dataSource.setPassword(environment.getRequiredProperty("wss.jpa.datasource.password"));
+    dataSource.setSchema(environment.getProperty("wss.jpa.datasource.schema"));
     return dataSource;
   }
 
