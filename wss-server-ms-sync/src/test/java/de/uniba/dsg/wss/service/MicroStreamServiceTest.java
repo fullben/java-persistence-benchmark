@@ -34,6 +34,7 @@ public abstract class MicroStreamServiceTest {
     this.msDataRoot.getStocks().clear();
     this.msDataRoot.getCustomers().clear();
     this.msDataRoot.getCarriers().clear();
+    this.msDataRoot.getProducts().clear();
 
     // add all data to data root :)
     this.msDataRoot.getWarehouses().putAll(converter.getWarehouses());
@@ -41,6 +42,8 @@ public abstract class MicroStreamServiceTest {
     this.msDataRoot.getCustomers().putAll(converter.getCustomers());
     this.msDataRoot.getOrders().putAll(converter.getOrders());
     this.msDataRoot.getCarriers().putAll(converter.getCarriers());
+    this.msDataRoot.getProducts().putAll(converter.getProducts());
+    this.msDataRoot.getEmployees().putAll(converter.getEmployees());
 
     this.storageManager.setRoot(msDataRoot);
     this.storageManager.storeRoot();

@@ -74,20 +74,45 @@ Note that if using MicroStream persistence, you must delete the MicroStream stor
 
 ### Deployment
 
-The server application is meant to be deployed and run as a Docker container. The appropriate container build instructions are defined in the Docker files found in the base directory of this repository. Depending on the persistence solution to be evaluated, one of the provided *docker-compose* files must be utilized:
+The server application is meant to be deployed and run as a Docker container. The appropriate
+container build instructions are defined in the Docker files found in the base directory of this
+repository. Depending on the persistence solution to be evaluated, one of the provided *
+docker-compose* files must be utilized:
 
-* `docker-compose.jpa.pg.yml`: Creates a container for the server application (JPA/PostgreSQL based persistence implementation will be used) and launches it after having started another container with a PostgreSQL database.
-* `docker-compose.ms.jacis.yml`: Creates a container just for the server application (MicroStream/JACIS based persistence implementation will be used) and launches it.
+* `docker-compose.jpa.pg.yml`: Creates a container for the server application (JPA/PostgreSQL based
+  persistence implementation will be used) and launches it after having started another container
+  with a PostgreSQL database.
+* `docker-compose.ms.jacis.yml`: Creates a container just for the server application (
+  MicroStream/JACIS based persistence implementation will be used) and launches it.
 
-Deploying either variation of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with either of the two compose file names.
+Deploying either variation of the benchmark can be achieved by calling the
+command `docker-compose -f YML-FILE up` in the root directory of this project, while
+replacing `YML-FILE` with either of the two compose file names.
+
+### Testing
+
+For testing, the profiles `dev` and `dev-test` needs to be configured.
+`dev-test` profile allows an override of SpringBoot managed beans and therefore integration tests on
+a preconfigured data base.
 
 ### Scaling
 
-The test implemented by this benchmark can be scaled as hinted at in the [configuration](#configuration) section. While the data model maintained by the server can be scaled using the server properties (namely the `jpb.model.warehouse-count` property), the JMeter threads must be scaled accordingly.
+The test implemented by this benchmark can be scaled as hinted at in
+the [configuration](#configuration) section. While the data model maintained by the server can be
+scaled using the server properties (namely the `jpb.model.warehouse-count` property), the JMeter
+threads must be scaled accordingly.
 
-As each JMeter thread represents the transactions performed by a single employee, and as each district has one employee, and each warehouse has ten districts, there must be ten JMeter threads per warehouse. This value can be configured in the JMeter project itself, by adjusting the `employee.count` variable. Note that the threads each use their own distinct employee account, defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of employees defined in this file, errors may occur; alternatively you may append new employee lines following the pattern exposed by the existing credentials.
+As each JMeter thread represents the transactions performed by a single employee, and as each
+district has one employee, and each warehouse has ten districts, there must be ten JMeter threads
+per warehouse. This value can be configured in the JMeter project itself, by adjusting
+the `employee.count` variable. Note that the threads each use their own distinct employee account,
+defined in the `wss-terminals/employees.csv` file. If the number of threads exceeds the number of
+employees defined in this file, errors may occur; alternatively you may append new employee lines
+following the pattern exposed by the existing credentials.
 
-Each employee thread executes an initial setup followed by running randomly selected (non-uniform) transactions until the duration defined in the `work.duration` variable has been exceeded. Adjusting this value affects the overall duration of the test and amount of data generated.
+Each employee thread executes an initial setup followed by running randomly selected (non-uniform)
+transactions until the duration defined in the `work.duration` variable has been exceeded. Adjusting
+this value affects the overall duration of the test and amount of data generated.
 
 ### Making and Processing Measurements
 
