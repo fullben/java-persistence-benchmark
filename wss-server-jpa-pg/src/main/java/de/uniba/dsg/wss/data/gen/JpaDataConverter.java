@@ -1,14 +1,37 @@
 package de.uniba.dsg.wss.data.gen;
 
 import de.uniba.dsg.wss.commons.Stopwatch;
-import de.uniba.dsg.wss.data.gen.model.*;
-import de.uniba.dsg.wss.data.model.*;
+import de.uniba.dsg.wss.data.gen.model.Address;
+import de.uniba.dsg.wss.data.gen.model.Carrier;
+import de.uniba.dsg.wss.data.gen.model.Customer;
+import de.uniba.dsg.wss.data.gen.model.District;
+import de.uniba.dsg.wss.data.gen.model.Employee;
+import de.uniba.dsg.wss.data.gen.model.Order;
+import de.uniba.dsg.wss.data.gen.model.OrderItem;
+import de.uniba.dsg.wss.data.gen.model.Payment;
+import de.uniba.dsg.wss.data.gen.model.Product;
+import de.uniba.dsg.wss.data.gen.model.Stock;
+import de.uniba.dsg.wss.data.gen.model.Warehouse;
+import de.uniba.dsg.wss.data.model.AddressEmbeddable;
+import de.uniba.dsg.wss.data.model.CarrierEntity;
+import de.uniba.dsg.wss.data.model.CustomerEntity;
+import de.uniba.dsg.wss.data.model.DistrictEntity;
+import de.uniba.dsg.wss.data.model.EmployeeEntity;
+import de.uniba.dsg.wss.data.model.OrderEntity;
+import de.uniba.dsg.wss.data.model.OrderItemEntity;
+import de.uniba.dsg.wss.data.model.PaymentEntity;
+import de.uniba.dsg.wss.data.model.ProductEntity;
+import de.uniba.dsg.wss.data.model.StockEntity;
+import de.uniba.dsg.wss.data.model.WarehouseEntity;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Converts a generated data model to a JPA entity data model.
@@ -43,7 +66,7 @@ public class JpaDataConverter implements DataConverter {
   }
 
   @Override
-  public void convert(DataGenerator generator) {
+  public void convert(IDataGenerator generator) {
     Stopwatch stopwatch = new Stopwatch(true);
     if (!generator.isDataGenerated()) {
       generator.generate();

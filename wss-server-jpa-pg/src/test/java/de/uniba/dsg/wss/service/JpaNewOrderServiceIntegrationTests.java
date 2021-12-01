@@ -9,8 +9,8 @@ import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.StockRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.model.CustomerEntity;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
 import de.uniba.dsg.wss.data.model.OrderEntity;
@@ -22,13 +22,11 @@ import de.uniba.dsg.wss.data.transfer.messages.NewOrderResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @DataJpaTest
 public class JpaNewOrderServiceIntegrationTests {
@@ -55,8 +53,7 @@ public class JpaNewOrderServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator =
-        new DataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
+    TestDataGenerator generator = new TestDataGenerator();
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);
@@ -65,9 +62,11 @@ public class JpaNewOrderServiceIntegrationTests {
     carrierRepository.saveAll(converter.getCarriers());
     warehouseRepository.saveAll(converter.getWarehouses());
 
-    warehouse = warehouseRepository.findAll().get(0);
-    district = warehouse.getDistricts().get(0);
-    customer = district.getCustomers().get(0);
+    warehouse = warehouseRepository.findById("W0").get();
+    district =
+        warehouse.getDistricts().stream().filter(d -> d.getId().equals("D0")).findFirst().get();
+    customer =
+        district.getCustomers().stream().filter(c -> c.getId().equals("C0")).findFirst().get();
     warehouseSalesTax = warehouse.getSalesTax();
     districtSalesTax = district.getSalesTax();
     customerLastName = customer.getLastName();
@@ -76,12 +75,8 @@ public class JpaNewOrderServiceIntegrationTests {
     totalOrderCount = orderRepository.count();
 
     List<ProductEntity> products = productRepository.findAll();
-    List<String> productIds =
-        products.stream().map(ProductEntity::getId).collect(Collectors.toList());
-    List<String> warehouseIds =
-        warehouseRepository.findAll().stream()
-            .map(WarehouseEntity::getId)
-            .collect(Collectors.toList());
+    List<String> productIds = List.of("P0", "P2", "P4", "P6");
+    List<String> warehouseIds = List.of("W0", "W2", "W4");
 
     request = new NewOrderRequest();
     request.setWarehouseId(warehouse.getId());

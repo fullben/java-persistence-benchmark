@@ -72,47 +72,6 @@ public class DataGenerator implements IDataGenerator {
   private final Function<String, String> passwordEncoder;
   private final LocalDateTime now;
 
-  /**
-   * Constructs a new data generator. This constructor is primarily meant for debugging and testing
-   * purposes. It is very much possible to provide parameters to it that will result in invalid data
-   * being generated.
-   *
-   * @param warehouses the number of warehouses to generate
-   * @param districts the number of districts per warehouse to generate
-   * @param customers the number of customers per district
-   * @param orders the number of orders per district
-   * @param products the number of products
-   * @param passwordEncoder the encoder function to be used to encode the employee credentials
-   */
-  // TODO remove it
-  public DataGenerator(
-      int warehouses,
-      int districts,
-      int customers,
-      int orders,
-      int products,
-      Function<String, String> passwordEncoder) {
-    if (warehouses < 1 || districts < 1 || customers < 1 || orders < 1 || products < 1) {
-      throw new IllegalArgumentException("Warehouse count must be greater than zero");
-    }
-    warehouseCount = warehouses;
-    productCount = products;
-    districtsPerWarehouseCount = districts;
-    customersPerDistrictCount = customers;
-    ordersPerDistrictCount = orders;
-    faker = new Faker(Locale.US);
-    salesTaxRandom = new UniformRandom(0.0, 0.2, 1);
-    oneInThreeRandom = new UniformRandom(1, 3);
-    emailService = new RandomSelector<>(EMAIL_SERVICES);
-    this.products = null;
-    carriers = null;
-    this.warehouses = null;
-    employees = new ArrayList<>();
-    existingEmails = new ArrayList<>();
-    this.passwordEncoder = requireNonNull(passwordEncoder);
-    now = LocalDateTime.now();
-  }
-
   public DataGenerator(
       int warehouseCount, boolean fullScale, Function<String, String> passwordEncoder) {
     if (warehouseCount < 1) {

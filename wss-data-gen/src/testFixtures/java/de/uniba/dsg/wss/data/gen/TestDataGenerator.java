@@ -74,6 +74,7 @@ public class TestDataGenerator implements IDataGenerator {
       w.setDistricts(new ArrayList<>());
       w.setStocks(new ArrayList<>());
       w.setSalesTax(0.1);
+      w.setName("");
       warehouses.put(id, w);
     }
 
@@ -129,6 +130,7 @@ public class TestDataGenerator implements IDataGenerator {
       district.setCustomers(new ArrayList<>());
       district.setOrders(new ArrayList<>());
       district.setAddress(new Address());
+      district.setName("");
 
       warehouse.getDistricts().add(district);
       districts.put(districtId, district);
@@ -147,7 +149,11 @@ public class TestDataGenerator implements IDataGenerator {
       customer.setFirstName(customerId + "-first");
       customer.setMiddleName(customerId + "-middle");
       customer.setLastName(customerId + "-last");
-      // omit other values
+      customer.setPhoneNumber("");
+      customer.setData("");
+      customer.setSince(LocalDateTime.now());
+      customer.setCredit("");
+
       Payment p = new Payment();
       p.setId("P" + i);
       p.setCustomer(customer);
@@ -176,6 +182,7 @@ public class TestDataGenerator implements IDataGenerator {
       item.setSupplyingWarehouse(warehouses.get("W0"));
       item.setNumber(1);
       item.setQuantity(2);
+      item.setDistInfo("");
       order.getItems().add(item);
       order.setItemCount(1);
       districts.get("D" + (i % DISTRICTS)).getOrders().add(order);
@@ -187,6 +194,7 @@ public class TestDataGenerator implements IDataGenerator {
     carrier.setId("CC0");
     carrier.setName("DHL");
     carrier.setAddress(new Address());
+    carrier.setPhoneNumber("");
 
     Employee employee = new Employee();
     employee.setId("E0");

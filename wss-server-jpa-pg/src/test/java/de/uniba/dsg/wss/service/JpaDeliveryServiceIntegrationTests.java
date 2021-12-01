@@ -10,8 +10,8 @@ import de.uniba.dsg.wss.data.access.DistrictRepository;
 import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.OrderItemEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
@@ -21,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @DataJpaTest
 public class JpaDeliveryServiceIntegrationTests {
@@ -38,8 +37,7 @@ public class JpaDeliveryServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator =
-        new DataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
+    TestDataGenerator generator = new TestDataGenerator();
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);
@@ -49,7 +47,7 @@ public class JpaDeliveryServiceIntegrationTests {
     warehouseRepository.saveAll(converter.getWarehouses());
 
     // Ensure that single order is not fulfilled
-    orderId = converter.getWarehouses().get(0).getDistricts().get(0).getOrders().get(0).getId();
+    orderId = "O0";
     OrderEntity order = orderRepository.getById(orderId);
     order.setCarrier(null);
     order.setFulfilled(false);
@@ -57,8 +55,8 @@ public class JpaDeliveryServiceIntegrationTests {
     orderRepository.save(order);
 
     request = new DeliveryRequest();
-    request.setWarehouseId(warehouseRepository.findAll().get(0).getId());
-    request.setCarrierId(carrierRepository.findAll().get(0).getId());
+    request.setWarehouseId("W0");
+    request.setCarrierId("CC0");
 
     deliveryService =
         new JpaDeliveryService(

@@ -7,8 +7,8 @@ import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.StockRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DataGenerator;
 import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
 import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @DataJpaTest
 public class JpaStockLevelServiceIntegrationTests {
@@ -38,8 +37,7 @@ public class JpaStockLevelServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DataGenerator generator =
-        new DataGenerator(1, 1, 100, 100, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
+    TestDataGenerator generator = new TestDataGenerator();
     generator.generate();
     JpaDataConverter converter = new JpaDataConverter();
     converter.convert(generator);
