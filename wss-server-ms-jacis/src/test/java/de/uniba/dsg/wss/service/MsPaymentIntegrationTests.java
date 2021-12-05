@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.PaymentData;
@@ -19,16 +18,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
+@SpringBootTest
+public class MsPaymentIntegrationTests extends MicroStreamTest {
 
   @Autowired private JacisContainer container;
   @Autowired private JacisStore<String, WarehouseData> warehouseStore;
   @Autowired private JacisStore<String, DistrictData> districtStore;
   @Autowired private JacisStore<String, CustomerData> customerStore;
   @Autowired private JacisStore<String, PaymentData> paymentStore;
-  @Autowired private MsDataWriter dataWriter;
   private MsPaymentService paymentService;
   private PaymentRequest request;
   private String warehouseId;
@@ -46,9 +45,8 @@ public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
 
   @BeforeEach
   public void setUp() {
-    populateStorage(
-        new DefaultDataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
-        dataWriter);
+    populateStorage();
+
     request = new PaymentRequest();
 
     WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);

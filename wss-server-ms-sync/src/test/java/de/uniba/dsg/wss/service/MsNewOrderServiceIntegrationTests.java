@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.StockData;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequest;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequestItem;
@@ -17,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
+public class MsNewOrderServiceIntegrationTests extends MicroStreamTest {
 
   @Autowired private MsNewOrderService msNewOrderService;
 
@@ -120,12 +121,12 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
 
   @Test
   public void processingNewOrderConcurrently() throws InterruptedException {
-    adjustDefaults(5, 10000);
+    adjustDefaults(5, 1000);
 
     // key -> stock id, value -> quantity
     List<ProductToOrder> productToOrderList = List.of(new ProductToOrder("W1", "P1", 2));
     NewOrderRequest request = getNewOrderRequest("W0", "D0", "C0", productToOrderList);
-    int concurrentRequests = 5000;
+    int concurrentRequests = 500;
     ExecutorService executorService =
         Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     for (int i = 0; i < concurrentRequests; i++) {

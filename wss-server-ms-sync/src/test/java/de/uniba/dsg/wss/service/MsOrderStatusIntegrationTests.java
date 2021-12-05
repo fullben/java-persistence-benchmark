@@ -3,6 +3,7 @@ package de.uniba.dsg.wss.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusResponse;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
+public class MsOrderStatusIntegrationTests extends MicroStreamTest {
 
   @Autowired private MsOrderStatusService orderStatusService;
   @Autowired private MsDataRoot msDataRoot;

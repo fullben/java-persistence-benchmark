@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsDeliveryServiceIntegrationTests extends MicroStreamServiceTest {
+class MsDeliveryServiceIntegrationTests extends MicroStreamTest {
 
   @Autowired private MsDeliveryService deliveryService;
   @Autowired private MsDataRoot dataRoot;

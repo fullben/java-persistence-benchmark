@@ -23,4 +23,6 @@ dependencies {
     // https://github.com/JanWiemer/jacis/wiki/Installation
     implementation files('libs/jacis-2.0.11-2021-10-25-SNAPSHOT.jar')
     // implementation 'org.jacis:jacis:2.0.10'
+
+    testImplementation(testFixtures(project(":wss-data-gen")))
 }

@@ -78,8 +78,13 @@ The server application is meant to be deployed and run as a Docker container. Th
 
 * `docker-compose.jpa.pg.yml`: Creates a container for the server application (JPA/PostgreSQL based persistence implementation will be used) and launches it after having started another container with a PostgreSQL database.
 * `docker-compose.ms.jacis.yml`: Creates a container just for the server application (MicroStream/JACIS based persistence implementation will be used) and launches it.
+* `docker-compose.ms.sync.yml`: Creates a container just for the server application (MicroStream based persistence implementation will be used) and launches it.
 
 Deploying either variation of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with either of the two compose file names.
+
+### Testing
+
+For testing, the profiles `dev` and `dev-test` must be active. The `dev-test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,dev-test`.
 
 ### Scaling
 

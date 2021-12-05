@@ -11,9 +11,9 @@ import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.PaymentRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.JpaDataConverter;
 import de.uniba.dsg.wss.data.gen.DataModel;
+import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
 import de.uniba.dsg.wss.data.model.CarrierEntity;
 import de.uniba.dsg.wss.data.model.CustomerEntity;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @DataJpaTest
 public class JpaPaymentServiceIntegrationTests {
@@ -54,11 +53,9 @@ public class JpaPaymentServiceIntegrationTests {
 
   @BeforeEach
   public void setUp() {
-    DefaultDataGenerator generator =
-        new DefaultDataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw));
     JpaDataConverter converter = new JpaDataConverter();
     DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> model =
-        converter.convert(generator.generate());
+        converter.convert(new TestDataGenerator().generate());
 
     productRepository.saveAll(model.getProducts());
     carrierRepository.saveAll(model.getCarriers());

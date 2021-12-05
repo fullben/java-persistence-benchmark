@@ -1,9 +1,9 @@
-package de.uniba.dsg.wss.service;
+package de.uniba.dsg.wss.data.access;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import de.uniba.dsg.wss.data.access.DataConsistencyManager;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.MsDataRoot;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MsConsistencyManagerTest extends MicroStreamServiceTest {
+public class MsConsistencyManagerTest extends MicroStreamTest {
 
   @Autowired private DataConsistencyManager consistencyManager;
   @Autowired private MsDataRoot dataRoot;

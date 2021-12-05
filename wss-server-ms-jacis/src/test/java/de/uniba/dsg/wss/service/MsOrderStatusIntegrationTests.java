@@ -3,8 +3,7 @@ package de.uniba.dsg.wss.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.OrderData;
@@ -20,9 +19,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
+@SpringBootTest
+public class MsOrderStatusIntegrationTests extends MicroStreamTest {
 
   @Autowired private JacisContainer container;
   @Autowired private JacisStore<String, WarehouseData> warehouseStore;
@@ -30,7 +30,7 @@ public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
   @Autowired private JacisStore<String, CustomerData> customerStore;
   @Autowired private JacisStore<String, OrderData> orderStore;
   @Autowired private JacisStore<String, OrderItemData> orderItemStore;
-  @Autowired private MsDataWriter dataWriter;
+
   private MsOrderStatusService orderStatusService;
   private OrderStatusRequest request;
   private String warehouseId;
@@ -46,9 +46,8 @@ public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
 
   @BeforeEach
   public void setUp() {
-    populateStorage(
-        new DefaultDataGenerator(1, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
-        dataWriter);
+    populateStorage();
+
     request = new OrderStatusRequest();
 
     WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);

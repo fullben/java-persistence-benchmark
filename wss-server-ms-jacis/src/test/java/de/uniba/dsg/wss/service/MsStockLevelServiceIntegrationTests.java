@@ -2,8 +2,7 @@ package de.uniba.dsg.wss.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.OrderData;
 import de.uniba.dsg.wss.data.model.OrderItemData;
@@ -21,9 +20,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest {
+@SpringBootTest
+public class MsStockLevelServiceIntegrationTests extends MicroStreamTest {
 
   @Autowired private JacisContainer container;
   @Autowired private JacisStore<String, WarehouseData> warehouseStore;
@@ -31,16 +31,14 @@ public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest 
   @Autowired private JacisStore<String, DistrictData> districtStore;
   @Autowired private JacisStore<String, OrderData> orderStore;
   @Autowired private JacisStore<String, OrderItemData> orderItemStore;
-  @Autowired private MsDataWriter dataWriter;
   private MsStockLevelService stockLevelService;
   private StockLevelRequest request;
   private long lowStocksCount;
 
   @BeforeEach
   public void setUp() {
-    populateStorage(
-        new DefaultDataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
-        dataWriter);
+    populateStorage();
+
     request = new StockLevelRequest();
 
     int threshold = 15;

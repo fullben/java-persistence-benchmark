@@ -5,8 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CarrierData;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
@@ -23,9 +22,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
-class MsDeliveryServiceIntegrationTests extends MicroStreamServiceTest {
+@SpringBootTest
+class MsDeliveryServiceIntegrationTests extends MicroStreamTest {
 
   @Autowired private JacisContainer container;
   @Autowired private JacisStore<String, WarehouseData> warehouseStore;
@@ -34,27 +34,27 @@ class MsDeliveryServiceIntegrationTests extends MicroStreamServiceTest {
   @Autowired private JacisStore<String, OrderData> orderStore;
   @Autowired private JacisStore<String, OrderItemData> orderItemStore;
   @Autowired private JacisStore<String, CarrierData> carrierStore;
-  @Autowired private MsDataWriter dataWriter;
   private MsDeliveryService deliveryService;
   private DeliveryRequest request;
   private String orderId;
 
   @BeforeEach
   public void setUp() {
-    populateStorage(
-        new DefaultDataGenerator(1, 1, 1, 1, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
-        dataWriter);
+    populateStorage();
     JacisLocalTransaction tx = container.beginLocalTransaction("Delivery test setup");
     request = new DeliveryRequest();
 
-    WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);
-    DistrictData district =
-        districtStore.getAllReadOnly(d -> d.getWarehouseId().equals(warehouse.getId())).get(0);
+    // WO
+    WarehouseData warehouse = warehouseStore.getAllReadOnly(w -> w.getId().equals("W0")).get(0);
+    // D0
+    DistrictData district = districtStore.getAllReadOnly(d -> d.getId().equals("D0")).get(0);
     request.setWarehouseId(warehouse.getId());
+    // CC0
     request.setCarrierId(carrierStore.getAllReadOnly().get(0).getId());
 
     // Ensure that single order is not fulfilled
-    OrderData order = orderStore.getAll(o -> o.getDistrictId().equals(district.getId())).get(0);
+    // O0
+    OrderData order = orderStore.getAll(o -> o.getId().equals("O0")).get(0);
     orderId = order.getId();
     order.setCarrierId(null);
     order.setFulfilled(false);

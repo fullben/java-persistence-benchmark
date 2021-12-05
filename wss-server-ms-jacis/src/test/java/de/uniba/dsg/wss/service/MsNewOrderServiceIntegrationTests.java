@@ -2,8 +2,7 @@ package de.uniba.dsg.wss.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.uniba.dsg.wss.data.gen.DefaultDataGenerator;
-import de.uniba.dsg.wss.data.gen.MsDataWriter;
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.OrderData;
@@ -14,9 +13,7 @@ import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequest;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequestItem;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderResponse;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import org.jacis.container.JacisContainer;
 import org.jacis.store.JacisStore;
@@ -24,9 +21,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
+@SpringBootTest
+public class MsNewOrderServiceIntegrationTests extends MicroStreamTest {
 
   @Autowired private JacisContainer container;
   @Autowired private JacisStore<String, ProductData> productStore;
@@ -36,7 +34,6 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
   @Autowired private JacisStore<String, CustomerData> customerStore;
   @Autowired private JacisStore<String, OrderData> orderStore;
   @Autowired private JacisStore<String, OrderItemData> orderItemStore;
-  @Autowired private MsDataWriter dataWriter;
   private MsNewOrderService newOrderService;
   private NewOrderRequest request;
   private String warehouseId;
@@ -53,9 +50,8 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
 
   @BeforeEach
   public void setUp() {
-    populateStorage(
-        new DefaultDataGenerator(2, 1, 10, 10, 1_000, (pw) -> new BCryptPasswordEncoder().encode(pw)),
-        dataWriter);
+    populateStorage();
+
     request = new NewOrderRequest();
 
     List<WarehouseData> warehouses = warehouseStore.getAllReadOnly();
@@ -92,17 +88,7 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
     request.setWarehouseId(warehouse.getId());
     request.setDistrictId(district.getId());
     request.setCustomerId(customer.getId());
-    List<NewOrderRequestItem> items = new ArrayList<>();
-    int itemCount = ThreadLocalRandom.current().nextInt(5, 16);
-    for (int i = 0; i < itemCount; i++) {
-      NewOrderRequestItem item = new NewOrderRequestItem();
-      item.setProductId(productIds.get(ThreadLocalRandom.current().nextInt(productIds.size())));
-      item.setQuantity(ThreadLocalRandom.current().nextInt(10, 21));
-      item.setSupplyingWarehouseId(
-          warehouseIds.get(ThreadLocalRandom.current().nextInt(warehouseIds.size())));
-      items.add(item);
-    }
-    request.setItems(items);
+    request.setItems(List.of(new NewOrderRequestItem("P0", "W0", 5)));
 
     preTaxTotal =
         request.getItems().stream()

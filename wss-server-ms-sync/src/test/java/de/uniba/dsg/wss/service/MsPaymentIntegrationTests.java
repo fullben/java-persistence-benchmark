@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
+public class MsPaymentIntegrationTests extends MicroStreamTest {
 
   @Autowired private MsPaymentService paymentService;
 
@@ -47,6 +48,7 @@ public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
     String customerId = "C0";
     double amount = 12.45;
     int paymentCount = msDataRoot.getCustomers().get(customerId).getPaymentCount();
+    assertEquals(1, paymentCount);
     PaymentRequest request = new PaymentRequest("W0", "D0", customerId, null, amount);
 
     int iterations = 5;

@@ -16,10 +16,10 @@ public class NewOrderRequestItem {
 
   public NewOrderRequestItem() {}
 
-  public NewOrderRequestItem(NewOrderRequestItem line) {
-    productId = line.productId;
-    supplyingWarehouseId = line.supplyingWarehouseId;
-    quantity = line.quantity;
+  public NewOrderRequestItem(String productId, String supplyingWarehouseId, int quantity) {
+    this.productId = productId;
+    this.supplyingWarehouseId = supplyingWarehouseId;
+    this.quantity = quantity;
   }
 
   public String getProductId() {
