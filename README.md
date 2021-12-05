@@ -26,7 +26,7 @@ Transactions can be simulated using the included [JMeter](https://jmeter.apache.
 
 ### Wholesale Supplier Server
 
-The main configuration properties of the server can be found in the `application.properties`, `application-prod.properties`, and `application-dev.properties` files. 
+The main configuration properties of the server can be found in the `application.properties`, `application-prod.properties`, `application-dev.properties`, and `application-test.properties` files. 
 
 The server can be launched with one of the two following profiles (configurable via the `spring.profiles.active` property in the `application.properties` file):
 
@@ -84,7 +84,7 @@ Deploying either variation of the benchmark can be achieved by calling the comma
 
 ### Testing
 
-For testing, the profiles `dev` and `dev-test` must be active. The `dev-test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,dev-test`.
+For testing, the profiles `dev` and `test` must be active. The `test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,test`.
 
 ### Scaling
 
