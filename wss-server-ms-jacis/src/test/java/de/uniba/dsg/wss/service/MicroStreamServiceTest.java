@@ -15,10 +15,6 @@ public abstract class MicroStreamServiceTest {
   @Autowired private MsDataWriter dataWriter;
 
   public void populateStorage() {
-    TestDataGenerator generator = new TestDataGenerator();
-    generator.generate();
-    MsDataConverter converter = new MsDataConverter();
-    converter.convert(generator);
-    dataWriter.writeAll(converter);
+    dataWriter.write(new MsDataConverter().convert(new TestDataGenerator().generate()));
   }
 }

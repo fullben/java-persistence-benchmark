@@ -46,6 +46,7 @@ public class MsOrderStatusIntegrationTests extends MicroStreamServiceTest {
   @BeforeEach
   public void setUp() {
     populateStorage();
+
     request = new OrderStatusRequest();
 
     WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);

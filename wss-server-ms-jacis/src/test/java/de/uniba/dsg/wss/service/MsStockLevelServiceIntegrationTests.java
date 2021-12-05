@@ -37,6 +37,7 @@ public class MsStockLevelServiceIntegrationTests extends MicroStreamServiceTest 
   @BeforeEach
   public void setUp() {
     populateStorage();
+
     request = new StockLevelRequest();
 
     int threshold = 15;

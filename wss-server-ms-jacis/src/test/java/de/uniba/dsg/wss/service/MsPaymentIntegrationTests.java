@@ -45,6 +45,7 @@ public class MsPaymentIntegrationTests extends MicroStreamServiceTest {
   @BeforeEach
   public void setUp() {
     populateStorage();
+
     request = new PaymentRequest();
 
     WarehouseData warehouse = warehouseStore.getAllReadOnly().get(0);

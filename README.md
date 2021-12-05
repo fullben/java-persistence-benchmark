@@ -1,4 +1,4 @@
-# Wholesale Supplier Java Persistence Benchmark (JPB)
+# Wholesale Supplier Java Persistence Benchmark (WSS)
 
 Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
@@ -35,11 +35,11 @@ The server can be launched with one of the two following profiles (configurable 
 
 The persistence layer of the server application is implemented both for JPA and MicroStream. Which implementation is to be utilized at runtime can be configured using the `application-dev.properties` and `application-prod.properties` files.
 
-* `jpb.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
-* `jpb.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
-* `jpb.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
-* `jpb.jpa.*`: Configuration values of the JPA persistence implementation.
-* `jpb.ms.*`: Configuration values of the MicroStream persistence implementation.
+* `wss.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
+* `wss.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
+* `wss.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
+* `wss.jpa.*`: Configuration values of the JPA persistence implementation.
+* `wss.ms.*`: Configuration values of the MicroStream persistence implementation.
 
 ### Wholesale Supplier Clients
 

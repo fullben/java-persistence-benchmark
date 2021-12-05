@@ -50,6 +50,7 @@ public class MsNewOrderServiceIntegrationTests extends MicroStreamServiceTest {
   @BeforeEach
   public void setUp() {
     populateStorage();
+  
     request = new NewOrderRequest();
 
     List<WarehouseData> warehouses = warehouseStore.getAllReadOnly();

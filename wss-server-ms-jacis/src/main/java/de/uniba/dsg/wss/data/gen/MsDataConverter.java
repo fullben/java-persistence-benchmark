@@ -36,118 +36,53 @@ import org.apache.logging.log4j.Logger;
  * @see DataGenerator
  * @author Benedikt Full
  */
-public class MsDataConverter implements DataConverter {
+public class MsDataConverter
+    implements DataConverter<ProductData, WarehouseData, EmployeeData, CarrierData> {
 
   private static final Logger LOG = LogManager.getLogger(MsDataConverter.class);
-  private List<ProductData> products;
-  private List<CarrierData> carriers;
-  private List<WarehouseData> warehouses;
-  private List<StockData> stocks;
-  private List<DistrictData> districts;
-  private List<EmployeeData> employees;
-  private List<CustomerData> customers;
-  private List<OrderData> orders;
-  private List<OrderItemData> orderItems;
-  private List<PaymentData> payments;
 
-  public MsDataConverter() {
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    payments = null;
-  }
+  public MsDataConverter() {}
 
   @Override
-  public void convert(IDataGenerator generator) {
-    Stopwatch stopwatch = new Stopwatch(true);
-    products = convertProducts(generator.getProducts());
-    carriers = convertCarriers(generator.getCarriers());
-    warehouses = convertWarehouses(generator.getWarehouses(), products, carriers);
-    stocks = convertStocks(generator.getWarehouses());
-    districts = convertDistricts(generator.getWarehouses());
-    employees = convertEmployees(generator.getEmployees(), warehouses);
-    customers = convertCustomers(generator.getWarehouses());
-    orders = convertOrders(generator.getWarehouses());
-    orderItems = convertOrderItems(generator.getWarehouses());
-    payments = convertPayments(generator.getWarehouses());
+  public MsDataModel convert(DataModel<Product, Warehouse, Employee, Carrier> model) {
+    // Create model objects by converting provided template
+    Stopwatch stopwatch = new Stopwatch().start();
+    List<ProductData> products = convertProducts(model.getProducts());
+    List<CarrierData> carriers = convertCarriers(model.getCarriers());
+    List<WarehouseData> warehouses = convertWarehouses(model.getWarehouses(), products, carriers);
+    List<StockData> stocks = convertStocks(model.getWarehouses());
+    List<DistrictData> districts = convertDistricts(model.getWarehouses());
+    List<EmployeeData> employees = convertEmployees(model.getEmployees(), warehouses);
+    List<CustomerData> customers = convertCustomers(model.getWarehouses());
+    List<OrderData> orders = convertOrders(model.getWarehouses());
+    List<OrderItemData> orderItems = convertOrderItems(model.getWarehouses());
+    List<PaymentData> payments = convertPayments(model.getWarehouses());
     stopwatch.stop();
+
+    // Create summary data
+    Stats stats = new Stats();
+    stats.setTotalModelObjectCount(model.getStats().getTotalModelObjectCount());
+    stats.setDurationMillis(stopwatch.getDurationMillis());
+    stats.setDuration(stopwatch.getDuration());
+
+    // Wrap everything in model instance
+    MsDataModel generatedModel =
+        new MsDataModel(
+            products,
+            warehouses,
+            employees,
+            carriers,
+            stats,
+            districts,
+            customers,
+            orders,
+            orderItems,
+            payments,
+            stocks);
+
     LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
-  }
 
-  @Override
-  public boolean hasConvertedData() {
-    return products != null
-        && carriers != null
-        && warehouses != null
-        && stocks != null
-        && districts != null
-        && employees != null
-        && customers != null
-        && orders != null
-        && orderItems != null
-        && payments != null;
-  }
-
-  @Override
-  public void clear() {
-    if (!hasConvertedData()) {
-      return;
-    }
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    orderItems = null;
-    payments = null;
-  }
-
-  public List<ProductData> getProducts() {
-    return products;
-  }
-
-  public List<CarrierData> getCarriers() {
-    return carriers;
-  }
-
-  public List<WarehouseData> getWarehouses() {
-    return warehouses;
-  }
-
-  public List<StockData> getStocks() {
-    return stocks;
-  }
-
-  public List<DistrictData> getDistricts() {
-    return districts;
-  }
-
-  public List<EmployeeData> getEmployees() {
-    return employees;
-  }
-
-  public List<CustomerData> getCustomers() {
-    return customers;
-  }
-
-  public List<OrderData> getOrders() {
-    return orders;
-  }
-
-  public List<OrderItemData> getOrderItems() {
-    return orderItems;
-  }
-
-  public List<PaymentData> getPayments() {
-    return payments;
+    return generatedModel;
   }
 
   private List<ProductData> convertProducts(List<Product> ps) {

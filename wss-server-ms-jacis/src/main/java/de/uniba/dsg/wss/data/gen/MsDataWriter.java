@@ -7,6 +7,7 @@ import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.EmployeeData;
 import de.uniba.dsg.wss.data.model.OrderData;
 import de.uniba.dsg.wss.data.model.OrderItemData;
+import de.uniba.dsg.wss.data.model.PaymentData;
 import de.uniba.dsg.wss.data.model.ProductData;
 import de.uniba.dsg.wss.data.model.StockData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Component;
  * @author Benedikt Full
  */
 @Component
-public class MsDataWriter implements DataWriter<MsDataConverter> {
+public class MsDataWriter
+    implements DataWriter<ProductData, WarehouseData, EmployeeData, CarrierData> {
 
   private static final Logger LOG = LogManager.getLogger(MsDataWriter.class);
   private final JacisContainer container;
@@ -37,6 +39,7 @@ public class MsDataWriter implements DataWriter<MsDataConverter> {
   private final JacisStore<String, CustomerData> customerStore;
   private final JacisStore<String, OrderData> orderStore;
   private final JacisStore<String, OrderItemData> orderItemStore;
+  private final JacisStore<String, PaymentData> paymentStore;
 
   @Autowired
   public MsDataWriter(
@@ -49,7 +52,8 @@ public class MsDataWriter implements DataWriter<MsDataConverter> {
       JacisStore<String, StockData> stockStore,
       JacisStore<String, CustomerData> customerStore,
       JacisStore<String, OrderData> orderStore,
-      JacisStore<String, OrderItemData> orderItemStore) {
+      JacisStore<String, OrderItemData> orderItemStore,
+      JacisStore<String, PaymentData> paymentStore) {
     this.container = container;
     this.carrierStore = carrierStore;
     this.productStore = productStore;
@@ -60,24 +64,39 @@ public class MsDataWriter implements DataWriter<MsDataConverter> {
     this.customerStore = customerStore;
     this.orderStore = orderStore;
     this.orderItemStore = orderItemStore;
+    this.paymentStore = paymentStore;
   }
 
   @Override
-  public void writeAll(MsDataConverter converter) {
-    Stopwatch stopwatch = new Stopwatch(true);
+  public void write(DataModel<ProductData, WarehouseData, EmployeeData, CarrierData> model) {
+    Stopwatch stopwatch = new Stopwatch().start();
+    if (!supports(model)) {
+      throw new IllegalArgumentException(
+          "Expected instance of "
+              + MsDataModel.class.getName()
+              + ", but got "
+              + (model == null ? null : model.getClass().getName()));
+    }
+    MsDataModel msDataModel = (MsDataModel) model;
     container.withLocalTx(
         () -> {
-          carrierStore.update(converter.getCarriers(), CarrierData::getId);
-          productStore.update(converter.getProducts(), ProductData::getId);
-          warehouseStore.update(converter.getWarehouses(), WarehouseData::getId);
-          stockStore.update(converter.getStocks(), StockData::getId);
-          districtStore.update(converter.getDistricts(), DistrictData::getId);
-          employeeStore.update(converter.getEmployees(), EmployeeData::getId);
-          customerStore.update(converter.getCustomers(), CustomerData::getId);
-          orderStore.update(converter.getOrders(), OrderData::getId);
-          orderItemStore.update(converter.getOrderItems(), OrderItemData::getId);
+          carrierStore.update(msDataModel.getCarriers(), CarrierData::getId);
+          productStore.update(msDataModel.getProducts(), ProductData::getId);
+          warehouseStore.update(msDataModel.getWarehouses(), WarehouseData::getId);
+          stockStore.update(msDataModel.getStocks(), StockData::getId);
+          districtStore.update(msDataModel.getDistricts(), DistrictData::getId);
+          employeeStore.update(msDataModel.getEmployees(), EmployeeData::getId);
+          customerStore.update(msDataModel.getCustomers(), CustomerData::getId);
+          orderStore.update(msDataModel.getOrders(), OrderData::getId);
+          orderItemStore.update(msDataModel.getOrderItems(), OrderItemData::getId);
+          paymentStore.update(msDataModel.getPayments(), PaymentData::getId);
         });
     stopwatch.stop();
     LOG.info("Wrote model data to MicroStream storage, took {}", stopwatch.getDuration());
+  }
+
+  @Override
+  public boolean supports(DataModel<ProductData, WarehouseData, EmployeeData, CarrierData> model) {
+    return model != null && MsDataModel.class.isAssignableFrom(model.getClass());
   }
 }

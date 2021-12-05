@@ -38,107 +38,42 @@ import org.apache.logging.log4j.Logger;
  * @author Benedikt Full
  * @author Johannes Manner
  */
-public class MsDataConverter implements DataConverter {
+public class MsDataConverter
+    implements DataConverter<ProductData, WarehouseData, EmployeeData, CarrierData> {
 
   private static final Logger LOG = LogManager.getLogger(MsDataConverter.class);
-  private Map<String, ProductData> products;
-  private Map<String, CarrierData> carriers;
-  private Map<String, WarehouseData> warehouses;
-  private Map<String, StockData> stocks;
-  private Map<String, DistrictData> districts;
-  private Map<String, EmployeeData> employees;
-  private Map<String, CustomerData> customers;
-  private Map<String, OrderData> orders;
-  private List<OrderItemData> orderItems;
-  private List<PaymentData> payments;
-
-  public Map<String, ProductData> getProducts() {
-    return products;
-  }
-
-  public Map<String, CarrierData> getCarriers() {
-    return carriers;
-  }
-
-  public Map<String, WarehouseData> getWarehouses() {
-    return warehouses;
-  }
-
-  public Map<String, StockData> getStocks() {
-    return stocks;
-  }
-
-  public Map<String, EmployeeData> getEmployees() {
-    return employees;
-  }
-
-  public Map<String, CustomerData> getCustomers() {
-    return customers;
-  }
-
-  public Map<String, OrderData> getOrders() {
-    return orders;
-  }
-
-  public MsDataConverter() {
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    payments = null;
-  }
 
   @Override
-  public void convert(IDataGenerator generator) {
-    Stopwatch stopwatch = new Stopwatch(true);
-    products = convertProducts(generator.getProducts());
-    carriers = convertCarriers(generator.getCarriers());
-    warehouses = convertWarehouses(generator.getWarehouses());
-
-    stocks = convertStocks(generator.getWarehouses());
-    districts = convertDistricts(generator.getWarehouses());
-    employees = convertEmployees(generator.getEmployees());
-    customers = convertCustomers(generator.getWarehouses());
-    orders = convertOrders(generator.getWarehouses());
-    orderItems = convertOrderItems(generator.getWarehouses());
-    payments = convertPayments(generator.getWarehouses());
+  public MsDataModel convert(DataModel<Product, Warehouse, Employee, Carrier> model) {
+    // Create model objects by converting provided template
+    Stopwatch stopwatch = new Stopwatch().start();
+    Map<String, ProductData> products = convertProducts(model.getProducts());
+    Map<String, CarrierData> carriers = convertCarriers(model.getCarriers());
+    Map<String, WarehouseData> warehouses = convertWarehouses(model.getWarehouses());
+    Map<String, StockData> stocks = convertStocks(model.getWarehouses(), warehouses, products);
+    Map<String, DistrictData> districts = convertDistricts(model.getWarehouses(), warehouses);
+    Map<String, EmployeeData> employees = convertEmployees(model.getEmployees(), districts);
+    Map<String, CustomerData> customers = convertCustomers(model.getWarehouses(), districts);
+    Map<String, OrderData> orders =
+        convertOrders(model.getWarehouses(), districts, customers, carriers);
+    convertOrderItems(model.getWarehouses(), warehouses, products, orders);
+    convertPayments(model.getWarehouses(), customers);
     stopwatch.stop();
+
+    // Create summary data
+    Stats stats = new Stats();
+    stats.setTotalModelObjectCount(model.getStats().getTotalModelObjectCount());
+    stats.setDurationMillis(stopwatch.getDurationMillis());
+    stats.setDuration(stopwatch.getDuration());
+
+    // Wrap everything in model instance
+    MsDataModel generatedModel =
+        new MsDataModel(
+            products, warehouses, employees, stocks, carriers, customers, orders, stats);
+
     LOG.info("Converted model data to MicroStream data, took {}", stopwatch.getDuration());
-  }
 
-  @Override
-  public boolean hasConvertedData() {
-    return products != null
-        && carriers != null
-        && warehouses != null
-        && stocks != null
-        && districts != null
-        && employees != null
-        && customers != null
-        && orders != null
-        && orderItems != null
-        && payments != null;
-  }
-
-  @Override
-  public void clear() {
-    if (!hasConvertedData()) {
-      return;
-    }
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    orderItems = null;
-    payments = null;
+    return generatedModel;
   }
 
   private Map<String, ProductData> convertProducts(List<Product> ps) {
@@ -177,13 +112,16 @@ public class MsDataConverter implements DataConverter {
     return warehouses;
   }
 
-  private Map<String, StockData> convertStocks(List<Warehouse> ws) {
+  private Map<String, StockData> convertStocks(
+      List<Warehouse> ws,
+      Map<String, WarehouseData> warehouses,
+      Map<String, ProductData> products) {
     Map<String, StockData> stocks = new HashMap<>();
     for (Warehouse warehouseBase : ws) {
-      WarehouseData warehouse = this.warehouses.get(warehouseBase.getId());
+      WarehouseData warehouse = warehouses.get(warehouseBase.getId());
       for (Stock stockBase : warehouseBase.getStocks()) {
         // create stock data
-        StockData stockData = this.stock(stockBase, warehouse);
+        StockData stockData = this.stock(stockBase, warehouse, products);
         // add stock to warehouse
         warehouse.getStocks().add(stockData);
         stocks.put(stockData.getId(), stockData);
@@ -194,10 +132,10 @@ public class MsDataConverter implements DataConverter {
     return stocks;
   }
 
-  private StockData stock(Stock s, WarehouseData warehouse) {
+  private StockData stock(Stock s, WarehouseData warehouse, Map<String, ProductData> products) {
     return new StockData(
         warehouse,
-        this.products.get(s.getProduct().getId()),
+        products.get(s.getProduct().getId()),
         s.getQuantity(),
         s.getYearToDateBalance(),
         s.getOrderCount(),
@@ -219,12 +157,14 @@ public class MsDataConverter implements DataConverter {
    * Districts are now also added to the warehouse (bidirectional relationship)
    *
    * @param ws warehouses to be converted
+   * @param warehouses the already converted warehouses
    * @return a map with district ids as keys and districts as values
    */
-  private Map<String, DistrictData> convertDistricts(List<Warehouse> ws) {
+  private Map<String, DistrictData> convertDistricts(
+      List<Warehouse> ws, Map<String, WarehouseData> warehouses) {
     Map<String, DistrictData> districts = new HashMap<>();
     for (Warehouse w : ws) {
-      WarehouseData warehouse = this.warehouses.get(w.getId());
+      WarehouseData warehouse = warehouses.get(w.getId());
       Map<String, DistrictData> districtsForWarehouse = warehouse.getDistricts();
 
       for (District d : w.getDistricts()) {
@@ -239,7 +179,8 @@ public class MsDataConverter implements DataConverter {
     return districts;
   }
 
-  private Map<String, EmployeeData> convertEmployees(List<Employee> es) {
+  private Map<String, EmployeeData> convertEmployees(
+      List<Employee> es, Map<String, DistrictData> districts) {
     Map<String, EmployeeData> employees = new HashMap<>();
     for (Employee e : es) {
       EmployeeData employee =
@@ -254,7 +195,7 @@ public class MsDataConverter implements DataConverter {
               e.getTitle(),
               e.getUsername(),
               e.getPassword(),
-              this.districts.get(e.getDistrict().getId()));
+              districts.get(e.getDistrict().getId()));
 
       employees.put(employee.getUsername(), employee);
     }
@@ -262,17 +203,19 @@ public class MsDataConverter implements DataConverter {
     return employees;
   }
 
-  private Map<String, CustomerData> convertCustomers(List<Warehouse> ws) {
+  private Map<String, CustomerData> convertCustomers(
+      List<Warehouse> ws, Map<String, DistrictData> districts) {
     List<Customer> cs = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
         cs.addAll(d.getCustomers());
       }
     }
-    return customers(cs);
+    return customers(cs, districts);
   }
 
-  private Map<String, CustomerData> customers(List<Customer> cs) {
+  private Map<String, CustomerData> customers(
+      List<Customer> cs, Map<String, DistrictData> districts) {
     Map<String, CustomerData> customers = new HashMap<>();
     for (Customer c : cs) {
       CustomerData customer =
@@ -285,7 +228,7 @@ public class MsDataConverter implements DataConverter {
               c.getPhoneNumber(),
               c.getEmail(),
               // referential integrity
-              this.districts.get(c.getDistrict().getId()),
+              districts.get(c.getDistrict().getId()),
               c.getSince(),
               c.getCredit(),
               c.getCreditLimit(),
@@ -298,26 +241,30 @@ public class MsDataConverter implements DataConverter {
 
       customers.put(customer.getId(), customer);
       // referential integrity
-      this.districts.get(customer.getDistrict().getId()).getCustomers().add(customer);
+      districts.get(customer.getDistrict().getId()).getCustomers().add(customer);
     }
     LOG.debug("Converted {} customers", customers.size());
     return customers;
   }
 
-  private Map<String, OrderData> convertOrders(List<Warehouse> ws) {
+  private Map<String, OrderData> convertOrders(
+      List<Warehouse> ws,
+      Map<String, DistrictData> districts,
+      Map<String, CustomerData> customers,
+      Map<String, CarrierData> carriers) {
     Map<String, OrderData> orders = new HashMap<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
-        DistrictData district = this.districts.get(d.getId());
+        DistrictData district = districts.get(d.getId());
         for (Order o : d.getOrders()) {
           OrderData order =
               new OrderData(
                   o.getId(),
                   district,
                   // referential integrity
-                  this.customers.get(o.getCustomer().getId()),
+                  customers.get(o.getCustomer().getId()),
                   // referential integrity
-                  this.carriers.get(o.getCarrier() == null ? null : o.getCarrier().getId()),
+                  carriers.get(o.getCarrier() == null ? null : o.getCarrier().getId()),
                   o.getEntryDate(),
                   o.getItemCount(),
                   o.isAllLocal(),
@@ -326,29 +273,30 @@ public class MsDataConverter implements DataConverter {
           orders.put(order.getId(), order);
           // referential integrity
           district.getOrders().put(order.getId(), order);
-          this.customers
-              .get(order.getCustomerRef().getId())
-              .getOrderRefs()
-              .put(order.getId(), order);
+          customers.get(order.getCustomerRef().getId()).getOrderRefs().put(order.getId(), order);
         }
       }
     }
     return orders;
   }
 
-  private List<OrderItemData> convertOrderItems(List<Warehouse> ws) {
+  private List<OrderItemData> convertOrderItems(
+      List<Warehouse> ws,
+      Map<String, WarehouseData> warehouses,
+      Map<String, ProductData> products,
+      Map<String, OrderData> orders) {
     List<OrderItemData> ois = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
         for (Order o : d.getOrders()) {
-          OrderData order = this.orders.get(o.getId());
+          OrderData order = orders.get(o.getId());
           for (OrderItem i : o.getItems()) {
             OrderItemData item =
                 new OrderItemData(
                     i.getId(),
                     order,
-                    this.products.get(i.getProduct().getId()),
-                    this.warehouses.get(i.getSupplyingWarehouse().getId()),
+                    products.get(i.getProduct().getId()),
+                    warehouses.get(i.getSupplyingWarehouse().getId()),
                     i.getNumber(),
                     i.getDeliveryDate(),
                     i.getQuantity(),
@@ -366,7 +314,8 @@ public class MsDataConverter implements DataConverter {
     return ois;
   }
 
-  private List<PaymentData> convertPayments(List<Warehouse> ws) {
+  private List<PaymentData> convertPayments(
+      List<Warehouse> ws, Map<String, CustomerData> customers) {
     List<Payment> ps =
         ws.parallelStream()
             .flatMap(
@@ -383,14 +332,14 @@ public class MsDataConverter implements DataConverter {
       PaymentData payment =
           new PaymentData(
               p.getId(),
-              this.customers.get(p.getCustomer().getId()),
+              customers.get(p.getCustomer().getId()),
               p.getDate(),
               p.getAmount(),
               p.getData());
 
       payments.add(payment);
       // referential integrity
-      this.customers.get(p.getCustomer().getId()).getPaymentRefs().add(payment);
+      customers.get(p.getCustomer().getId()).getPaymentRefs().add(payment);
     }
 
     return payments;

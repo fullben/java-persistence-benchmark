@@ -36,102 +36,53 @@ import org.apache.logging.log4j.Logger;
 /**
  * Converts a generated data model to a JPA entity data model.
  *
- * @see DataGenerator
  * @author Benedikt Full
+ * @author Johannes Manner
  */
-public class JpaDataConverter implements DataConverter {
+public class JpaDataConverter
+    implements DataConverter<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> {
 
   private static final Logger LOG = LogManager.getLogger(JpaDataConverter.class);
-  private Map<String, ProductEntity> products;
-  private Map<String, CarrierEntity> carriers;
-  private Map<String, WarehouseEntity> warehouses;
-  private List<StockEntity> stocks;
-  private Map<String, DistrictEntity> districts;
-  private List<EmployeeEntity> employees;
-  private Map<String, CustomerEntity> customers;
-  private Map<String, OrderEntity> orders;
-  private List<OrderItemEntity> orderItems;
-  private List<PaymentEntity> payments;
 
-  public JpaDataConverter() {
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    payments = null;
-  }
+  public JpaDataConverter() {}
 
   @Override
-  public void convert(IDataGenerator generator) {
-    Stopwatch stopwatch = new Stopwatch(true);
-    if (!generator.isDataGenerated()) {
-      generator.generate();
-    }
-    products = convertProducts(generator.getProducts());
-    carriers = convertCarriers(generator.getCarriers());
-    warehouses = convertWarehouses(generator.getWarehouses());
-    stocks = convertStocks(generator.getWarehouses());
-    districts = convertDistricts(generator.getWarehouses());
-    employees = convertEmployees(generator.getEmployees());
-    customers = convertCustomers(generator.getWarehouses());
-    orders = convertOrders(generator.getWarehouses());
-    orderItems = convertOrderItems(generator.getWarehouses());
-    payments = convertPayments(generator.getWarehouses());
+  public JpaDataModel convert(
+      DataModel<Product, Warehouse, Employee, Carrier> model) {
+    // Create model objects by converting provided template
+    Stopwatch stopwatch = new Stopwatch().start();
+    Map<String, ProductEntity> products = convertProducts(model.getProducts());
+    Map<String, CarrierEntity> carriers = convertCarriers(model.getCarriers());
+    Map<String, WarehouseEntity> warehouses = convertWarehouses(model.getWarehouses());
+    List<StockEntity> stocks = convertStocks(model.getWarehouses(), warehouses, products);
+    Map<String, DistrictEntity> districts = convertDistricts(model.getWarehouses(), warehouses);
+    List<EmployeeEntity> employees = convertEmployees(model.getEmployees(), districts);
+    Map<String, CustomerEntity> customers = convertCustomers(model.getWarehouses(), districts);
+    Map<String, OrderEntity> orders =
+        convertOrders(model.getWarehouses(), carriers, districts, customers);
+    convertOrderItems(model.getWarehouses(), products, warehouses, orders);
+    convertPayments(model.getWarehouses(), districts, customers);
     stopwatch.stop();
+
+    // Create summary data
+    Stats stats = new Stats();
+    stats.setTotalModelObjectCount(model.getStats().getTotalModelObjectCount());
+    stats.setDurationMillis(stopwatch.getDurationMillis());
+    stats.setDuration(stopwatch.getDuration());
+
+    // Wrap everything in model instance
+    JpaDataModel generatedModel =
+        new JpaDataModel(
+            new ArrayList<>(products.values()),
+            new ArrayList<>(warehouses.values()),
+            employees,
+            new ArrayList<>(carriers.values()),
+            stats);
+
     LOG.info("Converted model data to JPA entity data, took {}", stopwatch.getDuration());
-  }
 
-  @Override
-  public boolean hasConvertedData() {
-    return products != null
-        && carriers != null
-        && warehouses != null
-        && stocks != null
-        && districts != null
-        && employees != null
-        && customers != null
-        && orders != null
-        && orderItems != null
-        && payments != null;
+    return generatedModel;
   }
-
-  @Override
-  public void clear() {
-    if (!hasConvertedData()) {
-      return;
-    }
-    products = null;
-    carriers = null;
-    warehouses = null;
-    stocks = null;
-    districts = null;
-    employees = null;
-    customers = null;
-    orders = null;
-    orderItems = null;
-    payments = null;
-  }
-
-  public List<ProductEntity> getProducts() {
-    return products.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
-  }
-
-  public List<CarrierEntity> getCarriers() {
-    return carriers.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
-  }
-
-  public List<WarehouseEntity> getWarehouses() {
-    return warehouses.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
-  }
-
-  public List<EmployeeEntity> getEmployees() {
-    return employees;
-  }
-
 
   private Map<String, ProductEntity> convertProducts(List<Product> ps) {
     Map<String, ProductEntity> products = new HashMap<>();
@@ -180,20 +131,24 @@ public class JpaDataConverter implements DataConverter {
     return warehouses;
   }
 
-  private List<StockEntity> convertStocks(List<Warehouse> ws) {
+  private List<StockEntity> convertStocks(
+      List<Warehouse> ws,
+      Map<String, WarehouseEntity> warehouses,
+      Map<String, ProductEntity> products) {
     List<StockEntity> stocks =
         ws.stream()
             .flatMap(w -> w.getStocks().stream())
-            .map(s -> this.stock(s))
+            .map(s -> stock(s, warehouses, products))
             .collect(Collectors.toList());
     LOG.debug("Converted {} stocks", stocks.size());
     return stocks;
   }
 
-  private StockEntity stock(Stock s) {
+  private StockEntity stock(
+      Stock s, Map<String, WarehouseEntity> warehouses, Map<String, ProductEntity> products) {
     StockEntity stock = new StockEntity();
     stock.setId(s.getId());
-    stock.setProduct(this.products.get(s.getProduct().getId()));
+    stock.setProduct(products.get(s.getProduct().getId()));
     stock.setData(s.getData());
     stock.setQuantity(s.getQuantity());
     stock.setDist01(s.getDist01());
@@ -211,14 +166,15 @@ public class JpaDataConverter implements DataConverter {
     stock.setOrderCount(s.getOrderCount());
 
     // referential integrity
-    WarehouseEntity warehouseEntity = this.warehouses.get(s.getWarehouse().getId());
+    WarehouseEntity warehouseEntity = warehouses.get(s.getWarehouse().getId());
     stock.setWarehouse(warehouseEntity);
     warehouseEntity.getStocks().add(stock);
 
     return stock;
   }
 
-  private Map<String, DistrictEntity> convertDistricts(List<Warehouse> ws) {
+  private Map<String, DistrictEntity> convertDistricts(
+      List<Warehouse> ws, Map<String, WarehouseEntity> warehouses) {
     Map<String, DistrictEntity> districts = new HashMap<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
@@ -231,7 +187,7 @@ public class JpaDataConverter implements DataConverter {
         district.setYearToDateBalance(d.getYearToDateBalance());
 
         // referential integrity
-        WarehouseEntity warehouse = this.warehouses.get(d.getWarehouse().getId());
+        WarehouseEntity warehouse = warehouses.get(d.getWarehouse().getId());
         district.setWarehouse(warehouse);
         warehouse.getDistricts().add(district);
 
@@ -242,7 +198,8 @@ public class JpaDataConverter implements DataConverter {
     return districts;
   }
 
-  private List<EmployeeEntity> convertEmployees(List<Employee> es) {
+  private List<EmployeeEntity> convertEmployees(
+      List<Employee> es, Map<String, DistrictEntity> districts) {
     List<EmployeeEntity> employees = new ArrayList<>(es.size());
     for (Employee e : es) {
       EmployeeEntity employee = new EmployeeEntity();
@@ -256,24 +213,26 @@ public class JpaDataConverter implements DataConverter {
       employee.setUsername(e.getUsername());
       employee.setPassword(e.getPassword());
       employee.setTitle(e.getTitle());
-      employee.setDistrict(this.districts.get(e.getDistrict().getId()));
+      employee.setDistrict(districts.get(e.getDistrict().getId()));
       employees.add(employee);
     }
     LOG.debug("Converted {} employees", employees.size());
     return employees;
   }
 
-  private Map<String, CustomerEntity> convertCustomers(List<Warehouse> ws) {
+  private Map<String, CustomerEntity> convertCustomers(
+      List<Warehouse> ws, Map<String, DistrictEntity> districts) {
     List<Customer> cs = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
         cs.addAll(d.getCustomers());
       }
     }
-    return customers(cs);
+    return customers(cs, districts);
   }
 
-  private Map<String, CustomerEntity> customers(List<Customer> cs) {
+  private Map<String, CustomerEntity> customers(
+      List<Customer> cs, Map<String, DistrictEntity> districts) {
     Map<String, CustomerEntity> customers = new HashMap<>();
     for (Customer c : cs) {
       CustomerEntity customer = new CustomerEntity();
@@ -295,8 +254,8 @@ public class JpaDataConverter implements DataConverter {
       customer.setDeliveryCount(c.getDeliveryCount());
       customer.setSince(LocalDateTime.now());
 
-      //referential integrity
-      DistrictEntity district = this.districts.get(c.getDistrict().getId());
+      // referential integrity
+      DistrictEntity district = districts.get(c.getDistrict().getId());
       customer.setDistrict(district);
       district.getCustomers().add(customer);
 
@@ -306,17 +265,25 @@ public class JpaDataConverter implements DataConverter {
     return customers;
   }
 
-  private Map<String, OrderEntity> convertOrders(List<Warehouse> ws) {
+  private Map<String, OrderEntity> convertOrders(
+      List<Warehouse> ws,
+      Map<String, CarrierEntity> carriers,
+      Map<String, DistrictEntity> districts,
+      Map<String, CustomerEntity> customers) {
     List<Order> os = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
         os.addAll(d.getOrders());
       }
     }
-    return orders(os);
+    return orders(os, carriers, districts, customers);
   }
 
-  private Map<String, OrderEntity> orders(List<Order> os) {
+  private Map<String, OrderEntity> orders(
+      List<Order> os,
+      Map<String, CarrierEntity> carriers,
+      Map<String, DistrictEntity> districts,
+      Map<String, CustomerEntity> customers) {
     List<OrderEntity> orders =
         os.parallelStream()
             .map(
@@ -327,17 +294,17 @@ public class JpaDataConverter implements DataConverter {
                   order.setEntryDate(o.getEntryDate());
                   order.setFulfilled(o.isFulfilled());
                   if (o.getCarrier() != null) {
-                    order.setCarrier(this.carriers.get(o.getCarrier().getId()));
+                    order.setCarrier(carriers.get(o.getCarrier().getId()));
                   }
                   order.setAllLocal(o.isAllLocal());
 
                   // referential integrity
-                  DistrictEntity districtEntity = this.districts.get(o.getDistrict().getId());
+                  DistrictEntity districtEntity = districts.get(o.getDistrict().getId());
                   order.setDistrict(districtEntity);
                   districtEntity.getOrders().add(order);
 
                   // referential integrity
-                  CustomerEntity customerEntity = this.customers.get(o.getCustomer().getId());
+                  CustomerEntity customerEntity = customers.get(o.getCustomer().getId());
                   order.setCustomer(customerEntity);
                   customerEntity.getOrders().add(order);
 
@@ -347,14 +314,18 @@ public class JpaDataConverter implements DataConverter {
             .collect(Collectors.toList());
 
     Map<String, OrderEntity> orderMap = new HashMap<>();
-    for(OrderEntity orderEntity : orders) {
+    for (OrderEntity orderEntity : orders) {
       orderMap.put(orderEntity.getId(), orderEntity);
     }
     LOG.debug("Converted {} orders", orders.size());
     return orderMap;
   }
 
-  private List<OrderItemEntity> convertOrderItems(List<Warehouse> ws) {
+  private List<OrderItemEntity> convertOrderItems(
+      List<Warehouse> ws,
+      Map<String, ProductEntity> products,
+      Map<String, WarehouseEntity> warehouses,
+      Map<String, OrderEntity> orders) {
     List<OrderItem> ois = new ArrayList<>();
     for (Warehouse w : ws) {
       for (District d : w.getDistricts()) {
@@ -363,18 +334,23 @@ public class JpaDataConverter implements DataConverter {
         }
       }
     }
-    return orderItems(ois);
+    return orderItems(ois, products, warehouses, orders);
   }
 
-  private List<OrderItemEntity> orderItems(List<OrderItem> ois) {
+  private List<OrderItemEntity> orderItems(
+      List<OrderItem> ois,
+      Map<String, ProductEntity> products,
+      Map<String, WarehouseEntity> warehouses,
+      Map<String, OrderEntity> orders) {
     List<OrderItemEntity> orderItems =
         ois.stream()
             .map(
                 item -> {
                   OrderItemEntity orderItem = new OrderItemEntity();
                   orderItem.setId(item.getId());
-                  orderItem.setProduct(this.products.get(item.getProduct().getId()));
-                  orderItem.setSupplyingWarehouse(this.warehouses.get(item.getSupplyingWarehouse().getId()));
+                  orderItem.setProduct(products.get(item.getProduct().getId()));
+                  orderItem.setSupplyingWarehouse(
+                      warehouses.get(item.getSupplyingWarehouse().getId()));
                   orderItem.setAmount(item.getAmount());
                   orderItem.setQuantity(item.getQuantity());
                   orderItem.setNumber(item.getNumber());
@@ -382,7 +358,7 @@ public class JpaDataConverter implements DataConverter {
                   orderItem.setDeliveryDate(item.getDeliveryDate());
 
                   // referential integrity
-                  OrderEntity orderEntity = this.orders.get(item.getOrder().getId());
+                  OrderEntity orderEntity = orders.get(item.getOrder().getId());
                   orderItem.setOrder(orderEntity);
                   orderEntity.getItems().add(orderItem);
 
@@ -393,7 +369,10 @@ public class JpaDataConverter implements DataConverter {
     return orderItems;
   }
 
-  private List<PaymentEntity> convertPayments(List<Warehouse> ws) {
+  private List<PaymentEntity> convertPayments(
+      List<Warehouse> ws,
+      Map<String, DistrictEntity> districts,
+      Map<String, CustomerEntity> customers) {
     List<Payment> ps =
         ws.parallelStream()
             .flatMap(
@@ -404,10 +383,13 @@ public class JpaDataConverter implements DataConverter {
                                 d.getCustomers().parallelStream()
                                     .flatMap(c -> c.getPayments().stream())))
             .collect(Collectors.toList());
-    return payments(ps);
+    return payments(ps, districts, customers);
   }
 
-  private List<PaymentEntity> payments(List<Payment> ps) {
+  private List<PaymentEntity> payments(
+      List<Payment> ps,
+      Map<String, DistrictEntity> districts,
+      Map<String, CustomerEntity> customers) {
     List<PaymentEntity> payments =
         ps.parallelStream()
             .map(
@@ -417,10 +399,10 @@ public class JpaDataConverter implements DataConverter {
                   payment.setAmount(p.getAmount());
                   payment.setDate(p.getDate());
                   payment.setData(p.getData());
-                  payment.setDistrict(this.districts.get(p.getDistrict().getId()));
+                  payment.setDistrict(districts.get(p.getDistrict().getId()));
 
                   // referential integrity
-                  CustomerEntity customer = this.customers.get(p.getCustomer().getId());
+                  CustomerEntity customer = customers.get(p.getCustomer().getId());
                   payment.setCustomer(customer);
                   customer.getPayments().add(payment);
 

@@ -12,8 +12,7 @@ import java.util.concurrent.TimeUnit;
  * <p>The following snippet illustrates a typical use case for the stopwatch:
  *
  * <pre>
- *   Stopwatch stopwatch = new Stopwatch();
- *   stopwatch.start();
+ *   Stopwatch stopwatch = new Stopwatch().start();
  *   // Do some resource/time-intensive task here
  *   ...
  *   stopwatch.stop();
@@ -28,10 +27,18 @@ public class Stopwatch {
   private long stop;
   private boolean stopped;
 
+  /** Creates a new stopwatch that is not started. */
   public Stopwatch() {
     this(false);
   }
 
+  /**
+   * Creates a new stopwatch, which may start measuring immediatly, depending on the given
+   * parameter.
+   *
+   * @param start {@code true} to start the stopwatch instantly, {@code false} to initialize a not
+   *     started stopwatch
+   */
   public Stopwatch(boolean start) {
     reset();
     if (start) {
@@ -42,12 +49,14 @@ public class Stopwatch {
   /**
    * Starts or restarts time measurement.
    *
+   * @return itself
    * @see #stop()
    */
-  public void start() {
+  public Stopwatch start() {
     start = System.nanoTime();
     stop = 0;
     stopped = false;
+    return this;
   }
 
   /**

@@ -23,7 +23,7 @@ public abstract class PaymentService
 
   protected String buildNewCustomerData(
       String customerId, String warehouseId, String districtId, double amount, String oldData) {
-    String newData = "" + customerId + districtId + warehouseId + amount;
+    String newData = customerId + districtId + warehouseId + amount;
     return newData + oldData.substring(newData.length());
   }
 
