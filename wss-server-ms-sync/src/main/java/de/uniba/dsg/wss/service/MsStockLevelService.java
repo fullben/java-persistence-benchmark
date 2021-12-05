@@ -35,7 +35,7 @@ public class MsStockLevelService extends StockLevelService {
 
   @Override
   public StockLevelResponse process(StockLevelRequest req) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(req.getWarehouseId());
+    WarehouseData warehouse = dataRoot.getWarehouses().get(req.getWarehouseId());
     DistrictData district = warehouse.getDistricts().get(req.getDistrictId());
     List<StockData> stocksInOrder =
         district.getOrders().values().stream()
@@ -58,7 +58,7 @@ public class MsStockLevelService extends StockLevelService {
 
     // synchronized access to read the stock infos
     int lowStockCount =
-        this.consistencyManager.countStockEntriesLowerThanThreshold(
+        consistencyManager.countStockEntriesLowerThanThreshold(
             stocksInOrder, req.getStockThreshold());
     return new StockLevelResponse(req, lowStockCount);
   }

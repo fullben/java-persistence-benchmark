@@ -46,7 +46,7 @@ public class MsNewOrderService extends NewOrderService {
     for (int i = 0; i < maxRetries; i++) {
       try {
         // synchronized access
-        storedOrder = this.processOrderRequest(req);
+        storedOrder = processOrderRequest(req);
         break;
       } catch (MsTransactionException e) {
         // TODO handle exception?
@@ -138,7 +138,7 @@ public class MsNewOrderService extends NewOrderService {
         new OrderData(
             districtData, customerData, LocalDateTime.now(), stockUpdates.size(), allLocal);
 
-    return this.consistencyManager.storeOrder(order, stockUpdates);
+    return consistencyManager.storeOrder(order, stockUpdates);
   }
 
   private String getRandomDistrictInfo(StockData stock) {

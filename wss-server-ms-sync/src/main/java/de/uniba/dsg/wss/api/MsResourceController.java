@@ -41,7 +41,7 @@ public class MsResourceController implements ResourceController {
   @Override
   public ResponseEntity<Iterable<ProductRepresentation>> getProducts() {
     return ResponseEntity.ok(
-        this.dataRoot.getProducts().entrySet().stream()
+        dataRoot.getProducts().entrySet().stream()
             .parallel()
             .map(p -> modelMapper.map(p.getValue(), ProductRepresentation.class))
             .collect(Collectors.toList()));
@@ -49,7 +49,7 @@ public class MsResourceController implements ResourceController {
 
   @Override
   public ResponseEntity<EmployeeRepresentation> getEmployee(String username) {
-    EmployeeData employee = this.dataRoot.getEmployees().get(username);
+    EmployeeData employee = dataRoot.getEmployees().get(username);
     if (employee == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -66,7 +66,7 @@ public class MsResourceController implements ResourceController {
 
   @Override
   public ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(String warehouseId) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(warehouseId);
+    WarehouseData warehouse = dataRoot.getWarehouses().get(warehouseId);
     if (warehouse == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -80,7 +80,7 @@ public class MsResourceController implements ResourceController {
 
   @Override
   public ResponseEntity<List<StockRepresentation>> getWarehouseStocks(String warehouseId) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(warehouseId);
+    WarehouseData warehouse = dataRoot.getWarehouses().get(warehouseId);
     if (warehouse == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -94,7 +94,7 @@ public class MsResourceController implements ResourceController {
   @Override
   public ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
       String warehouseId, String districtId) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(warehouseId);
+    WarehouseData warehouse = dataRoot.getWarehouses().get(warehouseId);
     if (warehouse == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -113,7 +113,7 @@ public class MsResourceController implements ResourceController {
   @Override
   public ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
       String warehouseId, String districtId) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(warehouseId);
+    WarehouseData warehouse = dataRoot.getWarehouses().get(warehouseId);
     if (warehouse == null) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -132,7 +132,7 @@ public class MsResourceController implements ResourceController {
   @Override
   public ResponseEntity<List<CarrierRepresentation>> getCarriers() {
     return ResponseEntity.ok(
-        this.dataRoot.getCarriers().entrySet().parallelStream()
+        dataRoot.getCarriers().entrySet().parallelStream()
             .map(c -> modelMapper.map(c.getValue(), CarrierRepresentation.class))
             .collect(Collectors.toList()));
   }

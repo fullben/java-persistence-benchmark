@@ -121,7 +121,7 @@ public class MsDataConverter
       WarehouseData warehouse = warehouses.get(warehouseBase.getId());
       for (Stock stockBase : warehouseBase.getStocks()) {
         // create stock data
-        StockData stockData = this.stock(stockBase, warehouse, products);
+        StockData stockData = stock(stockBase, warehouse, products);
         // add stock to warehouse
         warehouse.getStocks().add(stockData);
         stocks.put(stockData.getId(), stockData);

@@ -33,8 +33,8 @@ public class MsDeliveryService extends DeliveryService {
 
   @Override
   public DeliveryResponse process(DeliveryRequest req) {
-    WarehouseData warehouse = this.dataRoot.getWarehouses().get(req.getWarehouseId());
-    CarrierData carrier = this.dataRoot.getCarriers().get(req.getCarrierId());
+    WarehouseData warehouse = dataRoot.getWarehouses().get(req.getWarehouseId());
+    CarrierData carrier = dataRoot.getCarriers().get(req.getCarrierId());
 
     // Find an order for each district (the oldest unfulfilled order)
     List<OrderData> oldestOrderForEachDistrict =

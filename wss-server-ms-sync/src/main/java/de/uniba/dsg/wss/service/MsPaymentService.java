@@ -67,7 +67,7 @@ public class MsPaymentService extends PaymentService {
     // copy the customer data is here important since there could be concurrent updates on the same
     // customer object...
     CustomerData copiedCustomer =
-        this.consistencyManager.storePaymentAndUpdateDependentObjects(
+        consistencyManager.storePaymentAndUpdateDependentObjects(
             warehouseData, districtData, customer, payment);
 
     // building response object...
