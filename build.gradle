@@ -8,13 +8,22 @@ subprojects {
     apply plugin: 'java'
     apply plugin: "com.diffplug.spotless"
 
+    // Plugins for WSS server core and implementations
     if (name != 'wss-data-gen' || name != 'wss-commons') {
         apply plugin: 'org.springframework.boot'
         apply plugin: 'io.spring.dependency-management'
+        // Plugins for implementations only
+        if (name != 'wss-server-core') {
+            apply plugin: 'application'
+            // Set main class; may be overridden in build of actual implementation
+            application {
+                mainClass = 'de.uniba.dsg.wss.Application'
+            }
+        }
     }
 
     group 'de.uniba.dsg'
-    version '1.0'
+    version '1.0.0'
 
     repositories {
         mavenCentral()

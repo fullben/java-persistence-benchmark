@@ -1,18 +1,3 @@
-plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-    id 'java'
-    id 'application'
-}
-
-application {
-    mainClass = 'de.uniba.dsg.wss.Application'
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(':wss-server-core')
     // MicroStream persistence
@@ -22,7 +7,6 @@ dependencies {
     // https://github.com/JanWiemer/jacis/issues/31
     // https://github.com/JanWiemer/jacis/wiki/Installation
     implementation files('libs/jacis-2.0.11-2021-10-25-SNAPSHOT.jar')
-    // implementation 'org.jacis:jacis:2.0.10'
-
+    // Tests
     testImplementation(testFixtures(project(":wss-data-gen")))
 }

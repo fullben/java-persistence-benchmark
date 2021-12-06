@@ -123,19 +123,12 @@ For this, simply create a new module. By convention, the module name should star
 The `build.gradle` of the module should start out similar to the following build file:
 
 ```groovy
-plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-    id 'java'
-    id 'application'
-}
-
 application {
-    mainClass = 'de.uniba.dsg.wss.Application'
+    // Only if you want to use a custom main class
 }
 
 repositories {
-    mavenCentral()
+    // Only if you need repositories other than mavenCentral()
 }
 
 dependencies {

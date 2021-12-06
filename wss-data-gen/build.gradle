@@ -1,10 +1,5 @@
 plugins {
-    id 'java'
     id "java-test-fixtures"
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {

@@ -1,11 +1,5 @@
 plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
     id 'java-library'
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
