@@ -1,0 +1,19 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api project(':wss-commons')
+    api project(':wss-data-gen')
+    // Automatic mapping between model classes
+    api 'org.modelmapper:modelmapper:2.4.4'
+    // API documentation and web interface
+    implementation 'io.springfox:springfox-swagger2:2.7.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.7.0'
+}
