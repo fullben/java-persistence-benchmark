@@ -2,7 +2,6 @@ package de.uniba.dsg.wss.data.model;
 
 import java.util.UUID;
 
-
 public abstract class BaseData {
 
   protected final String id;

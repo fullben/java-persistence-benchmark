@@ -14,11 +14,10 @@ public class OrderStatusRequest {
 
   private String customerEmail;
 
-  public OrderStatusRequest(){
+  public OrderStatusRequest() {}
 
-  }
-
-  public OrderStatusRequest(String warehouseId, String districtId, String customerId, String customerEmail) {
+  public OrderStatusRequest(
+      String warehouseId, String districtId, String customerId, String customerEmail) {
     this.warehouseId = warehouseId;
     this.districtId = districtId;
     this.customerId = customerId;

@@ -1,6 +1,7 @@
 package de.uniba.dsg.wss.service;
 
 import de.uniba.dsg.wss.data.access.CustomerRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.StockRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
@@ -16,7 +17,6 @@ import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequest;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequestItem;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderResponse;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderResponseItem;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

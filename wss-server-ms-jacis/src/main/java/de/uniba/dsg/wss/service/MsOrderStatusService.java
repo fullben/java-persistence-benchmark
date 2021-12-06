@@ -2,12 +2,12 @@ package de.uniba.dsg.wss.service;
 
 import de.uniba.dsg.wss.data.model.CustomerData;
 import de.uniba.dsg.wss.data.model.DistrictData;
+import de.uniba.dsg.wss.data.model.OrderData;
+import de.uniba.dsg.wss.data.model.OrderItemData;
 import de.uniba.dsg.wss.data.model.WarehouseData;
 import de.uniba.dsg.wss.data.transfer.messages.OrderItemStatusResponse;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusRequest;
 import de.uniba.dsg.wss.data.transfer.messages.OrderStatusResponse;
-import de.uniba.dsg.wss.data.model.OrderData;
-import de.uniba.dsg.wss.data.model.OrderItemData;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;

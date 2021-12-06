@@ -1,6 +1,8 @@
 package de.uniba.dsg.wss.service;
 
 import de.uniba.dsg.wss.data.access.CustomerRepository;
+import de.uniba.dsg.wss.data.access.DistrictRepository;
+import de.uniba.dsg.wss.data.access.PaymentRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
 import de.uniba.dsg.wss.data.model.CustomerEntity;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
@@ -8,8 +10,6 @@ import de.uniba.dsg.wss.data.model.PaymentEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentRequest;
 import de.uniba.dsg.wss.data.transfer.messages.PaymentResponse;
-import de.uniba.dsg.wss.data.access.DistrictRepository;
-import de.uniba.dsg.wss.data.access.PaymentRepository;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import org.postgresql.util.PSQLException;

@@ -108,7 +108,13 @@ Note that when executing the JMeter tests, no resource intensive features such a
 
 Furthermore, if you have configured a large number of threads as described in the section [scaling](#scaling), you may have to adjust the amount of heap memory available to the JVM executing the JMeter script. This can be facilitated by modifying the appropriate JMeter file. This file is found at `PATH-TO-JMETER-INSTALLATION/bin/jmeter`. Open the file and find the line `: "${HEAP:="-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m"}"` and adjust the values of `-Xms` and `-Xmx`. For example, if you have 50 threads, a size of 4GB to 6GB is appropriate.
 
-## Extensibility
+## Contributions
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+All changes should honor the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). You can run the `spotlessJavaApply` and `spotlessMiscApply` tasks to ensure that your Java code adheres to the Google Java Style (be aware that certain aspects of the style are not enforced by *spotless*, namely removing any wildcard imports) and that your other files are also formatted properly. Contributions that do not follow these requirements will not be accepted. Please make sure to update tests and documentation as appropriate.
+
+### Extensibility
 
 This benchmark is extensible, meaning it is possible to add custom implementations for a persistence solution of your choice.
 
@@ -140,4 +146,4 @@ dependencies {
 
 The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or the two implementations provided with the original benchmark version (`wss-server-jpa-pg` and `wss-server-ms-jacis`). Note that this module should use the same package structure as the core module. In order to avoid name collisions, use prefixes or postfixes on your class names.
 
-Aside from the application implementation, you must also provide a `Dockerfile` and `docker-compose` file for enabling the execution of your implementation in a container environment. These files must be defined in the root directory of this project. Check the existing implementations there for further information. 
+Aside from the application implementation, you must also provide a `Dockerfile` and `docker-compose` file for enabling the execution of your implementation in a container environment. These files must be defined in the root directory of this project. Check the existing implementations there for further information.

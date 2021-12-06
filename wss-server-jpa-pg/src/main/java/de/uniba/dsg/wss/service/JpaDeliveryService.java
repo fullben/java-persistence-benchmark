@@ -2,6 +2,8 @@ package de.uniba.dsg.wss.service;
 
 import de.uniba.dsg.wss.data.access.CarrierRepository;
 import de.uniba.dsg.wss.data.access.CustomerRepository;
+import de.uniba.dsg.wss.data.access.DistrictRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.model.CarrierEntity;
 import de.uniba.dsg.wss.data.model.CustomerEntity;
 import de.uniba.dsg.wss.data.model.DistrictEntity;
@@ -9,8 +11,6 @@ import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.model.OrderItemEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
-import de.uniba.dsg.wss.data.access.DistrictRepository;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;

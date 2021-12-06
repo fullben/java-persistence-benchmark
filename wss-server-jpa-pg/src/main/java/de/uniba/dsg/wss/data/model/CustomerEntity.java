@@ -1,9 +1,17 @@
 package de.uniba.dsg.wss.data.model;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Index;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * A customer of the wholesale supplier.
@@ -31,7 +39,7 @@ public class CustomerEntity extends PersonEntity {
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
   private List<OrderEntity> orders;
 
-  public CustomerEntity(){
+  public CustomerEntity() {
     this.payments = new ArrayList<>();
     this.orders = new ArrayList<>();
   }

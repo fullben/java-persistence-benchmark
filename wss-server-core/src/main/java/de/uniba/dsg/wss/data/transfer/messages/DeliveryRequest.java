@@ -10,9 +10,7 @@ public class DeliveryRequest {
   @NotBlank(message = "Carrier id is required")
   private String carrierId;
 
-  public DeliveryRequest(){
-
-  }
+  public DeliveryRequest() {}
 
   public DeliveryRequest(String warehouseId, String carrierId) {
     this.warehouseId = warehouseId;

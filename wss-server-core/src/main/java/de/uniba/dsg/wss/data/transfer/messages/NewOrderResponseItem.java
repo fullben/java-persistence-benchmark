@@ -11,10 +11,17 @@ public class NewOrderResponseItem {
   private int stockQuantity;
   private String brandGeneric;
 
-  public NewOrderResponseItem(){
-  }
+  public NewOrderResponseItem() {}
 
-  public NewOrderResponseItem(String supplyingWarehouseId, String itemId, String itemName, double itemPrice, double amount, int quantity, int stockQuantity, String brandGeneric) {
+  public NewOrderResponseItem(
+      String supplyingWarehouseId,
+      String itemId,
+      String itemName,
+      double itemPrice,
+      double amount,
+      int quantity,
+      int stockQuantity,
+      String brandGeneric) {
     this.supplyingWarehouseId = supplyingWarehouseId;
     this.itemId = itemId;
     this.itemName = itemName;

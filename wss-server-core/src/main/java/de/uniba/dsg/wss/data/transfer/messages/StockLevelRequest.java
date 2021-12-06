@@ -14,9 +14,7 @@ public class StockLevelRequest {
   @Min(value = 10, message = "Stock level threshold must be greater than nine")
   private int stockThreshold;
 
-  public StockLevelRequest(){
-
-  }
+  public StockLevelRequest() {}
 
   public StockLevelRequest(String warehouseId, String districtId, int stockThreshold) {
     this.warehouseId = warehouseId;

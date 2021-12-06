@@ -1,10 +1,10 @@
 package de.uniba.dsg.wss.service;
 
+import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.StockRepository;
 import de.uniba.dsg.wss.data.model.OrderEntity;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
 import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
-import de.uniba.dsg.wss.data.access.OrderRepository;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;

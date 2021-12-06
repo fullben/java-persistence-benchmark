@@ -3,13 +3,13 @@ package de.uniba.dsg.wss.api;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.OrderRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.ProductRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.StockRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.WarehouseRepresentation;
-import de.uniba.dsg.wss.MicroStreamTest;
 import java.util.List;
 import org.assertj.core.util.IterableUtil;
 import org.junit.jupiter.api.BeforeEach;

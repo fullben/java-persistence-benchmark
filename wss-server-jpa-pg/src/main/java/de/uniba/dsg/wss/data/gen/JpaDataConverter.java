@@ -47,8 +47,7 @@ public class JpaDataConverter
   public JpaDataConverter() {}
 
   @Override
-  public JpaDataModel convert(
-      DataModel<Product, Warehouse, Employee, Carrier> model) {
+  public JpaDataModel convert(DataModel<Product, Warehouse, Employee, Carrier> model) {
     // Create model objects by converting provided template
     Stopwatch stopwatch = new Stopwatch().start();
     Map<String, ProductEntity> products = convertProducts(model.getProducts());
