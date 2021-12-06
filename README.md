@@ -12,7 +12,7 @@ The benchmark is based on the famous TPC-C benchmark. Like TPC-C, it models the 
 * Update the delivery status of an order (read-write)
 * Check the stock levels of products at a warehouse (read)
 
-In order to model this scenario, the benchmark has a server application (implemented using [Spring Boot](https://spring.io/projects/spring-boot)), which provides access to the data of the supplier and can execute the transactions described above. This application is implemented in multiple 'flavors'. The core of the application resides in the `wss-server-core` module, while the actual implementations for each persistence mechanism reside in their own dedicated subproject (e.g., `wss-server-jpa-pg` for JPA-based persistence backed by a PostgreSQL database).
+In order to model this scenario, the benchmark has a server application (implemented using [Spring Boot](https://spring.io/projects/spring-boot)), which provides access to the data of the supplier and can execute the transactions described above. This application is implemented in multiple 'flavors'. The core of the application resides in the `wss-server-core` module, while the actual implementations for each persistence mechanism reside in their own dedicated subproject.
 
 The current version of this project includes the following actual server application implementations:
 
@@ -28,18 +28,16 @@ Transactions can be simulated using the included [JMeter](https://jmeter.apache.
 
 The main configuration properties of the server can be found in the `application.properties`, `application-prod.properties`, `application-dev.properties`, and `application-test.properties` files. 
 
-The server can be launched with one of the two following profiles (configurable via the `spring.profiles.active` property in the `application.properties` file):
+The server implementations can be launched with one of the two following profiles (configurable via the `spring.profiles.active` property in the `application.properties` file):
 
-* `prod`: Configures a [PostgreSQL](https://www.postgresql.org/) database as JPA data store.
-* `dev`: Configures an in-memory H2 database as JPA data store.
+* `prod`: Normally generate a large amount of data for initial database population.
+* `dev`: Usually use a smaller amount for initial database population and may use an alternative backing storage solution than the `prod` profile.
 
-The persistence layer of the server application is implemented both for JPA and MicroStream. Which implementation is to be utilized at runtime can be configured using the `application-dev.properties` and `application-prod.properties` files.
+All implementations may use the following properties to configure their core behavior:
 
 * `wss.model.initialize`: Whether the server should generate the model data at startup. `True` to indicate that the model should be generated, `false` for not generating any data.
 * `wss.model.warehouse-count`: Primary scaling factor of the data model, defines how many warehouses the wholesale supplier has. Must be a value greater than zero.
 * `wss.model.full-scale`: Secondary scaling factor of the data model, for development purposes only. Setting this to `false` reduces the amount of entities generated per warehouse.
-* `wss.jpa.*`: Configuration values of the JPA persistence implementation.
-* `wss.ms.*`: Configuration values of the MicroStream persistence implementation.
 
 ### Wholesale Supplier Clients
 
@@ -49,7 +47,7 @@ User Defined Variable|Command-Line Argument|Default Value|Description
 ---|---|---|---
 `server.url`|`-Jurl`|`localhost`|The url of the targeted server, excluding port and protocol, e.g. `localhost` for a server running on the same machine.
 `server.port`|`-Jport`|8080|The port of the targeted server.
-`server.protocol`|`-Jprotocol`|http|The protocol of the targeted server, usually either `http` or `https`.
+`server.protocol`|`-Jprotocol`|`http`|The protocol of the targeted server, usually either `http` or `https`.
 `employee.count`|`-Jemployees`|10|The number of employees to be simulated.
 `work.duration`|`-Jduration`|9000|The duration for which employee work will be simulated in seconds.
 
@@ -64,13 +62,15 @@ For a local development setup, the following software is required:
 * A Java IDE (e.g. [IntelliJ IDEA](https://www.jetbrains.com/idea/))
 * JMeter (tested with version 5.4.1)
 
-Make sure that the `spring.profiles.active` property in the `application.properties` file is set to `dev`.
+Make sure that the `spring.profiles.active` property in the `application.properties` file of the implementation you are working on is set to `dev`.
 
 Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
 
 Once the server has been launched, you may start the JMeter test plan defined in the `wss-terminals/terminals.jmx` file found in this project.
 
-Note that if using MicroStream persistence, you must delete the MicroStream storage folder created during each server run before performing any further runs.
+### Testing
+
+For testing, the profiles `dev` and `test` must be active. The `test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,test`.
 
 ### Deployment
 
@@ -80,11 +80,7 @@ The server application is meant to be deployed and run as a Docker container. Th
 * `docker-compose.ms.jacis.yml`: Creates a container just for the server application (MicroStream/JACIS based persistence implementation will be used) and launches it.
 * `docker-compose.ms.sync.yml`: Creates a container just for the server application (MicroStream based persistence implementation will be used) and launches it.
 
-Deploying either variation of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with either of the two compose file names.
-
-### Testing
-
-For testing, the profiles `dev` and `test` must be active. The `test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,test`.
+Deployment of any variant of the benchmark can be achieved by calling the command `docker-compose -f YML-FILE up` in the root directory of this project, while replacing `YML-FILE` with any of the compose file names.
 
 ### Scaling
 
@@ -137,6 +133,6 @@ dependencies {
 }
 ```
 
-The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or the two implementations provided with the original benchmark version (`wss-server-jpa-pg` and `wss-server-ms-jacis`). Note that this module should use the same package structure as the core module. In order to avoid name collisions, use prefixes or postfixes on your class names.
+The module itself should implement the application components defined in the `wss-server-core` module. For more information on what components and structures are necessary, consult the core module, or any of the implementations provided with the benchmark. Note that this module should use the same package structure as the core module. In order to avoid name collisions, use prefixes or postfixes on your class names.
 
 Aside from the application implementation, you must also provide a `Dockerfile` and `docker-compose` file for enabling the execution of your implementation in a container environment. These files must be defined in the root directory of this project. Check the existing implementations there for further information.
