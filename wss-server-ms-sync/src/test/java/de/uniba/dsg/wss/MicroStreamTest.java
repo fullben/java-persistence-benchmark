@@ -25,8 +25,7 @@ public abstract class MicroStreamTest {
     MsDataModel dataModel = new MsDataConverter().convert(new TestDataGenerator().generate());
 
     // remove all data from data root - cannot instantiate another root object since then I get null
-    // pointers in the logic classes
-    // bean has to be the same object
+    // pointers in the logic classes bean has to be the same object
     this.msDataRoot.getOrders().clear();
     this.msDataRoot.getEmployees().clear();
     this.msDataRoot.getWarehouses().clear();

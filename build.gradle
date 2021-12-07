@@ -60,6 +60,7 @@ subprojects {
         }
     }
 
+    // Spotless plugin for formatting of files (general and code style)
     spotless {
         format 'misc', {
             // Define the files to apply `misc` to
