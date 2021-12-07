@@ -1,0 +1,58 @@
+package de.uniba.dsg.wss.service;
+
+import de.uniba.dsg.wss.data.access.OrderRepository;
+import de.uniba.dsg.wss.data.access.StockRepository;
+import de.uniba.dsg.wss.data.model.OrderEntity;
+import de.uniba.dsg.wss.data.transfer.messages.StockLevelRequest;
+import de.uniba.dsg.wss.data.transfer.messages.StockLevelResponse;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class JpaStockLevelService extends StockLevelService {
+
+  private final OrderRepository orderRepository;
+  private final StockRepository stockRepository;
+
+  @Autowired
+  public JpaStockLevelService(OrderRepository orderRepository, StockRepository stockRepository) {
+    this.orderRepository = orderRepository;
+    this.stockRepository = stockRepository;
+  }
+
+  @Retryable(
+      value = {RuntimeException.class, SQLException.class, PSQLException.class},
+      backoff = @Backoff(delay = 100),
+      maxAttempts = 5)
+  @Transactional(isolation = Isolation.REPEATABLE_READ, readOnly = true)
+  @Override
+  public StockLevelResponse process(StockLevelRequest req) {
+    // Find the most 20 recent orders for the district
+    List<OrderEntity> orders =
+        orderRepository.findTwentyMostRecentOrdersOfDistrict(req.getDistrictId());
+
+    // Find the corresponding stock objects and count the ones below the given threshold
+    List<String> productIds =
+        orders.stream()
+            .flatMap(o -> o.getItems().stream().map(i -> i.getProduct().getId()))
+            .distinct()
+            .collect(Collectors.toList());
+    int lowStockCount =
+        stockRepository
+            .findByWarehouseIdAndProductIdAndQuantityThreshold(
+                req.getWarehouseId(), productIds, req.getStockThreshold())
+            .size();
+
+    StockLevelResponse res = new StockLevelResponse(req);
+    res.setLowStocksCount(lowStockCount);
+    return res;
+  }
+}

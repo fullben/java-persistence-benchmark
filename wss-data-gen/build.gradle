@@ -1,0 +1,9 @@
+plugins {
+    id "java-test-fixtures"
+}
+
+dependencies {
+    implementation project(':wss-commons')
+    // Fake data generator
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+}

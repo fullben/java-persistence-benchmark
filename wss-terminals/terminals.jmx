@@ -30,28 +30,28 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="server.url" elementType="Argument">
               <stringProp name="Argument.name">server.url</stringProp>
-              <stringProp name="Argument.value">localhost</stringProp>
+              <stringProp name="Argument.value">${__P(url, localhost)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="server.port" elementType="Argument">
               <stringProp name="Argument.name">server.port</stringProp>
-              <stringProp name="Argument.value">8080</stringProp>
+              <stringProp name="Argument.value">${__P(port, 8080)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="server.protocol" elementType="Argument">
               <stringProp name="Argument.name">server.protocol</stringProp>
-              <stringProp name="Argument.value">http</stringProp>
+              <stringProp name="Argument.value">${__P(protocol, http)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="employee.count" elementType="Argument">
               <stringProp name="Argument.name">employee.count</stringProp>
-              <stringProp name="Argument.value">10</stringProp>
+              <stringProp name="Argument.value">${__P(employees, 10)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">The number of employees that will be simulated</stringProp>
             </elementProp>
             <elementProp name="work.duration" elementType="Argument">
               <stringProp name="Argument.name">work.duration</stringProp>
-              <stringProp name="Argument.value">9000</stringProp>
+              <stringProp name="Argument.value">${__P(duration, 9000)}</stringProp>
               <stringProp name="Argument.desc">The duration for which the employee work (the five business transactions) will be simulated in milliseconds</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
@@ -427,6 +427,15 @@ vars.put(&quot;orderItems&quot;, orderItems)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">12000</stringProp>
@@ -521,6 +530,15 @@ vars.put(&quot;paymentRequest&quot;, req)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">12000</stringProp>
@@ -612,6 +630,15 @@ vars.put(&quot;orderStatusReq&quot;, req)
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
+                <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
                 <stringProp name="ConstantTimer.delay">10000</stringProp>
@@ -695,6 +722,15 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                   <boolProp name="Assertion.assume_success">false</boolProp>
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
                 <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">
@@ -781,6 +817,15 @@ vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).
                   <boolProp name="Assertion.assume_success">false</boolProp>
                   <intProp name="Assertion.test_type">16</intProp>
                 </ResponseAssertion>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Processing duration extractor" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+                  <stringProp name="RegexExtractor.refname">processingNs</stringProp>
+                  <stringProp name="RegexExtractor.regex">Processing-Ns:\s+(.+)</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">-1</stringProp>
+                  <stringProp name="RegexExtractor.match_number"></stringProp>
+                </RegexExtractor>
                 <hashTree/>
               </hashTree>
               <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Think time" enabled="true">

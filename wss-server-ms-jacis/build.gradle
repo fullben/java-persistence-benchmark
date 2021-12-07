@@ -1,0 +1,12 @@
+dependencies {
+    implementation project(':wss-server-core')
+    // MicroStream persistence
+    implementation 'one.microstream:microstream-storage-embedded:' + version_microstream
+    implementation 'one.microstream:microstream-storage-embedded-configuration:' + version_microstream
+    // Build based on the JACIS repository; for reasons see:
+    // https://github.com/JanWiemer/jacis/issues/31
+    // https://github.com/JanWiemer/jacis/wiki/Installation
+    implementation files('libs/jacis-2.0.11-2021-10-25-SNAPSHOT.jar')
+    // Tests
+    testImplementation(testFixtures(project(":wss-data-gen")))
+}
