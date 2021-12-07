@@ -1,4 +1,4 @@
-# Wholesale Supplier Java Persistence Benchmark (WSS)
+# Wholesale Supplier (WSS) Java Persistence Benchmark
 
 Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
@@ -70,7 +70,7 @@ Once the server has been launched, you may start the JMeter test plan defined in
 
 ### Testing
 
-For testing, the profiles `dev` and `test` must be active. The `test` profile allows an override of Spring Boot managed beans and therefore integration tests on a preconfigured database. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `dev,test`.
+All WSS server implementations include tests, with their own Spring profile defined in a dedicated `application-test.properties` file located in the test resources. For running these tests, this profile must be active. This can be achieved by setting the environment variable `SPRING_PROFILES_ACTIVE` with the value `test`.
 
 ### Deployment
 
@@ -108,7 +108,9 @@ Furthermore, if you have configured a large number of threads as described in th
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-All changes should honor the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). You can run the `spotlessJavaApply` and `spotlessMiscApply` tasks to ensure that your Java code adheres to the Google Java Style (be aware that certain aspects of the style are not enforced by *spotless*, namely removing any wildcard imports) and that your other files are also formatted properly. Contributions that do not follow these requirements will not be accepted. Please make sure to update tests and documentation as appropriate.
+All changes should honor the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). You can run the `spotlessJavaApply` and `spotlessMiscApply` tasks to ensure that your Java code adheres to the Google Java Style (be aware that certain aspects of the style are not enforced by the Spotless plugin, namely removing all [wildcard imports](https://google.github.io/styleguide/javaguide.html#s3.3.1-wildcard-imports)) and that your other files are also formatted properly. Please make sure to update tests and documentation as appropriate.
+
+Contributions that do not follow these guidelines will not be accepted.
 
 ### Extensibility
 
@@ -129,7 +131,7 @@ repositories {
 
 dependencies {
     implementation project(':wss-server-core')
-    // Dependencies for your persistence solution here
+    // Dependencies of your implementation here
 }
 ```
 
