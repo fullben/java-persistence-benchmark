@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.1 (09.12.2021)
+
+- Fix invalid environment property keys in Docker Compose files
+
 ## 2.0.0 (07.12.2021)
 
 - Split the project into multiple modules in order to increase flexibility and extensibility of the benchmark:

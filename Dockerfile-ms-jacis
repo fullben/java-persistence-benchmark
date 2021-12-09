@@ -1,11 +1,11 @@
 FROM gradle:6.9.1-jdk11-hotspot as BUILD_IMAGE
-COPY --chown=gradle:gradle . /home/jpb/
-WORKDIR /home/jpb
+COPY --chown=gradle:gradle . /home/wss/
+WORKDIR /home/wss
 RUN gradle :wss-server-ms-jacis:bootJar
 
 FROM openjdk:11.0.12-jre
-WORKDIR /home/jpb
-COPY --from=BUILD_IMAGE /home/jpb/wss-server-ms-jacis/build/libs/wss-server-*.jar app.jar
+WORKDIR /home/wss
+COPY --from=BUILD_IMAGE /home/wss/wss-server-ms-jacis/build/libs/wss-server-*.jar app.jar
 EXPOSE 8080
 ENV JAVA_OPTS=""
 CMD java $JAVA_OPTS -jar app.jar
