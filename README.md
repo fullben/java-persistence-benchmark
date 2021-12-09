@@ -48,7 +48,7 @@ User Defined Variable|Command-Line Argument|Default Value|Description
 `server.url`|`-Jurl`|`localhost`|The url of the targeted server, excluding port and protocol, e.g. `localhost` for a server running on the same machine.
 `server.port`|`-Jport`|8080|The port of the targeted server.
 `server.protocol`|`-Jprotocol`|`http`|The protocol of the targeted server, usually either `http` or `https`.
-`employee.count`|`-Jemployees`|10|The number of employees to be simulated.
+`employee.count`|`-Jemployees`|10|The number of employees to be simulated. Should be set to number of warehouses times ten.
 `work.duration`|`-Jduration`|9000|The duration for which employee work will be simulated in seconds.
 
 ## Setup & Usage
