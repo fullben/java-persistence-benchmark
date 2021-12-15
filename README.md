@@ -64,7 +64,7 @@ For a local development setup, the following software is required:
 
 Make sure that the `spring.profiles.active` property in the `application.properties` file of the implementation you are working on is set to `dev`.
 
-Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
+Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui/`.
 
 Once the server has been launched, you may start the JMeter test plan defined in the `wss-terminals/terminals.jmx` file found in this project.
 
