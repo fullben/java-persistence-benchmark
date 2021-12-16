@@ -18,6 +18,16 @@ public class NewOrderRequest {
   @NotEmpty(message = "Order items are required")
   private List<NewOrderRequestItem> items;
 
+  public NewOrderRequest() {}
+
+  public NewOrderRequest(
+      String warehouseId, String districtId, String customerId, List<NewOrderRequestItem> items) {
+    this.warehouseId = warehouseId;
+    this.districtId = districtId;
+    this.customerId = customerId;
+    this.items = items;
+  }
+
   public String getWarehouseId() {
     return warehouseId;
   }
