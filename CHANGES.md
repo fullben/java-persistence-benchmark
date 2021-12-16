@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## Development
+
+- Rework the transaction API (resource-based paths, more sensible request structure requirements, no more implementation requirements for individual server implementations)
+- Improve API documentation
+
 ## 2.0.1 (09.12.2021)
 
 - Fix invalid environment property keys in Docker Compose files
