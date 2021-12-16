@@ -346,12 +346,7 @@
                   <collectionProp name="Arguments.arguments">
                     <elementProp name="" elementType="HTTPArgument">
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
-  &quot;districtId&quot;: &quot;${randomDistrictId}&quot;,&#xd;
-  &quot;customerId&quot;: &quot;${randomCustomerId}&quot;,&#xd;
-  &quot;items&quot;: ${orderItems}&#xd;
-}</stringProp>
+                      <stringProp name="Argument.value">${orderItems}</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
                     </elementProp>
                   </collectionProp>
@@ -360,7 +355,7 @@
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/new-order</stringProp>
+                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/${randomCustomerId}/orders</stringProp>
                 <stringProp name="HTTPSampler.method">POST</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -470,7 +465,7 @@ vars.put(&quot;orderItems&quot;, orderItems)
                   <collectionProp name="Arguments.arguments">
                     <elementProp name="" elementType="HTTPArgument">
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">${paymentRequest}</stringProp>
+                      <stringProp name="Argument.value">${amount}</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
                     </elementProp>
                   </collectionProp>
@@ -479,7 +474,7 @@ vars.put(&quot;orderItems&quot;, orderItems)
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/payment</stringProp>
+                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/payments?${customerIdentifier}</stringProp>
                 <stringProp name="HTTPSampler.method">POST</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -504,19 +499,19 @@ def warehouseId = vars.get(&quot;empWarehouseId&quot;)
 // District is one of the home warehouse&apos;s districts, randomly selected
 String[] districtIds = vars.get(&quot;districtId_ALL&quot;).split(&quot;,&quot;)
 String randomDistrictId = districtIds[ThreadLocalRandom.current().nextInt(districtIds.size())]
+vars.put(&quot;randomDistrictId&quot;, randomDistrictId)
 
 // Customer is one of the selected district&apos;s customers, randomly selected
 // 60% of the time the email is provided, 40% the id
 def customers = new JsonSlurper().parseText(&quot;[&quot; + vars.get(&quot;customer_&quot; + randomDistrictId + &quot;_ALL&quot;) + &quot;]&quot;)
 def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.size())]
 def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
+vars.put(&quot;customerIdentifier&quot;, provideEmail ? &quot;customerEmail=&quot; + randomCustomer.email.toString() : &quot;customerId=&quot; + randomCustomer.id.toString());
+
 
 // Amount is random (double) between 1.0 and 5000
 def amount = ThreadLocalRandom.current().nextInt(1, 5001)
-
-// Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;amount\&quot;: &quot; + amount.toString() + &quot;, \&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;, \&quot;customerId\&quot;: &quot; + (provideEmail ? null : (&quot;\&quot;&quot; +randomCustomer.id.toString() + &quot;\&quot;&quot;)) + &quot;, \&quot;districtId\&quot;: \&quot;&quot; + randomDistrictId + &quot;\&quot;, \&quot;warehouseId\&quot;: \&quot;&quot; + warehouseId + &quot;\&quot;}&quot;
-vars.put(&quot;paymentRequest&quot;, req)
+vars.put(&quot;amount&quot;, String.valueOf(amount));
 </stringProp>
                 </JSR223PreProcessor>
                 <hashTree/>
@@ -568,21 +563,14 @@ vars.put(&quot;paymentRequest&quot;, req)
               </UniformRandomTimer>
               <hashTree/>
               <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET order-status" enabled="true">
-                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                  <collectionProp name="Arguments.arguments">
-                    <elementProp name="" elementType="HTTPArgument">
-                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">${orderStatusReq}</stringProp>
-                      <stringProp name="Argument.metadata">=</stringProp>
-                    </elementProp>
-                  </collectionProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                  <collectionProp name="Arguments.arguments"/>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain"></stringProp>
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/order-status</stringProp>
+                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/orders/status?${customerIdentifier}</stringProp>
                 <stringProp name="HTTPSampler.method">GET</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -606,16 +594,14 @@ def warehouseId = vars.get(&quot;empWarehouseId&quot;);
 // District is one of the home warehouse&apos;s districts, randomly selected
 String[] districtIds = vars.get(&quot;districtId_ALL&quot;).split(&quot;,&quot;)
 String randomDistrictId = districtIds[ThreadLocalRandom.current().nextInt(districtIds.size())]
+vars.put(&quot;randomDistrictId&quot;, randomDistrictId);
 
 // Customer is one of the selected district&apos;s customers, randomly selected
 // 60% of the time the email is provided, 40% the id
 def customers = new JsonSlurper().parseText(&quot;[&quot; + vars.get(&quot;customer_&quot; + randomDistrictId + &quot;_ALL&quot;) + &quot;]&quot;)
 def randomCustomer = customers[ThreadLocalRandom.current().nextInt(customers.size())]
 def provideEmail = ThreadLocalRandom.current().nextInt(101) &gt; 61;
-
-// Build the entire request body here, because variable expansion cannot expand to null
-def req = &quot;{\&quot;warehouseId\&quot;: \&quot;&quot; + warehouseId + &quot;\&quot;, \&quot;districtId\&quot;: \&quot;&quot; + randomDistrictId + &quot;\&quot;,\&quot;customerId\&quot;: &quot; + (provideEmail ? null : (&quot;\&quot;&quot; + randomCustomer.id.toString()) + &quot;\&quot;&quot;) + &quot;,\&quot;customerEmail\&quot;: &quot; + (provideEmail ? (&quot;\&quot;&quot; + randomCustomer.email + &quot;\&quot;&quot;) : null) + &quot;}&quot;
-vars.put(&quot;orderStatusReq&quot;, req)
+vars.put(&quot;customerIdentifier&quot;, provideEmail ? &quot;customerEmail=&quot; + randomCustomer.email.toString() : &quot;customerId=&quot; + randomCustomer.id.toString());
 </stringProp>
                   <stringProp name="scriptLanguage">groovy</stringProp>
                 </JSR223PreProcessor>
@@ -673,10 +659,7 @@ vars.put(&quot;orderStatusReq&quot;, req)
                   <collectionProp name="Arguments.arguments">
                     <elementProp name="" elementType="HTTPArgument">
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">{&#xd;
-	&quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
-	&quot;carrierId&quot;: &quot;${randomCarrierId}&quot;&#xd;
-}</stringProp>
+                      <stringProp name="Argument.value">${randomCarrierId}</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
                     </elementProp>
                   </collectionProp>
@@ -685,7 +668,7 @@ vars.put(&quot;orderStatusReq&quot;, req)
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/delivery</stringProp>
+                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/deliveries</stringProp>
                 <stringProp name="HTTPSampler.method">PUT</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -702,9 +685,6 @@ vars.put(&quot;orderStatusReq&quot;, req)
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
                   <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-// def warehouseId = vars.get(&quot;empWarehouseId&quot;);
 
 // Carrier id is randomly selected from all available carriers
 String[] carrierIds = vars.get(&quot;carrierId_ALL&quot;).split(&quot;,&quot;)
@@ -761,17 +741,21 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
               </UniformRandomTimer>
               <hashTree/>
               <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET stock-level" enabled="true">
-                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                   <collectionProp name="Arguments.arguments">
-                    <elementProp name="" elementType="HTTPArgument">
+                    <elementProp name="districtId" elementType="HTTPArgument">
                       <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">{&#xd;
-  &quot;warehouseId&quot;: &quot;${empWarehouseId}&quot;,&#xd;
-  &quot;districtId&quot;: &quot;${empDistrictId}&quot;,&#xd;
-  &quot;stockThreshold&quot;: ${minStockLevel}&#xd;
-}</stringProp>
+                      <stringProp name="Argument.value">${empDistrictId}</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">districtId</stringProp>
+                    </elementProp>
+                    <elementProp name="threshold" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value">${minStockLevel}</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                      <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                      <stringProp name="Argument.name">threshold</stringProp>
                     </elementProp>
                   </collectionProp>
                 </elementProp>
@@ -779,7 +763,7 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/stock-level</stringProp>
+                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/stock-levels</stringProp>
                 <stringProp name="HTTPSampler.method">GET</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -796,12 +780,6 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
                   <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
-
-// Warehouse is home warehouse
-// def warehouseId = vars.get(&quot;empWarehouseId&quot;);
-
-// District is the employee&apos;s district
-// def districtId = vars.get(&quot;empDistrictId&quot;);
 
 // Minimum stock level is randomly selected from a value between 10 and 20
 vars.put(&quot;minStockLevel&quot;, ThreadLocalRandom.current().nextInt(10, 21).toString());
