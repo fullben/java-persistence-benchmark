@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Benedikt Full
  */
 @RestController
-@RequestMapping("api/transactions")
+@RequestMapping("api")
 @Validated
 public class TransactionController {
 
@@ -97,7 +97,6 @@ public class TransactionController {
     requireEitherCustomerIdOrEmail(customerId, customerEmail);
     PaymentRequest req =
         new PaymentRequest(warehouseId, districtId, customerId, customerEmail, amount);
-    System.out.println("Id: " + req.getCustomerId() + " - Email: " + req.getCustomerEmail());
     return ApiResponse.ok().withDurationHeader().withBody(() -> paymentService.process(req));
   }
 

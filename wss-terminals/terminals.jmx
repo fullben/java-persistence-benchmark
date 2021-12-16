@@ -355,7 +355,7 @@
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/${randomCustomerId}/orders</stringProp>
+                <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/${randomCustomerId}/orders</stringProp>
                 <stringProp name="HTTPSampler.method">POST</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -474,7 +474,7 @@ vars.put(&quot;orderItems&quot;, orderItems)
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/payments?${customerIdentifier}</stringProp>
+                <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/payments?${customerIdentifier}</stringProp>
                 <stringProp name="HTTPSampler.method">POST</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -570,7 +570,7 @@ vars.put(&quot;amount&quot;, String.valueOf(amount));
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/orders/status?${customerIdentifier}</stringProp>
+                <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/districts/${randomDistrictId}/customers/orders/status?${customerIdentifier}</stringProp>
                 <stringProp name="HTTPSampler.method">GET</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -668,7 +668,7 @@ vars.put(&quot;customerIdentifier&quot;, provideEmail ? &quot;customerEmail=&quo
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/deliveries</stringProp>
+                <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/deliveries</stringProp>
                 <stringProp name="HTTPSampler.method">PUT</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -763,7 +763,7 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
                 <stringProp name="HTTPSampler.port"></stringProp>
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/api/transactions/warehouses/${empWarehouseId}/stock-levels</stringProp>
+                <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/stock-levels</stringProp>
                 <stringProp name="HTTPSampler.method">GET</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
