@@ -28,7 +28,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -81,7 +80,7 @@ public class TransactionController {
       @PathVariable(name = "customerId") @NotBlank String customerId,
       @RequestBody @NotEmpty List<NewOrderRequestItem> items) {
     NewOrderRequest req = new NewOrderRequest(warehouseId, districtId, customerId, items);
-    return ApiResponse.ok().withDurationHeader().withBody(() -> newOrderService.process(req));
+    return ApiResponse.created().withDurationHeader().withBody(() -> newOrderService.process(req));
   }
 
   @PostMapping(
@@ -97,7 +96,7 @@ public class TransactionController {
     requireEitherCustomerIdOrEmail(customerId, customerEmail);
     PaymentRequest req =
         new PaymentRequest(warehouseId, districtId, customerId, customerEmail, amount);
-    return ApiResponse.ok().withDurationHeader().withBody(() -> paymentService.process(req));
+    return ApiResponse.created().withDurationHeader().withBody(() -> paymentService.process(req));
   }
 
   @GetMapping(
@@ -116,7 +115,7 @@ public class TransactionController {
     return ApiResponse.ok().withDurationHeader().withBody(() -> orderStatusService.process(req));
   }
 
-  @PutMapping(
+  @PostMapping(
       value = "warehouses/{warehouseId}/deliveries",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Operation(summary = "Updates the delivery status of up to 10 undelivered orders")
@@ -124,7 +123,7 @@ public class TransactionController {
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @RequestBody @NotBlank String carrierId) {
     DeliveryRequest req = new DeliveryRequest(warehouseId, carrierId);
-    return ApiResponse.ok().withDurationHeader().withBody(() -> deliveryService.process(req));
+    return ApiResponse.created().withDurationHeader().withBody(() -> deliveryService.process(req));
   }
 
   @GetMapping(

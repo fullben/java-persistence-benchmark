@@ -412,9 +412,9 @@ vars.put(&quot;orderItems&quot;, orderItems)
 </stringProp>
                 </JSR223PreProcessor>
                 <hashTree/>
-                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 201" enabled="false">
                   <collectionProp name="Asserion.test_strings">
-                    <stringProp name="49586">200</stringProp>
+                    <stringProp name="49587">201</stringProp>
                   </collectionProp>
                   <stringProp name="Assertion.custom_message"></stringProp>
                   <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -515,9 +515,9 @@ vars.put(&quot;amount&quot;, String.valueOf(amount));
 </stringProp>
                 </JSR223PreProcessor>
                 <hashTree/>
-                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 201" enabled="false">
                   <collectionProp name="Asserion.test_strings">
-                    <stringProp name="49586">200</stringProp>
+                    <stringProp name="49587">201</stringProp>
                   </collectionProp>
                   <stringProp name="Assertion.custom_message"></stringProp>
                   <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
@@ -653,7 +653,7 @@ vars.put(&quot;customerIdentifier&quot;, provideEmail ? &quot;customerEmail=&quo
                 <stringProp name="RandomTimer.range">1000</stringProp>
               </UniformRandomTimer>
               <hashTree/>
-              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PUT delivery" enabled="true">
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST delivery" enabled="true">
                 <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
                 <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
                   <collectionProp name="Arguments.arguments">
@@ -669,7 +669,7 @@ vars.put(&quot;customerIdentifier&quot;, provideEmail ? &quot;customerEmail=&quo
                 <stringProp name="HTTPSampler.protocol"></stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/api/warehouses/${empWarehouseId}/deliveries</stringProp>
-                <stringProp name="HTTPSampler.method">PUT</stringProp>
+                <stringProp name="HTTPSampler.method">POST</stringProp>
                 <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -693,9 +693,9 @@ vars.put(&quot;randomCarrierId&quot;, randomValue)
 </stringProp>
                 </JSR223PreProcessor>
                 <hashTree/>
-                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 200" enabled="false">
+                <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert response 201" enabled="false">
                   <collectionProp name="Asserion.test_strings">
-                    <stringProp name="49586">200</stringProp>
+                    <stringProp name="49587">201</stringProp>
                   </collectionProp>
                   <stringProp name="Assertion.custom_message"></stringProp>
                   <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
