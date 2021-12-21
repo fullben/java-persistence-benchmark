@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.api;
 
+import de.uniba.dsg.wss.auth.Privileges;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
 import de.uniba.dsg.wss.data.transfer.messages.NewOrderRequest;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +50,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 @Validated
+@PreAuthorize("hasAuthority('" + Privileges.EXECUTE_BUSINESS_TRANSACTIONS_ALL + "')")
 public class TransactionController {
 
   private final NewOrderService newOrderService;

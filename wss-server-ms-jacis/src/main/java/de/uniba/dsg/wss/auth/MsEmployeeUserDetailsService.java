@@ -18,7 +18,9 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final JacisStore<String, EmployeeData> employeeStore;
 
   @Autowired
-  public MsEmployeeUserDetailsService(JacisStore<String, EmployeeData> employeeStore) {
+  public MsEmployeeUserDetailsService(
+      AuthorityMapping authorityMapping, JacisStore<String, EmployeeData> employeeStore) {
+    super(authorityMapping);
     this.employeeStore = employeeStore;
   }
 

@@ -1,6 +1,7 @@
 package de.uniba.dsg.wss.auth;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +13,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public abstract class EmployeeUserDetailsService implements UserDetailsService {
 
-  public EmployeeUserDetailsService() {}
+  private final AuthorityMapping authorityMapping;
+
+  public EmployeeUserDetailsService(AuthorityMapping authorityMapping) {
+    this.authorityMapping = authorityMapping;
+  }
 
   @Override
   public abstract EmployeeUserDetails loadUserByUsername(String username)
@@ -32,7 +37,10 @@ public abstract class EmployeeUserDetailsService implements UserDetailsService {
    *     Roles}
    */
   protected EmployeeUserDetails createUserDetails(String username, String password, String role) {
-    return new EmployeeUserDetails(
-        username, password, List.of(new SimpleGrantedAuthority(Roles.prefixed(role))));
+    Set<SimpleGrantedAuthority> effectiveAuthorities =
+        authorityMapping.getEffectiveAuthorities(role).stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toSet());
+    return new EmployeeUserDetails(username, password, effectiveAuthorities);
   }
 }

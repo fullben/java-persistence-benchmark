@@ -18,7 +18,9 @@ public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final EmployeeRepository employeeRepository;
 
   @Autowired
-  public JpaEmployeeUserDetailsService(EmployeeRepository employeeRepository) {
+  public JpaEmployeeUserDetailsService(
+      AuthorityMapping authorityMapping, EmployeeRepository employeeRepository) {
+    super(authorityMapping);
     this.employeeRepository = employeeRepository;
   }
 

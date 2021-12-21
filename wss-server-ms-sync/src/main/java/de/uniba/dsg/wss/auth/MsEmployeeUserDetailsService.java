@@ -18,7 +18,8 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final MsDataRoot dataRoot;
 
   @Autowired
-  public MsEmployeeUserDetailsService(MsDataRoot dataRoot) {
+  public MsEmployeeUserDetailsService(AuthorityMapping authorityMapping, MsDataRoot dataRoot) {
+    super(authorityMapping);
     this.dataRoot = dataRoot;
   }
 
