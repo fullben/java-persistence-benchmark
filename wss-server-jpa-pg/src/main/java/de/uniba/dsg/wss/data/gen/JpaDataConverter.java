@@ -211,6 +211,7 @@ public class JpaDataConverter
       employee.setEmail(e.getEmail());
       employee.setUsername(e.getUsername());
       employee.setPassword(e.getPassword());
+      employee.setRole(e.getRole());
       employee.setTitle(e.getTitle());
       employee.setDistrict(districts.get(e.getDistrict().getId()));
       employees.add(employee);

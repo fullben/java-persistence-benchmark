@@ -31,6 +31,6 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
             .findAny()
             .orElseThrow(
                 () -> new UsernameNotFoundException("Unable to find user with name " + username));
-    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
+    return createUserDetails(employee.getUsername(), employee.getPassword(), employee.getRole());
   }
 }

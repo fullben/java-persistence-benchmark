@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .disable()
         .authorizeRequests()
         .antMatchers("/api/**")
-        .hasRole(Role.TERMINAL_USER.simpleName())
+        .hasRole(Roles.TERMINAL_USER)
         .and()
         .authorizeRequests()
         .antMatchers("/**")

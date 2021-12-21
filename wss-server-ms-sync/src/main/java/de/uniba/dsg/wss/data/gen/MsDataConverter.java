@@ -195,6 +195,7 @@ public class MsDataConverter
               e.getTitle(),
               e.getUsername(),
               e.getPassword(),
+              e.getRole(),
               districts.get(e.getDistrict().getId()));
 
       employees.put(employee.getUsername(), employee);

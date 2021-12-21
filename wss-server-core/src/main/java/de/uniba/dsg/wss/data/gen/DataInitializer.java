@@ -2,6 +2,7 @@ package de.uniba.dsg.wss.data.gen;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
+import de.uniba.dsg.wss.auth.Roles;
 import de.uniba.dsg.wss.data.gen.model.Carrier;
 import de.uniba.dsg.wss.data.gen.model.Employee;
 import de.uniba.dsg.wss.data.gen.model.Product;
@@ -42,7 +43,8 @@ public abstract class DataInitializer implements CommandLineRunner {
    * @see #generateData()
    */
   protected DefaultDataGenerator createDataGenerator() {
-    return new DefaultDataGenerator(modelWarehouseCount, fullScaleModel, passwordEncoder::encode);
+    return new DefaultDataGenerator(
+        modelWarehouseCount, fullScaleModel, passwordEncoder::encode, Roles.TERMINAL_USER);
   }
 
   /**
