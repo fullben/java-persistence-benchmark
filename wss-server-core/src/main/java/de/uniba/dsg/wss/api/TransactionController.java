@@ -73,7 +73,15 @@ public class TransactionController {
   @PostMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/{customerId}/orders",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Creates a new customer order based on the given data")
+  @Operation(
+      summary = "New-order transaction",
+      description =
+          "Creates a new customer order for the specified customer and with the provided items.",
+      responses = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Data describing the newly created order")
+      })
   public ResponseEntity<NewOrderResponse> doNewOrderTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @PathVariable(name = "districtId") @NotBlank String districtId,
@@ -86,7 +94,18 @@ public class TransactionController {
   @PostMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/payments",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Creates a customer payment based on the given data")
+  @Operation(
+      summary = "Payment transaction",
+      description =
+          "Creates a customer payment for the identified customer and with the amount specified in the body.",
+      responses = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "Data describing the newly created payment"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Customer not found")
+      })
   public ResponseEntity<PaymentResponse> doPaymentTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @PathVariable(name = "districtId") @NotBlank String districtId,
@@ -103,7 +122,17 @@ public class TransactionController {
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/orders/status",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Operation(
-      summary = "Returns status data regarding the most recent order of the customer specified")
+      summary = "Order-status transaction",
+      description =
+          "Returns status data regarding the most recent order of the customer specified.",
+      responses = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description = "Data regarding the specified customer and their most recent order"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "400",
+            description = "Customer not found")
+      })
   public ResponseEntity<OrderStatusResponse> doOrderStatusTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @PathVariable(name = "districtId") @NotBlank String districtId,
@@ -118,7 +147,15 @@ public class TransactionController {
   @PostMapping(
       value = "warehouses/{warehouseId}/deliveries",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Updates the delivery status of up to 10 undelivered orders")
+  @Operation(
+      summary = "Delivery transaction",
+      description =
+          "Updates the delivery status of up to 10 undelivered orders from the specified warehouse.",
+      responses = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "201",
+            description = "The given warehouse and carrier ID")
+      })
   public ResponseEntity<DeliveryResponse> doDeliveryTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @RequestBody @NotBlank String carrierId) {
@@ -130,8 +167,15 @@ public class TransactionController {
       value = "warehouses/{warehouseId}/stock-levels",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   @Operation(
-      summary =
-          "Checks the stock levels of items affected by the 20 most recent orders for the specified district for whether they are below a certain threshold and returns the number of affected stocks")
+      summary = "Stock-level transaction",
+      description =
+          "Checks the stock levels of items affected by the 20 most recent orders for the specified district for whether they are below a certain threshold and returns the number of affected stocks",
+      responses = {
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(
+            responseCode = "200",
+            description =
+                "Some of the provided data and the number of stocks that are below the specified threshold")
+      })
   public ResponseEntity<StockLevelResponse> doStockLevelTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
       @RequestParam(name = "districtId") @NotBlank String districtId,

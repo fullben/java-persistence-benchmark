@@ -29,46 +29,56 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ResourceController {
 
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns all products")
+  @Operation(summary = "Returns products", description = "Returns all products.")
   ResponseEntity<Iterable<ProductRepresentation>> getProducts();
 
   @GetMapping(value = "employees/{username}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns the employee identified by the given username")
+  @Operation(
+      summary = "Returns an employee",
+      description = "Finds and returns the employee identified by the given username.")
   ResponseEntity<EmployeeRepresentation> getEmployee(@NotBlank @PathVariable String username);
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns all warehouses")
+  @Operation(summary = "Returns warehouses", description = "Returns all warehouses.")
   ResponseEntity<List<WarehouseRepresentation>> getWarehouses();
 
   @GetMapping(
       value = "warehouses/{warehouseId}/districts",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns the 10 districts of the specified warehouse")
+  @Operation(
+      summary = "Returns warehouse districts",
+      description = "Returns the 10 districts of the specified warehouse.")
   ResponseEntity<List<DistrictRepresentation>> getWarehouseDistricts(
       @NotBlank @PathVariable String warehouseId);
 
   @GetMapping(
       value = "warehouses/{warehouseId}/stocks",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns the stocks of the specified warehouse")
+  @Operation(
+      summary = "Returns warehouse stocks",
+      description = "Returns the stocks of the specified warehouse.")
   ResponseEntity<List<StockRepresentation>> getWarehouseStocks(
       @NotBlank @PathVariable String warehouseId);
 
   @GetMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns the customers of the specified district")
+  @Operation(
+      summary = "Returns warehouse customers",
+      description = "Returns the customers of the specified district.")
   ResponseEntity<List<CustomerRepresentation>> getDistrictCustomers(
       @NotBlank @PathVariable String warehouseId, @NotBlank @PathVariable String districtId);
 
   @GetMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/orders",
       produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns the orders of the specified district")
+  @Operation(
+      summary = "Returns district orders",
+      description = "Returns the orders of the specified district.")
   ResponseEntity<List<OrderRepresentation>> getDistrictOrders(
       @NotBlank @PathVariable String warehouseId, @NotBlank @PathVariable String districtId);
 
   @GetMapping(value = "carriers", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  @Operation(summary = "Returns all carriers")
+  @Operation(summary = "Returns carriers", description = "Returns all carriers.")
   ResponseEntity<List<CarrierRepresentation>> getCarriers();
 }
