@@ -104,7 +104,7 @@ public class TransactionController {
             description = "Data describing the newly created payment"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Customer not found")
+            description = "Neither customer ID nor email were provided")
       })
   public ResponseEntity<PaymentResponse> doPaymentTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
@@ -131,7 +131,7 @@ public class TransactionController {
             description = "Data regarding the specified customer and their most recent order"),
         @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
-            description = "Customer not found")
+            description = "Neither customer ID nor email were provided")
       })
   public ResponseEntity<OrderStatusResponse> doOrderStatusTransaction(
       @PathVariable(name = "warehouseId") @NotBlank String warehouseId,
