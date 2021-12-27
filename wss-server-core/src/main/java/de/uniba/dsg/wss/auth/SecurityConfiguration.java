@@ -17,11 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * Configures the security of this server. While the API provided by implementations of the {@link
- * de.uniba.dsg.wss.api.ResourceController ResourceController} is publicly available, access to the
- * API provided by implementations of the {@link de.uniba.dsg.wss.api.TransactionController
- * TransactionController} is restricted to users which can authenticate themselves with basic
- * authentication.
+ * Configures the security of this server. This configuration ensures that the entire API provided
+ * by implementations of the {@link de.uniba.dsg.wss.api.ResourceController ResourceController} and
+ * {@link de.uniba.dsg.wss.api.TransactionController TransactionController} is restricted to users
+ * which can authenticate themselves with basic authentication and hold the role {@link Roles#USER}.
+ * Note that the controller implementations may restrict access even further.
  *
  * @author Benedikt Full
  */
