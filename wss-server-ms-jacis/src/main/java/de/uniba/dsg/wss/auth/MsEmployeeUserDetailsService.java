@@ -18,7 +18,9 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final JacisStore<String, EmployeeData> employeeStore;
 
   @Autowired
-  public MsEmployeeUserDetailsService(JacisStore<String, EmployeeData> employeeStore) {
+  public MsEmployeeUserDetailsService(
+      AuthorityMapping authorityMapping, JacisStore<String, EmployeeData> employeeStore) {
+    super(authorityMapping);
     this.employeeStore = employeeStore;
   }
 
@@ -31,6 +33,6 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
             .findAny()
             .orElseThrow(
                 () -> new UsernameNotFoundException("Unable to find user with name " + username));
-    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
+    return createUserDetails(employee.getUsername(), employee.getPassword(), employee.getRole());
   }
 }

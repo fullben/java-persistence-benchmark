@@ -29,12 +29,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @ExceptionHandler(value = {BadRequestException.class})
   protected ResponseEntity<Object> handleConflict(BadRequestException ex, WebRequest request) {
-    log(ex);
-    return handleExceptionInternal(
-        ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    log(ex, status);
+    return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), status, request);
   }
 
-  private void log(Exception e) {
-    LOG.warn("Encountered a {}: {}", e.getClass().getSimpleName(), e.getMessage());
+  private void log(Exception e, HttpStatus status) {
+    LOG.warn("{}: {} (Responding with: {})", e.getClass().getSimpleName(), e.getMessage(), status);
   }
 }

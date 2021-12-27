@@ -18,13 +18,13 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final MsDataRoot dataRoot;
 
   @Autowired
-  public MsEmployeeUserDetailsService(MsDataRoot dataRoot) {
+  public MsEmployeeUserDetailsService(AuthorityMapping authorityMapping, MsDataRoot dataRoot) {
+    super(authorityMapping);
     this.dataRoot = dataRoot;
   }
 
   @Override
   public EmployeeUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
     EmployeeData employee =
         dataRoot.getEmployees().entrySet().parallelStream()
             .filter(e -> e.getValue().getUsername().equals(username))
@@ -32,6 +32,6 @@ public class MsEmployeeUserDetailsService extends EmployeeUserDetailsService {
             .orElseThrow(
                 () -> new UsernameNotFoundException("Unable to find user with name " + username))
             .getValue();
-    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
+    return createUserDetails(employee.getUsername(), employee.getPassword(), employee.getRole());
   }
 }

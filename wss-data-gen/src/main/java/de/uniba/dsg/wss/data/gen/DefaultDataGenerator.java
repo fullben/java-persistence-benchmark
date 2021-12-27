@@ -78,6 +78,7 @@ public class DefaultDataGenerator implements DataGenerator {
   private final RandomSelector<String> emailService;
   private final Function<String, String> passwordEncoder;
   private final LocalDateTime now;
+  private final String defaultEmployeeRole;
 
   /**
    * Constructs a new data generator. This constructor is primarily meant for debugging and testing
@@ -90,7 +91,9 @@ public class DefaultDataGenerator implements DataGenerator {
    * @param orders the number of orders per district
    * @param products the number of products
    * @param passwordEncoder the encoder function to be used to encode the employee credentials
+   * @deprecated use {@link #DefaultDataGenerator(int, boolean, Function, String)} instead
    */
+  @Deprecated
   public DefaultDataGenerator(
       int warehouses,
       int districts,
@@ -111,11 +114,26 @@ public class DefaultDataGenerator implements DataGenerator {
     oneInThreeRandom = new UniformRandom(1, 3);
     emailService = new RandomSelector<>(EMAIL_SERVICES);
     this.passwordEncoder = requireNonNull(passwordEncoder);
+    this.defaultEmployeeRole = "";
     now = LocalDateTime.now();
   }
 
+  /**
+   * Constructs a new data generator based on the given parameters. This is the primary constructor
+   * of the generator.
+   *
+   * @param warehouseCount the number of warehouses to be generated
+   * @param fullScale {@code true} to generate a full-scale model based on the given warehouse
+   *     count, {@code false} for only generating a downscaled model with far less model objects
+   *     than the full-scale model
+   * @param passwordEncoder the function used for encoding the plaintext passwords of the employees
+   * @param defaultEmployeeRole the role assigned to all employees generated
+   */
   public DefaultDataGenerator(
-      int warehouseCount, boolean fullScale, Function<String, String> passwordEncoder) {
+      int warehouseCount,
+      boolean fullScale,
+      Function<String, String> passwordEncoder,
+      String defaultEmployeeRole) {
     if (warehouseCount < 1) {
       throw new IllegalArgumentException("Warehouse count must be greater than zero");
     }
@@ -136,11 +154,8 @@ public class DefaultDataGenerator implements DataGenerator {
     oneInThreeRandom = new UniformRandom(1, 3);
     emailService = new RandomSelector<>(EMAIL_SERVICES);
     this.passwordEncoder = requireNonNull(passwordEncoder);
+    this.defaultEmployeeRole = requireNonNull(defaultEmployeeRole);
     now = LocalDateTime.now();
-  }
-
-  public DefaultDataGenerator(int warehouseCount, Function<String, String> passwordEncoder) {
-    this(warehouseCount, true, passwordEncoder);
   }
 
   @Override
@@ -307,6 +322,7 @@ public class DefaultDataGenerator implements DataGenerator {
     String postfix = warehouseNbr + "_" + districtNbr;
     employee.setUsername(EMPLOYEE_USERNAME_PREFIX + postfix);
     employee.setPassword(passwordEncoder.apply(DEFAULT_PASSWORD + "_" + postfix));
+    employee.setRole(defaultEmployeeRole);
     employee.setDistrict(district);
     employee.setTitle(faker.job().title());
     return employee;

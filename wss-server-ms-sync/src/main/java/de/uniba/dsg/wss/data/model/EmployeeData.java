@@ -9,10 +9,11 @@ package de.uniba.dsg.wss.data.model;
  */
 public class EmployeeData extends PersonData {
 
-  private final DistrictData districtRef;
   private final String title;
   private final String username;
   private final String password;
+  private final String role;
+  private final DistrictData districtRef;
 
   public EmployeeData(
       String id,
@@ -25,11 +26,13 @@ public class EmployeeData extends PersonData {
       String title,
       String username,
       String password,
+      String role,
       DistrictData districtRef) {
     super(id, firstName, middleName, lastName, address, phoneNumber, email);
     this.title = title;
     this.username = username;
     this.password = password;
+    this.role = role;
     this.districtRef = districtRef;
   }
 
@@ -43,6 +46,10 @@ public class EmployeeData extends PersonData {
 
   public String getPassword() {
     return password;
+  }
+
+  public String getRole() {
+    return role;
   }
 
   public DistrictData getDistrictRef() {

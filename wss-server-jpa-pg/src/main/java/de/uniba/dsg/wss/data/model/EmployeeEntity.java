@@ -31,6 +31,9 @@ public class EmployeeEntity extends PersonEntity {
   @Column(nullable = false)
   private String password;
 
+  @Column(nullable = false)
+  private String role;
+
   public DistrictEntity getDistrict() {
     return district;
   }
@@ -61,5 +64,13 @@ public class EmployeeEntity extends PersonEntity {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 }

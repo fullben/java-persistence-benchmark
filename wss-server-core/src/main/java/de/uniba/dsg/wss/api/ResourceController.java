@@ -1,5 +1,6 @@
 package de.uniba.dsg.wss.api;
 
+import de.uniba.dsg.wss.auth.Privileges;
 import de.uniba.dsg.wss.data.transfer.representations.CarrierRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
@@ -13,6 +14,7 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @RequestMapping("api")
 @Validated
+@PreAuthorize("hasAuthority('" + Privileges.READ_DATA_ALL + "')")
 public interface ResourceController {
 
   @GetMapping(value = "products", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -36,6 +39,7 @@ public interface ResourceController {
   @Operation(
       summary = "Returns an employee",
       description = "Finds and returns the employee identified by the given username.")
+  @PreAuthorize("hasAuthority('" + Privileges.READ_DATA_OWN + "')")
   ResponseEntity<EmployeeRepresentation> getEmployee(@NotBlank @PathVariable String username);
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
