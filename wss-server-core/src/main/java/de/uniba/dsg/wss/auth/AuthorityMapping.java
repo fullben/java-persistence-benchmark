@@ -73,7 +73,7 @@ public class AuthorityMapping {
   public Set<String> getEffectiveAuthorities(String role) {
     Set<String> effectiveRoles = getEffectiveRoles(requireRole(role));
     Set<String> effectiveAuthorities =
-        effectiveRoles.stream().map(AuthorityMapping::prefixedRole).collect(Collectors.toSet());
+        effectiveRoles.stream().map(Roles::prefixed).collect(Collectors.toSet());
     effectiveRoles.forEach(
         r -> {
           Set<String> privileges = rolesToPrivileges.get(r);
@@ -148,18 +148,9 @@ public class AuthorityMapping {
   }
 
   private String requireRole(String role) {
-    String plainRole = stripPrefix(role);
-    if (!listRoles().contains(role)) {
+    if (!Roles.isRole(role)) {
       throw new IllegalArgumentException("Not a role: " + role);
     }
-    return plainRole;
-  }
-
-  private static String prefixedRole(String role) {
-    return Roles.prefixed(role);
-  }
-
-  private static String stripPrefix(String role) {
-    return role.startsWith(Roles.ROLE_PREFIX) ? role.substring(Roles.ROLE_PREFIX.length()) : role;
+    return Roles.unprefixed(role);
   }
 }

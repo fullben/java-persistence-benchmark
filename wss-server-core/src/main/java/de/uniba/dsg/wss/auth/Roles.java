@@ -49,16 +49,43 @@ public final class Roles {
    *
    * @param role the role name, must be neither {@code null} nor blank
    * @return the given role name, prefixed with the {@link #ROLE_PREFIX}
+   * @throws IllegalArgumentException if the given role does not represent a role as determined by
+   *     {@link #isRole(String)}
+   * @see #unprefixed(String)
    */
   public static String prefixed(String role) {
-    if (role == null || role.isBlank()) {
-      throw new IllegalArgumentException("Null or blank role names are not allowed");
+    if (!isRole(role)) {
+      throw new IllegalArgumentException("Not a role: " + role);
     }
     String strippedRole = role.strip();
     if (strippedRole.startsWith(ROLE_PREFIX)) {
       return strippedRole;
     }
     return ROLE_PREFIX + strippedRole;
+  }
+
+  /**
+   * Returns a version of the given role name that does not start with the {@link #ROLE_PREFIX}.
+   *
+   * <p>If the given role already does not start with the {@code ROLE_PREFIX} (ignoring any leading
+   * whitespace), this method will simply return the given name, stripped of all leading and
+   * trailing whitespace.
+   *
+   * <p>If the given role name starts with the {@code ROLE_PREFIX}, this method will strip the given
+   * name of all leading and trailing whitespace, remove the prefix, and return the resulting name.
+   *
+   * @param role the role name, must be one of the roles defined in this class, can be prefixed with
+   *     the {@link #ROLE_PREFIX}
+   * @return the given role name, without the {@link #ROLE_PREFIX}
+   * @throws IllegalArgumentException if the given role does not represent a role as determined by
+   *     {@link #isRole(String)}
+   * @see #prefixed(String)
+   */
+  public static String unprefixed(String role) {
+    if (!isRole(role)) {
+      throw new IllegalArgumentException("Not a role: " + role);
+    }
+    return removePrefix(role);
   }
 
   /** @return a list of all roles */
@@ -68,5 +95,28 @@ public final class Roles {
     roles.add(TERMINAL_USER);
     roles.add(ADMIN);
     return roles;
+  }
+
+  /**
+   * Checks whether the given name identifies one of the roles defined by this class.
+   *
+   * <p>Note that this implementation performs a 'fuzzy' check: the given role name is allowed to
+   * start with the {@link #ROLE_PREFIX} and can contain leading and trailing whitespace.
+   *
+   * @param role some string
+   * @return {@code true} if the given string matches one of the roles defined in this class,
+   *     ignoring the default role prefix and any leading and trailing whitespace characters, {@code
+   *     false} otherwise
+   */
+  public static boolean isRole(String role) {
+    return role != null && !role.isBlank() && list().contains(removePrefix(role));
+  }
+
+  private static String removePrefix(String role) {
+    if (role == null) {
+      return null;
+    }
+    role = role.strip();
+    return role.startsWith(ROLE_PREFIX) ? role.substring(ROLE_PREFIX.length()) : role;
   }
 }
