@@ -18,13 +18,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @ConfigurationProperties(prefix = "springfox")
 @EnableSwagger2
-public class SpringFoxConfiguration {
+public class SpringfoxConfiguration {
 
   private String title;
   private String description;
   private String basePackage;
 
-  public SpringFoxConfiguration() {
+  public SpringfoxConfiguration() {
     title = null;
     description = null;
     basePackage = null;
