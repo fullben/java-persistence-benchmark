@@ -2,6 +2,8 @@
 
 Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
+Check the [release notes](RELEASES.md) for the changes introduced with the different versions of the benchmark.
+
 ## Structure
 
 The benchmark is based on the famous TPC-C benchmark. Like TPC-C, it models the activities of a wholesale supplier. This supplier has 100 000 products and a number of warehouses in which these products are stocked. Each warehouse has 10 districts, and an employee responsible for each district and its 3000 customers. The customers and employees of the supplier can execute certain tasks (*transactions*):
