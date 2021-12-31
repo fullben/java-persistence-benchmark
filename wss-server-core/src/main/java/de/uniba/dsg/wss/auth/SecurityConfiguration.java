@@ -18,10 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Configures the security of this server. This configuration ensures that the entire API provided
- * by implementations of the {@link de.uniba.dsg.wss.api.ResourceController ResourceController} and
- * {@link de.uniba.dsg.wss.api.TransactionController TransactionController} is restricted to users
- * which can authenticate themselves with basic authentication and hold the role {@link Roles#USER}.
- * Note that the controller implementations may restrict access even further.
+ * by implementations of the {@link de.uniba.dsg.wss.api.controllers.ResourceController
+ * ResourceController ResourceController} and {@link
+ * de.uniba.dsg.wss.api.controllers.TransactionController TransactionController} is restricted to
+ * users which can authenticate themselves with basic authentication and hold the role {@link
+ * Roles#USER}. Note that the controller implementations may restrict access even further.
  *
  * @author Benedikt Full
  */

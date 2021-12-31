@@ -1,4 +1,4 @@
-package de.uniba.dsg.wss.api;
+package de.uniba.dsg.wss.api.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,13 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 
 @SpringBootTest
-public class MsResourceControllerTests extends MicroStreamTest {
+public class MsResourceControllerTest extends MicroStreamTest {
 
   @Autowired private MsResourceController controller;
 
   @BeforeEach
   public void setUp() {
-    super.populateStorage();
+    prepareTestStorage();
   }
 
   @Test

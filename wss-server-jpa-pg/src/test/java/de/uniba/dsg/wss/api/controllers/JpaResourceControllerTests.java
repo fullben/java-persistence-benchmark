@@ -1,10 +1,20 @@
-package de.uniba.dsg.wss.api;
+package de.uniba.dsg.wss.api.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import de.uniba.dsg.wss.MicroStreamTest;
 import de.uniba.dsg.wss.auth.Privileges;
+import de.uniba.dsg.wss.data.access.CarrierRepository;
+import de.uniba.dsg.wss.data.access.OrderRepository;
+import de.uniba.dsg.wss.data.access.ProductRepository;
+import de.uniba.dsg.wss.data.access.WarehouseRepository;
+import de.uniba.dsg.wss.data.gen.DataModel;
+import de.uniba.dsg.wss.data.gen.JpaDataConverter;
+import de.uniba.dsg.wss.data.gen.TestDataGenerator;
+import de.uniba.dsg.wss.data.model.CarrierEntity;
+import de.uniba.dsg.wss.data.model.EmployeeEntity;
+import de.uniba.dsg.wss.data.model.ProductEntity;
+import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.representations.CustomerRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.DistrictRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.OrderRepresentation;
@@ -13,6 +23,7 @@ import de.uniba.dsg.wss.data.transfer.representations.StockRepresentation;
 import de.uniba.dsg.wss.data.transfer.representations.WarehouseRepresentation;
 import java.util.List;
 import org.assertj.core.util.IterableUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +32,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 
 @SpringBootTest
-public class MsResourceControllerTest extends MicroStreamTest {
+public class JpaResourceControllerTests {
 
-  @Autowired private MsResourceController controller;
+  @Autowired private JpaResourceController controller;
+  @Autowired private WarehouseRepository warehouseRepository;
+  @Autowired private ProductRepository productRepository;
+  @Autowired private CarrierRepository carrierRepository;
+  @Autowired private OrderRepository orderRepository;
 
   @BeforeEach
   public void setUp() {
-    prepareTestStorage();
+    JpaDataConverter converter = new JpaDataConverter();
+    DataModel<ProductEntity, WarehouseEntity, EmployeeEntity, CarrierEntity> dataModel =
+        converter.convert(new TestDataGenerator().generate());
+
+    productRepository.saveAll(dataModel.getProducts());
+    carrierRepository.saveAll(dataModel.getCarriers());
+    warehouseRepository.saveAll(dataModel.getWarehouses());
+  }
+
+  @AfterEach
+  public void tearDown() {
+    orderRepository.deleteAll();
+    warehouseRepository.deleteAll();
+    productRepository.deleteAll();
+    carrierRepository.deleteAll();
   }
 
   @Test
