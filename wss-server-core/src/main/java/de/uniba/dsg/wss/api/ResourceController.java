@@ -39,7 +39,6 @@ public interface ResourceController {
   @Operation(
       summary = "Returns an employee",
       description = "Finds and returns the employee identified by the given username.")
-  @PreAuthorize("hasAuthority('" + Privileges.READ_DATA_OWN + "')")
   ResponseEntity<EmployeeRepresentation> getEmployee(@NotBlank @PathVariable String username);
 
   @GetMapping(value = "warehouses", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
