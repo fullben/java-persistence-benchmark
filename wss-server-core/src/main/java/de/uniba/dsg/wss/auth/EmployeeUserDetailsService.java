@@ -24,7 +24,8 @@ public abstract class EmployeeUserDetailsService implements UserDetailsService {
       throws UsernameNotFoundException;
 
   /**
-   * Creates a new {@code EmployeeUserDetails} instance with the given parameters.
+   * Creates a new {@code EmployeeUserDetails} instance with the given parameters. Note that this
+   * method uses the given {@code role} to determine the effective authorities of the user.
    *
    * <p>Implementations of this type of service may use this method in their implementation of
    * {@link #loadUserByUsername(String)} to create the user details object to be returned.
