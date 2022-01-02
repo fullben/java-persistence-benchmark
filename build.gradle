@@ -9,7 +9,7 @@ subprojects {
     apply plugin: "com.diffplug.spotless"
 
     group 'de.uniba.dsg'
-    version '2.0.1'
+    version '2.1.0'
 
     repositories {
         mavenCentral()
@@ -76,4 +76,8 @@ subprojects {
             googleJavaFormat()
         }
     }
+
+    // Check formatting everytime code is being compiled
+    compileJava.dependsOn 'spotlessJavaCheck'
+    compileJava.dependsOn 'spotlessMiscCheck'
 }

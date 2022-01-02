@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## Development
+## 2.1.0 (02.01.2022)
 
 - Rework security implementation
   - Define actual user roles, privileges, and mapping between these two concepts
