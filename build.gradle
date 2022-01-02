@@ -76,4 +76,8 @@ subprojects {
             googleJavaFormat()
         }
     }
+
+    // Check formatting everytime code is being compiled
+    compileJava.dependsOn 'spotlessJavaCheck'
+    compileJava.dependsOn 'spotlessMiscCheck'
 }
