@@ -187,6 +187,7 @@ public class MsDataConverter
       employee.setEmail(e.getEmail());
       employee.setUsername(e.getUsername());
       employee.setPassword(e.getPassword());
+      employee.setRole(e.getRole());
       employee.setTitle(e.getTitle());
       employee.setDistrictId(e.getDistrict().getId());
       employee.setDistrictWarehouseId(e.getDistrict().getWarehouse().getId());

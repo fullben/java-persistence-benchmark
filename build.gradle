@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.3' apply false
+    id 'org.springframework.boot' version '2.5.7' apply false
     id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
     id "com.diffplug.spotless" version "6.0.2" apply false
 }
@@ -9,7 +9,7 @@ subprojects {
     apply plugin: "com.diffplug.spotless"
 
     group 'de.uniba.dsg'
-    version '2.0.1'
+    version '2.1.0'
 
     repositories {
         mavenCentral()
@@ -20,8 +20,8 @@ subprojects {
         sourceCompatibility = 11
 
         dependencies {
-            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
         }
 
         test {
@@ -57,6 +57,7 @@ subprojects {
             compile 'org.springframework.boot:spring-boot-starter-validation'
             compile 'org.springframework.boot:spring-boot-starter-security'
             testImplementation 'org.springframework.boot:spring-boot-starter-test'
+            testImplementation 'org.springframework.security:spring-security-test'
         }
     }
 
@@ -75,4 +76,8 @@ subprojects {
             googleJavaFormat()
         }
     }
+
+    // Check formatting everytime code is being compiled
+    compileJava.dependsOn 'spotlessJavaCheck'
+    compileJava.dependsOn 'spotlessMiscCheck'
 }

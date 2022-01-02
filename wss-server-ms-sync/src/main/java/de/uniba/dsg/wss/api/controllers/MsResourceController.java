@@ -1,4 +1,4 @@
-package de.uniba.dsg.wss.api;
+package de.uniba.dsg.wss.api.controllers;
 
 import de.uniba.dsg.wss.data.model.DistrictData;
 import de.uniba.dsg.wss.data.model.EmployeeData;

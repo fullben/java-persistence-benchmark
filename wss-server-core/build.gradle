@@ -8,6 +8,5 @@ dependencies {
     // Automatic mapping between model classes
     api 'org.modelmapper:modelmapper:2.4.4'
     // API documentation and web interface
-    implementation 'io.springfox:springfox-swagger2:2.7.0'
-    implementation 'io.springfox:springfox-swagger-ui:2.7.0'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 }

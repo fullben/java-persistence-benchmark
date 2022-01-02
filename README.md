@@ -2,6 +2,8 @@
 
 Extensible benchmark for comparing the performance of a [JPA-based](https://www.oracle.com/java/technologies/persistence-jsp.html) and [MicroStream-based](https://microstream.one/platforms/microstream-for-java/) persistence implementation, loosely based on the [TPC-C](http://www.tpc.org/tpcc/) benchmark.
 
+Check the [release notes](RELEASES.md) for the changes introduced with the different versions of the benchmark.
+
 ## Structure
 
 The benchmark is based on the famous TPC-C benchmark. Like TPC-C, it models the activities of a wholesale supplier. This supplier has 100 000 products and a number of warehouses in which these products are stocked. Each warehouse has 10 districts, and an employee responsible for each district and its 3000 customers. The customers and employees of the supplier can execute certain tasks (*transactions*):
@@ -64,7 +66,7 @@ For a local development setup, the following software is required:
 
 Make sure that the `spring.profiles.active` property in the `application.properties` file of the implementation you are working on is set to `dev`.
 
-Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui.html`.
+Use the IDE to launch the Java application locally. By default, the server will become available at `localhost:8080`. The API documentation will be available at `localhost:8080/swagger-ui/`.
 
 Once the server has been launched, you may start the JMeter test plan defined in the `wss-terminals/terminals.jmx` file found in this project.
 

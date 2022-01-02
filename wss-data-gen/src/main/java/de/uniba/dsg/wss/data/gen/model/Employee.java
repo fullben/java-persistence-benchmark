@@ -11,6 +11,7 @@ public class Employee extends Person {
   private String title;
   private String username;
   private String password;
+  private String role;
   private District district;
 
   public String getTitle() {
@@ -35,6 +36,14 @@ public class Employee extends Person {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 
   public District getDistrict() {

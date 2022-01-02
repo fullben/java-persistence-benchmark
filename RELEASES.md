@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.1.0 (02.01.2022)
+
+- Rework security implementation
+  - Define actual user roles, privileges, and mapping between these two concepts
+  - Add the concept of a role to the employee model construct; every employee now has a single role
+  - Improve the the `UserDetailsService` base class
+  - Increase security granularity by securing the transaction API endpoints with a different privilege than the resource API endpoints
+- Rework the transaction API
+  - Use resource-based paths instead of transaction names
+  - Improve request structure (combination of path parameters, request parameters, and request body content instead of sending everything as part of the body)
+  - Add proper Swagger-based API documentation
+  - Remove requirement for actual server implementations to add a copy+paste transaction controller implementation
+
 ## 2.0.1 (09.12.2021)
 
 - Fix invalid environment property keys in Docker Compose files

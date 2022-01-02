@@ -1,8 +1,8 @@
 dependencies {
     implementation project(':wss-server-core')
     // MicroStream persistence
-    implementation 'one.microstream:microstream-storage-embedded:' + version_microstream
-    implementation 'one.microstream:microstream-storage-embedded-configuration:' + version_microstream
+    implementation 'one.microstream:microstream-storage-embedded:06.00.00-MS-GA'
+    implementation 'one.microstream:microstream-storage-embedded-configuration:06.00.00-MS-GA'
     // Tests
     testImplementation(testFixtures(project(":wss-data-gen")))
 }

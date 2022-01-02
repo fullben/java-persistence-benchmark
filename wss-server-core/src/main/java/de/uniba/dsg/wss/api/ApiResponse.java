@@ -31,19 +31,32 @@ public final class ApiResponse {
    * @param status a valid HttpStatus
    * @return the builder
    * @see #ok()
+   * @see #created()
    */
   public static ApiResponseBuilder status(HttpStatus status) {
     return new ApiResponseBuilder(status);
   }
 
   /**
-   * Creates a response builder with the status set to {@link HttpStatus#OK}.
+   * Creates a response builder with the status set to {@link HttpStatus#OK} ({@code 200}).
    *
    * @return the builder
    * @see #status(HttpStatus)
+   * @see #created()
    */
   public static ApiResponseBuilder ok() {
     return status(HttpStatus.OK);
+  }
+
+  /**
+   * Creates a response builder with the status set to {@link HttpStatus#CREATED} ({@code 201}).
+   *
+   * @return the builder
+   * @see #status(HttpStatus)
+   * @see #ok()
+   */
+  public static ApiResponseBuilder created() {
+    return status(HttpStatus.CREATED);
   }
 
   /**

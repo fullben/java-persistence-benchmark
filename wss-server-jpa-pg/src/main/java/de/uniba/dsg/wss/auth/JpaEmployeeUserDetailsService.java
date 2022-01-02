@@ -18,7 +18,9 @@ public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
   private final EmployeeRepository employeeRepository;
 
   @Autowired
-  public JpaEmployeeUserDetailsService(EmployeeRepository employeeRepository) {
+  public JpaEmployeeUserDetailsService(
+      AuthorityMapping authorityMapping, EmployeeRepository employeeRepository) {
+    super(authorityMapping);
     this.employeeRepository = employeeRepository;
   }
 
@@ -28,6 +30,6 @@ public class JpaEmployeeUserDetailsService extends EmployeeUserDetailsService {
     if (employee == null) {
       throw new UsernameNotFoundException("Unable to find user with name " + username);
     }
-    return createWithDefaultRole(employee.getUsername(), employee.getPassword());
+    return createUserDetails(employee.getUsername(), employee.getPassword(), employee.getRole());
   }
 }

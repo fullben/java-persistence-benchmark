@@ -13,6 +13,7 @@ public class EmployeeData extends PersonData implements JacisCloneable<EmployeeD
   private String title;
   private String username;
   private String password;
+  private String role;
   private String districtId;
   private String districtWarehouseId;
 
@@ -43,6 +44,14 @@ public class EmployeeData extends PersonData implements JacisCloneable<EmployeeD
   public void setPassword(String password) {
     checkWritable();
     this.password = password;
+  }
+
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
   }
 
   public String getDistrictId() {
