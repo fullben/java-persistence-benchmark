@@ -77,7 +77,7 @@ public class TransactionController {
 
   @PostMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/{customerId}/orders",
-      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "New-order transaction",
       description =
@@ -98,7 +98,7 @@ public class TransactionController {
 
   @PostMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/payments",
-      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Payment transaction",
       description =
@@ -125,7 +125,7 @@ public class TransactionController {
 
   @GetMapping(
       value = "warehouses/{warehouseId}/districts/{districtId}/customers/orders/status",
-      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Order-status transaction",
       description =
@@ -151,7 +151,7 @@ public class TransactionController {
 
   @PostMapping(
       value = "warehouses/{warehouseId}/deliveries",
-      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Delivery transaction",
       description =
@@ -170,7 +170,7 @@ public class TransactionController {
 
   @GetMapping(
       value = "warehouses/{warehouseId}/stock-levels",
-      produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @Operation(
       summary = "Stock-level transaction",
       description =
