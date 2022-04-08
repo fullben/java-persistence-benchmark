@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import de.uniba.dsg.wss.auth.Privileges;
 import de.uniba.dsg.wss.data.access.CarrierRepository;
+import de.uniba.dsg.wss.data.access.EmployeeRepository;
 import de.uniba.dsg.wss.data.access.OrderRepository;
 import de.uniba.dsg.wss.data.access.ProductRepository;
 import de.uniba.dsg.wss.data.access.WarehouseRepository;
@@ -39,6 +40,7 @@ public class JpaResourceControllerTests {
   @Autowired private ProductRepository productRepository;
   @Autowired private CarrierRepository carrierRepository;
   @Autowired private OrderRepository orderRepository;
+  @Autowired private EmployeeRepository employeeRepository;
 
   @BeforeEach
   public void setUp() {
@@ -54,6 +56,7 @@ public class JpaResourceControllerTests {
   @AfterEach
   public void tearDown() {
     orderRepository.deleteAll();
+    employeeRepository.deleteAll();
     warehouseRepository.deleteAll();
     productRepository.deleteAll();
     carrierRepository.deleteAll();
@@ -61,7 +64,7 @@ public class JpaResourceControllerTests {
 
   @Test
   @WithMockUser(
-      username = "terminal_user_1",
+      username = "jpb",
       authorities = {Privileges.READ_DATA_ALL})
   public void checkWarehouse() {
     ResponseEntity<List<WarehouseRepresentation>> warehouses = controller.getWarehouses();
