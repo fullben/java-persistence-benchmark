@@ -13,7 +13,10 @@ import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
@@ -53,15 +56,14 @@ public class JpaDeliveryService extends DeliveryService {
     List<DistrictEntity> districts = districtRepository.findByWarehouseId(req.getWarehouseId());
     CarrierEntity carrier = carrierRepository.getById(req.getCarrierId());
 
-    for (DistrictEntity district : districts) {
+    List<String> districtIds =
+        districts.stream().map(DistrictEntity::getId).collect(Collectors.toList());
+    List<OrderEntity> orders = orderRepository.findOldestUnfulfilledOrderOfDistricts(districtIds);
+    Map<String, CustomerEntity> customers = new HashMap<>();
+
+    for (OrderEntity order : orders) {
+
       double amountSum = 0;
-      // Find oldest new/unfulfilled order
-      OrderEntity order =
-          orderRepository.findOldestUnfulfilledOrderOfDistrict(district.getId()).orElse(null);
-      if (order == null) {
-        // No unfulfilled orders for this district, do nothing
-        continue;
-      }
 
       // Update fulfillment status and carrier of order
       order.setCarrier(carrier);
@@ -72,15 +74,17 @@ public class JpaDeliveryService extends DeliveryService {
         orderItem.setDeliveryDate(LocalDateTime.now());
         amountSum += orderItem.getAmount();
       }
-      // Save order and items
-      order = orderRepository.save(order);
 
       // Update customer balance and delivery count
       CustomerEntity customer = order.getCustomer();
       customer.setBalance(customer.getBalance() + amountSum);
       customer.setDeliveryCount(customer.getDeliveryCount() + 1);
-      customerRepository.save(customer);
+      customers.putIfAbsent(customer.getId(), customer);
     }
+
+    // save - batch processing
+    orderRepository.saveAll(orders);
+    customerRepository.saveAll(customers.values());
     return new DeliveryResponse(req);
   }
 }
