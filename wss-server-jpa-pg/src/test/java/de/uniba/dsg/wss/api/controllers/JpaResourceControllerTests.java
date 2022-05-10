@@ -64,7 +64,7 @@ public class JpaResourceControllerTests {
 
   @Test
   @WithMockUser(
-      username = "jpb",
+      username = "terminal_user_1",
       authorities = {Privileges.READ_DATA_ALL})
   public void checkWarehouse() {
     ResponseEntity<List<WarehouseRepresentation>> warehouses = controller.getWarehouses();
