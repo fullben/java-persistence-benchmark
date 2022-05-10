@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## Development
+
+- Fix a major performance bug of the delivery transaction in the JPA-based (PostgreSQL) implementation
+- Upgrade Gradle to 7.4.2, update some dependencies and improve main build script
+
 ## 2.1.0 (02.01.2022)
 
 - Rework security implementation
