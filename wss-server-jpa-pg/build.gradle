@@ -4,7 +4,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.retry:spring-retry:1.3.1'
     implementation 'org.postgresql:postgresql:42.2.23'
-    implementation 'com.h2database:h2:1.4.197'
+    implementation 'com.h2database:h2:2.1.212'
     // Tests
     testImplementation(testFixtures(project(":wss-data-gen")))
 }
