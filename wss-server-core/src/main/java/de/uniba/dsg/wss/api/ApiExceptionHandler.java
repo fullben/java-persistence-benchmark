@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private static final Logger LOG = LogManager.getLogger(ResponseEntityExceptionHandler.class);
+  private static final Logger LOG = LogManager.getLogger(ApiExceptionHandler.class);
 
   /**
    * Logs the given exception and returns a {@code 400 Bad Request} response.

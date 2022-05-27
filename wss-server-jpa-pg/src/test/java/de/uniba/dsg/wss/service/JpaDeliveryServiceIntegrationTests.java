@@ -2,7 +2,6 @@ package de.uniba.dsg.wss.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.uniba.dsg.wss.data.access.CarrierRepository;
 import de.uniba.dsg.wss.data.access.CustomerRepository;
@@ -21,6 +20,7 @@ import de.uniba.dsg.wss.data.model.ProductEntity;
 import de.uniba.dsg.wss.data.model.WarehouseEntity;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryRequest;
 import de.uniba.dsg.wss.data.transfer.messages.DeliveryResponse;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class JpaDeliveryServiceIntegrationTests {
   @Autowired private CarrierRepository carrierRepository;
   private JpaDeliveryService deliveryService;
   private DeliveryRequest request;
-  private String orderId;
+  private List<String> orderIds = List.of("O0", "O5", "O10", "O15");
 
   @BeforeEach
   public void setUp() {
@@ -51,12 +51,15 @@ public class JpaDeliveryServiceIntegrationTests {
     warehouseRepository.saveAll(model.getWarehouses());
 
     // Ensure that single order is not fulfilled
-    orderId = "O0";
-    OrderEntity order = orderRepository.getById(orderId);
-    order.setCarrier(null);
-    order.setFulfilled(false);
-    order.getItems().forEach(i -> i.setDeliveryDate(null));
-    orderRepository.save(order);
+    // O0 and O10 belong to D0, O5 and O15 belong to D5
+    List<String> orderIds = List.of("O0", "O5", "O10", "O15");
+    for (String id : orderIds) {
+      OrderEntity order = orderRepository.getById(id);
+      order.setCarrier(null);
+      order.setFulfilled(false);
+      order.getItems().forEach(i -> i.setDeliveryDate(null));
+      orderRepository.save(order);
+    }
 
     request = new DeliveryRequest();
     request.setWarehouseId("W0");
@@ -76,15 +79,46 @@ public class JpaDeliveryServiceIntegrationTests {
   }
 
   @Test
-  public void orderIsUpdatedByDeliveryRequest() {
+  public void ordersAreUpdatedByDeliveryRequest() {
     deliveryService.process(request);
 
-    OrderEntity order = orderRepository.getById(orderId);
-    assertTrue(order.isFulfilled());
-    assertNotNull(order.getCarrier());
-    for (OrderItemEntity item : order.getItems()) {
-      assertNotNull(item.getDeliveryDate());
+    List<OrderEntity> orders = orderRepository.findAllById(orderIds);
+    int fulfilledOrders = 0;
+
+    // for each district D0 and D5 a single order has to be fulfilled (the oldest one)
+    for (OrderEntity order : orders) {
+      if (order.isFulfilled()) {
+        fulfilledOrders++;
+        assertNotNull(order.getCarrier());
+        for (OrderItemEntity item : order.getItems()) {
+          assertNotNull(item.getDeliveryDate());
+        }
+      }
     }
+
+    assertEquals(2, fulfilledOrders);
+  }
+
+  @Test
+  public void fullfillAllOrdersByDeliveryRequest() {
+    deliveryService.process(request);
+    deliveryService.process(request);
+
+    List<OrderEntity> orders = orderRepository.findAllById(orderIds);
+    int fulfilledOrders = 0;
+
+    // for each district D0 and D5 a single order has to be fulfilled (the oldest one)
+    for (OrderEntity order : orders) {
+      if (order.isFulfilled()) {
+        fulfilledOrders++;
+        assertNotNull(order.getCarrier());
+        for (OrderItemEntity item : order.getItems()) {
+          assertNotNull(item.getDeliveryDate());
+        }
+      }
+    }
+
+    assertEquals(4, fulfilledOrders);
   }
 
   @AfterEach
